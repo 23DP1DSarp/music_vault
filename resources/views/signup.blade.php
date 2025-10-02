@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @vite('resources/css/style.css')
+    @vite('resources/css/login.css')
     <title>Sign Up</title>
 </head>
 <body>
@@ -17,28 +17,35 @@
        
     </nav>
 
+    @auth
+    <p>You are logged in!</p>
+    <form action="/logout" method="POST">
+    @csrf
+    <button>Log out</button>
+    </form>
+    @else 
     <main>
             <h1>Sign Up</h1>
-            <form id="sign_up_form" action="" method="post">
-
+            <form id="sign_up_form" action="/register" method="post">
+                @csrf
                 <div class="form_parts">
                     <label>Username</label>
-                    <input name="username" type="text" required>
+                    <input name="name" type="text">
                 </div>
 
                 <div class="form_parts">
                     <label>Password</label>
-                    <input name="password" type="password" required>
+                    <input name="password" type="password">
                 </div>
 
                 <div class="form_parts">
                     <label>Email</label>
-                    <input name="email" type="email" required>
+                    <input name="email" type="email">
                 </div>
                 
                 <div class="form_parts">
                     <label>Date of Birth</label>
-                    <input name="date_of_birth" type="date" required>
+                    <input name="date_of_birth" type="date">
                 </div>
 
                 <div class="form_parts">
@@ -47,6 +54,8 @@
 
             </form>
     </main>
+    @endauth
+
     
     <footer>
         <div id="footer_wrapper">
