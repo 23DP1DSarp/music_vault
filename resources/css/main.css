@@ -65,6 +65,10 @@ nav {
   flex-direction: row;
   justify-content: center;
   margin: 0 auto;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0px;
+  align-items: center;
 }
 
 #navbuttons ul {
@@ -80,6 +84,9 @@ nav {
     flex-direction: row;
     gap: 20px;
     align-items: center;
+    font-size: 16px;
+    line-height: 28px;
+    letter-spacing: -0.5px;
 }
 
 main {
@@ -335,6 +342,7 @@ footer h6 {
   padding: 6px;
   border: #ECECF0 solid 1px;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 #footer_top ul {

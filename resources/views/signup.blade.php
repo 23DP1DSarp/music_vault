@@ -9,21 +9,13 @@
 <body>
     <nav>
         <div id="logo">
-            <img src="images/vinyl_icon.svg">
+            <img src="images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
         </div>
-
         <p>Log In</p>
        
     </nav>
 
-    @auth
-    <p>You are logged in!</p>
-    <form action="/logout" method="POST">
-    @csrf
-    <button>Log out</button>
-    </form>
-    @else 
     <main>
             <h1>Sign Up</h1>
             <form id="sign_up_form" action="/register" method="post">
@@ -54,7 +46,7 @@
 
             </form>
     </main>
-    @endauth
+    
 
     
     <footer>
@@ -62,7 +54,7 @@
         <div id="footer_top">
             <div id="footer_info">
                 <div id="footer_logo">
-                    <img src="images/vinyl_icon.svg">
+                    <img src="images/footer_images/vinyl_icon.svg">
                     <p>MusicVault</p>
                 </div>
                 <p id="footer_info_text">

@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/resources/css/main.css">
+    @vite('resources/css/main.css')
     <title>Main page</title>
 </head>
 <body>
     <nav>
         <div id="navwrapper">
         <div id="logo">
-            <img src="/public/images/nav_images/vinyl_icon.svg">
+            <img src="images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
         </div>
 
@@ -26,9 +26,17 @@
         <div id="rightbuttons">
             
             <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
-            <img id="shoppingcart" src="/public/images/nav_images/shopping_cart_icon.svg">
-            <p>Sign Up</p>
-
+            <img id="shoppingcart" src="images/nav_images/shopping_cart_icon.svg">
+            @auth
+            <p>{{Auth::user()->name}}</p>
+            <form action="/logout" method="POST">
+                @csrf
+                <button>Log out</button>
+            </form>
+            @else
+            <a href="/showlogin">Log In</a>
+            <a href="/showsignup">Sign In</a>
+            @endauth
         </div>
     </div>
     </nav>
@@ -64,7 +72,7 @@
             </div>
 
             <div id="right_side">
-                <img src="/public/images/main_page_images/Vinyl_records_collection.png">
+                <img src="images/main_page_images/Vinyl_records_collection.png">
             </div>
 
         </div>
@@ -113,7 +121,7 @@
         <div id="footer_top">
             <div id="footer_info">
                 <div id="footer_logo">
-                    <img src="/public/images/footer_images/vinyl_icon.svg">
+                    <img src="images/footer_images/vinyl_icon.svg">
                     <p>MusicVault</p>
                 </div>
                 <p id="footer_info_text">
@@ -123,10 +131,10 @@
                 </p>
 
                 <div id="icons">
-                    <img class="icon" src="/public/images/footer_images/facebook_icon.svg">
-                    <img class="icon" src="/public/images/footer_images/instagram_icon.svg">
-                    <img class="icon" src="/public/images/footer_images/twitter_icon.svg">
-                    <img class="icon" src="/public/images/footer_images/youtube_icon.svg">
+                    <img class="icon" src="images/footer_images/facebook_icon.svg">
+                    <img class="icon" src="images/footer_images/instagram_icon.svg">
+                    <img class="icon" src="images/footer_images/twitter_icon.svg">
+                    <img class="icon" src="images/footer_images/youtube_icon.svg">
                 </div>
                 
             </div>
