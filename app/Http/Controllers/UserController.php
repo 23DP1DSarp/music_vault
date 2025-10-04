@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Auth\Events\Registered;
 
 class UserController extends Controller
 {
@@ -40,8 +41,10 @@ class UserController extends Controller
 
         $user = User::create($incomingFields);
 
+        event(new Registered($user));
+
         auth()->login($user);
 
-        return redirect('/');
+        return redirect('/email/verify');
     }
 }

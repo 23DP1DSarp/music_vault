@@ -31,11 +31,11 @@
             <p>{{Auth::user()->name}}</p>
             <form action="/logout" method="POST">
                 @csrf
-                <button>Log out</button>
+                <button id="logoutbtn">Log out</button>
             </form>
             @else
             <a href="/showlogin">Log In</a>
-            <a href="/showsignup">Sign In</a>
+            <a href="/showsignup">Sign Up</a>
             @endauth
         </div>
     </div>
