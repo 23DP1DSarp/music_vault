@@ -12,7 +12,7 @@
             <img src="images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
         </div>
-        <p>Log In</p>
+        <a href="/showlogin">Log In</a>
        
     </nav>
 

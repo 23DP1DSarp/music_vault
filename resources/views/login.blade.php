@@ -13,7 +13,7 @@
             <p>MusicVault</p>
         </div>
 
-        <p>Sign Up</p>
+        <a href="/showsignup">Sign Up</a>
        
     </nav>
 
@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="form_parts">
-                    <input id="submit_btn" type="submit" value="Sign Up">
+                    <input id="submit_btn" type="submit" value="Log In">
                 </div>
 
             </form>
