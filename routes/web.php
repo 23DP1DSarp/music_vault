@@ -1,12 +1,15 @@
 <?php
 
+use App\Models\Album;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AlbumController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
 
 Route::get('/', function () {
-    return view('main');
+    $albums = Album::all();
+    return view('main', ['albums' => $albums]);
 });
 
 Route::post('/register', [UserController::class, 'register']);
@@ -21,6 +24,10 @@ Route::get('/showlogin', function () {
 
 Route::get('/showsignup', function () {
     return view('signup');
+});
+
+Route::get('/showaddalbum', function() {
+    return view('addalbum');
 });
 
 Route::get('/email/verify', function () {
@@ -40,3 +47,8 @@ Route::post('/email/verification-notification', function (Request $request) {
  
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+
+Route::post('/add_album', [AlbumController::class, 'addAlbum']);
+
+Route::get('/show_albums', [AlbumController::class, 'filterGenre']);

@@ -20,6 +20,9 @@
                 <li>Genres</li>
                 <li>Artists</li>
                 <li>Forums</li>
+                @auth
+                <li><a href="/showaddalbum">Add Album</a></li>
+                @endauth
             </ul>
         </div>
 
@@ -83,15 +86,15 @@
             <p id="results_count">6 records found</p>
 
             <div id="filters">
-                <form action="" method="post">
+                <form action="/show_albums" method="GET">
                     <label>Genre:</label>
                     <button class="form_button">All</button>
-                    <button class="form_button">Rock</button>
-                    <button class="form_button">Jazz</button>
-                    <button class="form_button">Electronic</button>
-                    <button class="form_button">Pop</button>
-                    <button class="form_button">Hip-Hop</button>
-                    <button class="form_button">Classical</button>
+                    <button class="form_button" type="submit" name="genre" value="Rock">Rock</button>
+                    <button class="form_button" name="genre" value="Jazz">Jazz</button>
+                    <button class="form_button" name="genre" value="Electronic">Electronic</button>
+                    <button class="form_button" name="genre" value="Pop">Pop</button>
+                    <button class="form_button" name="genre" value="Hip-Hop">Hip-Hop</button>
+                    <button class="form_button" name="genre" value="Classical">Classical</button>
 
                     <label>Condition:</label>
                     <select name="condition" id="condtion_select">
@@ -114,6 +117,25 @@
 
             </div>
         </div>
+
+        <div id="albums">
+            <h2>All Albums</h2>
+            <div id="album_cards">
+            @forelse ($albums as $album)
+                <div id="album_data">
+                    @if ($album->cover)
+                        <img src="{{ asset('storage/'.$album->cover) }}">
+                    @endif
+                    <h3>{{$album['title']}}</h3>
+                    <p>{{$album['author']}}</p>
+                    <p>{{$album['genre']}}</p>
+                    <p>{{$album['year_of_release']}}</p>
+                </div>
+            @empty
+            <p>No albums found.</p>
+            @endforelse
+        </div>
+    </div>
     </main>
 
     <footer>
