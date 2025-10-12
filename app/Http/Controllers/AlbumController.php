@@ -13,7 +13,13 @@ class AlbumController extends Controller
             'author' => 'required',
             'genre' => 'required',
             'year_of_release' => 'required|integer',
-            'cover' => 'nullable|image|mimes:png,jpg,jpeg|max:2048'
+            'cover' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+            'track1' => 'required',
+            'track2' => 'nullable',
+            'track3' => 'nullable',
+            'track4' => 'nullable',
+            'track5' => 'nullable'
+
         ]);
 
         if ($request->hasFile('cover')) {
@@ -23,6 +29,7 @@ class AlbumController extends Controller
         $incomingFields['title'] = strip_tags($incomingFields['title']);
         $incomingFields['author'] = strip_tags($incomingFields['author']);
         $incomingFields['genre'] = strip_tags($incomingFields['genre']);
+
         Album::create($incomingFields);
         return redirect('/');
     }

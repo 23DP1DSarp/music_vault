@@ -42,19 +42,45 @@
     </nav>
     <main>
         @auth
+        <h1>Add Album</h1>
         <form id="add_album" action="/add_album" method="POST" enctype="multipart/form-data">
             @csrf
-            <label>Title</label>
-            <input name="title" type="text">
-            <label>Author</label>
-            <input name="author" type="text">
-            <label>Genre</label>
-            <input name="genre" type="text">
-            <label>Year of release</label>
-            <input name="year_of_release" type="text">
-            <label>Cover</label>
-            <input name="cover" type="file" accept="image/*">
-            <input type="submit">
+            <div id="album_wrapper">
+                <div id="input_side">
+                    <label>Title</label>
+                    <input class="album_input" name="title" type="text">
+                    <label>Author</label>
+                    <input class="album_input" name="author" type="text">
+                    <label>Genre</label>
+                    <input class="album_input" name="genre" type="text">
+                    <label>Year of release</label>
+                    <input class="album_input" name="year_of_release" type="text">
+
+                    <div id="track_list">
+                        <h1>Track List</h1>
+                        
+                        <label>Track 1</label>
+                        <input class="album_input" name="track1" type="text">
+                        <label>Track 2 (optional)</label>
+                        <input class="album_input" name="track2" type="text">
+                        <label>Track 3 (optional)</label>
+                        <input class="album_input" name="track3" type="text">
+                        <label>Track 4 (optional)</label>
+                        <input class="album_input" name="track4" type="text">
+                        <label>Track 5 (optional)</label>
+                        <input class="album_input" name="track5" type="text">
+                        <input id="submit_btn" type="submit" value="Add Album">
+                    </div>
+
+                </div>
+
+                <div id="album_cover_side">
+                    <label>Cover</label>
+                    <input name="cover" type="file" accept="image/*">
+                </div>
+
+                
+            </div>
         </form>
         @else
         <h1>This page is only for registered users.</h1>

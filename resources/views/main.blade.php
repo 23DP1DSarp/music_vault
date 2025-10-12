@@ -128,12 +128,16 @@
                     @endif
                     <h3>{{$album['title']}}</h3>
                     <p>{{$album['author']}}</p>
+                    <div id="genre_and_year">
                     <p>{{$album['genre']}}</p>
+                    <p>&nbsp;•&nbsp;</p>
                     <p>{{$album['year_of_release']}}</p>
+                    </div>
                 </div>
             @empty
             <p>No albums found.</p>
             @endforelse
+            </div>
         </div>
     </div>
     </main>

@@ -15,7 +15,12 @@ class Album extends Model
         'author',
         'genre',
         'year_of_release',
-        'cover'
+        'cover',
+        'track1',
+        'track2',
+        'track3',
+        'track4',
+        'track5'
     ];
     
     
