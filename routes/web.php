@@ -30,6 +30,10 @@ Route::get('/showaddalbum', function() {
     return view('addalbum');
 });
 
+Route::get('/zohoverify', function() {
+    return view('zohoverify');
+});
+
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
