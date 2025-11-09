@@ -14,13 +14,13 @@ class Album extends Model
         'title',
         'author',
         'genre',
-        'year_of_release',
+        'label',
+        'release_date',
+        'country',
         'cover',
-        'track1',
-        'track2',
-        'track3',
-        'track4',
-        'track5'
+        'format',
+        'notes'
+
     ];
     
     

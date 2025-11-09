@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Album;
+use App\Models\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -47,6 +48,10 @@ Route::post('/email/verification-notification', function (Request $request) {
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 
-Route::post('/add_album', [AlbumController::class, 'addAlbum']);
+Route::post('/add_album', [AlbumController::class, 'addAlbum'])->name('add_album');
+
+
+Route::post('/add_track', [AlbumController::class, 'addTrack'])->name('add_track');
+
 
 Route::get('/show_albums', [AlbumController::class, 'filterGenre']);

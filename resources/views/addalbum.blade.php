@@ -43,45 +43,93 @@
     <main>
         @auth
         <h1>Add Album</h1>
-        <form id="add_album" action="/add_album" method="POST" enctype="multipart/form-data">
+        <div id="form_wrapper">
+        
+            
+            
+                <div id="album_wrapper">
+                    <div id="input_side">
+                        <label>Title</label>
+                        <input class="album_input" name="title" type="text">
+                        <label>Author</label>
+                        <input class="album_input" name="author" type="text">
+                        <label>Genre</label>
+                        <input class="album_input" name="genre" type="text">
+                        <label>Date of release</label>
+                        <input class="album_input" name="release_date" type="date">
+                    </div>
+                        
+                        <div id="album_cover_side">
+                            <label>Cover</label>
+                            <input name="cover" type="file" accept="image/*">
+                        </div>
+                </div>
+                
+            
+            <form id="add_album" action="/add_track" method="POST" enctype="multipart/form-data">
             @csrf
-            <div id="album_wrapper">
-                <div id="input_side">
-                    <label>Title</label>
-                    <input class="album_input" name="title" type="text">
-                    <label>Author</label>
-                    <input class="album_input" name="author" type="text">
-                    <label>Genre</label>
-                    <input class="album_input" name="genre" type="text">
-                    <label>Year of release</label>
-                    <input class="album_input" name="year_of_release" type="text">
-
-                    <div id="track_list">
+            
+                        
                         <h1>Track List</h1>
                         
-                        <label>Track 1</label>
-                        <input class="album_input" name="track1" type="text">
-                        <label>Track 2 (optional)</label>
-                        <input class="album_input" name="track2" type="text">
-                        <label>Track 3 (optional)</label>
-                        <input class="album_input" name="track3" type="text">
-                        <label>Track 4 (optional)</label>
-                        <input class="album_input" name="track4" type="text">
-                        <label>Track 5 (optional)</label>
-                        <input class="album_input" name="track5" type="text">
-                        <input id="submit_btn" type="submit" value="Add Album">
-                    </div>
+                        @for ($i = 0; $i < 5; $i++)
+                        <div id="track_list">
+                            <div class="track_info">
+                                <div class="input_labels">
+                                    <label>Track Nr.</label>
+                                    <input type="number" class="track_nr" name="tracks[{{ $i }}][position]">
+                                </div>
+                                <div class="input_labels">
+                                    <label>Author</label>
+                                    <input type="text" class="author" name="tracks[{{ $i }}][artist]">
+                                </div>
+                                <div class="input_labels">
+                                    <label>Title</label>
+                                    <input type="text" class="title" name="tracks[{{ $i }}][song_title]">
+                                </div>
+                                <div class="input_labels">
+                                    <label>Duration</label>
+                                    <input type="text" class="duration" name="tracks[{{ $i }}][duration]">
+                                </div>
+                            </div>
+                            @endfor
+                            <!--
+                            <div class="track_info">
+                                <input type="number" class="track_nr" name="track[{{ $i }}][track_nr]">
+                                <input type="text" class="author" name="track[{{ $i }}][author]">
+                                <input type="text" class="title" name="track[{{ $i }}][title]">
+                                <input type="text" class="duration" name="tracks[{{ $i }}][duration]">
+                            </div>
 
-                </div>
+                            <div class="track_info">
+                                <input type="number" class="track_nr" name="track[{{ $i }}][track_nr]">
+                                <input type="text" class="author" name="track[{{ $i }}][author]">
+                                <input type="text" class="title" name="track[{{ $i }}][title]">
+                                <input type="text" class="duration" name="tracks[{{ $i }}][duration]">
+                            </div>
 
-                <div id="album_cover_side">
-                    <label>Cover</label>
-                    <input name="cover" type="file" accept="image/*">
-                </div>
+                            <div class="track_info">
+                                <input type="number" class="track_nr" name="track[{{ $i }}][track_nr]">
+                                <input type="text" class="author" name="track[{{ $i }}][author]">
+                                <input type="text" class="title" name="track[{{ $i }}][title]">
+                                <input type="text" class="duration" name="tracks[{{ $i }}][duration]">
+                            </div>
 
+                            <div class="track_info">
+                                <input type="number" class="track_nr" name="track[{{ $i }}][track_nr]">
+                                <input type="text" class="author" name="track[{{ $i }}][author]">
+                                <input type="text" class="title" name="track[{{ $i }}][title]">
+                                <input type="text" class="duration" name="tracks[{{ $i }}][duration]">
+                            </div>
+                            -->
+                            <input id="submit_btn" type="submit" value="Add Album">
+                        </div> 
+                      
+                </form>
+                </div> 
                 
-            </div>
-        </form>
+            
+        
         @else
         <h1>This page is only for registered users.</h1>
         @endauth

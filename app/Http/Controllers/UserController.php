@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Auth\Events\Registered;
 
+
 class UserController extends Controller
 {
 
