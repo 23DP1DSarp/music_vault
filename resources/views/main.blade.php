@@ -131,7 +131,7 @@
                     <div id="genre_and_year">
                     <p>{{$album['genre']}}</p>
                     <p>&nbsp;•&nbsp;</p>
-                    <p>{{$album['year_of_release']}}</p>
+                    <p>{{date('Y', strtotime($album['release_date']))}}</p>
                     </div>
                 </div>
             @empty

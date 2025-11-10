@@ -265,6 +265,7 @@ main {
   display: flex;
   flex-direction: row;
   gap: 25px;
+  width: fit-content;
   margin-bottom: 50px;
 }
 
@@ -272,7 +273,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  width: 358px;
+  max-width: 280px;
   height: 434px;
   border: solid #E4E4E4 1px;
   border-radius: 14px;
