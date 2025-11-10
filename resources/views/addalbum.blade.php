@@ -45,8 +45,8 @@
         <h1>Add Album</h1>
         <div id="form_wrapper">
         
-            
-            
+            <form id="add_album" action="/add_album" method="POST" enctype="multipart/form-data">
+            @csrf
                 <div id="album_wrapper">
                     <div id="input_side">
                         <label>Title</label>
@@ -64,9 +64,9 @@
                             <input name="cover" type="file" accept="image/*">
                         </div>
                 </div>
-                
+            </form>
             
-            <form id="add_album" action="/add_track" method="POST" enctype="multipart/form-data">
+            <form id="add_track" action="/add_track" method="POST" enctype="multipart/form-data">
             @csrf
             
                         
@@ -122,10 +122,11 @@
                                 <input type="text" class="duration" name="tracks[{{ $i }}][duration]">
                             </div>
                             -->
-                            <input id="submit_btn" type="submit" value="Add Album">
+                            
                         </div> 
                       
                 </form>
+                <input id="submit_btn" type="submit" value="Add Album">
                 </div> 
                 
             
@@ -209,5 +210,34 @@
         </div>
         </div>
     </footer>
+
+    <script>
+
+
+        
+        document.getElementById('form_wrapper').addEventListener('submit', async () => {
+            const form = document.getElementById('add_album');
+            const form2 = document.getElementById('add_track');
+            const data = new FormData(form);
+            const data2 = new FormData(form2);
+
+            
+            fetch("{{ route('add.album') }}", {
+                method: "POST",
+                body: data,
+                headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'}
+            });
+
+            
+            fetch("{{ route('add.track') }}", {
+                method: "POST",
+                body: data,
+                headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'}
+            });
+
+        });
+
+
+    </script>
 </body>
 </html>
