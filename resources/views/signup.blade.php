@@ -22,22 +22,34 @@
                 @csrf
                 <div class="form_parts">
                     <label>Username</label>
-                    <input name="name" type="text">
+                    <input name="name" type="text" class="@error('name')  is-invalid @enderror">
+                    @error('name')
+                        <div class="error_message">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form_parts">
                     <label>Password</label>
-                    <input name="password" type="password">
+                    <input name="password" type="password" class="@error('password')  is-invalid @enderror">
+                    @error('password')
+                        <div class="error_message">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="form_parts">
                     <label>Email</label>
-                    <input name="email" type="email">
+                    <input name="email" type="email" class="@error('email')  is-invalid @enderror">
+                    @error('email')
+                        <div class="error_message">{{ $message }}</div>
+                    @enderror
                 </div>
                 
                 <div class="form_parts">
                     <label>Date of Birth</label>
-                    <input name="date_of_birth" type="date">
+                    <input name="date_of_birth" type="date" class="@error('date_of_birth')  is-invalid @enderror">
+                    @error('date_of_birth')
+                        <div class="error_message">You must be at least 13 years old to register.</div>
+                    @enderror
                 </div>
 
                 <div class="form_parts">
