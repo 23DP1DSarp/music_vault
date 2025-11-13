@@ -45,7 +45,7 @@
         <h1>Add Album</h1>
         <div id="form_wrapper">
         
-            <form id="add_album" action="/add_album" method="POST" enctype="multipart/form-data">
+            <form id="add_album_with_tracks" action="/add_album_with_tracks" method="POST" enctype="multipart/form-data">
             @csrf
                 <div id="album_wrapper">
                     <div id="input_side">
@@ -64,10 +64,9 @@
                             <input name="cover" type="file" accept="image/*">
                         </div>
                 </div>
-            </form>
             
-            <form id="add_track" action="/add_track" method="POST" enctype="multipart/form-data">
-            @csrf
+            
+            
             
                         
                         <h1>Track List</h1>
@@ -93,39 +92,11 @@
                                 </div>
                             </div>
                             @endfor
-                            <!--
-                            <div class="track_info">
-                                <input type="number" class="track_nr" name="track[{{ $i }}][track_nr]">
-                                <input type="text" class="author" name="track[{{ $i }}][author]">
-                                <input type="text" class="title" name="track[{{ $i }}][title]">
-                                <input type="text" class="duration" name="tracks[{{ $i }}][duration]">
-                            </div>
-
-                            <div class="track_info">
-                                <input type="number" class="track_nr" name="track[{{ $i }}][track_nr]">
-                                <input type="text" class="author" name="track[{{ $i }}][author]">
-                                <input type="text" class="title" name="track[{{ $i }}][title]">
-                                <input type="text" class="duration" name="tracks[{{ $i }}][duration]">
-                            </div>
-
-                            <div class="track_info">
-                                <input type="number" class="track_nr" name="track[{{ $i }}][track_nr]">
-                                <input type="text" class="author" name="track[{{ $i }}][author]">
-                                <input type="text" class="title" name="track[{{ $i }}][title]">
-                                <input type="text" class="duration" name="tracks[{{ $i }}][duration]">
-                            </div>
-
-                            <div class="track_info">
-                                <input type="number" class="track_nr" name="track[{{ $i }}][track_nr]">
-                                <input type="text" class="author" name="track[{{ $i }}][author]">
-                                <input type="text" class="title" name="track[{{ $i }}][title]">
-                                <input type="text" class="duration" name="tracks[{{ $i }}][duration]">
-                            </div>
-                            -->
+                            
                             
                         </div> 
-                      
-                </form>
+                      </form>
+                
                 <input id="submit_btn" type="submit" value="Add Album">
                 </div> 
                 
@@ -211,33 +182,5 @@
         </div>
     </footer>
 
-    <script>
-
-
-        
-        document.getElementById('form_wrapper').addEventListener('submit', async () => {
-            const form = document.getElementById('add_album');
-            const form2 = document.getElementById('add_track');
-            const data = new FormData(form);
-            const data2 = new FormData(form2);
-
-            
-            fetch("{{ route('add.album') }}", {
-                method: "POST",
-                body: data,
-                headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'}
-            });
-
-            
-            fetch("{{ route('add.track') }}", {
-                method: "POST",
-                body: data,
-                headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'}
-            });
-
-        });
-
-
-    </script>
 </body>
 </html>

@@ -48,10 +48,6 @@ Route::post('/email/verification-notification', function (Request $request) {
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 
-Route::post('/add_album', [AlbumController::class, 'addAlbum'])->name('add.album');
-
-
-Route::post('/add_track', [AlbumController::class, 'addTrack'])->name('add.track');
-
+Route::post('/add_album_with_tracks', [AlbumController::class, 'addAlbum'])->name('add.album');
 
 Route::get('/show_albums', [AlbumController::class, 'filterGenre']);

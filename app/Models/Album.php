@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Track;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,6 +27,11 @@ class Album extends Model
     
     public function showAlbums() {
         return $this->hasMany(Album::class);
+    }
+
+
+    public function tracks() {
+        return $this->hasMany(Track::class);
     }
     
 }

@@ -32,18 +32,31 @@ class AlbumController extends Controller
         $incomingFields['author'] = strip_tags($incomingFields['author']);
         $incomingFields['genre'] = strip_tags($incomingFields['genre']);
 
-        Album::create($incomingFields);
+        $album = Album::create($incomingFields);
+
+        $incomingFields = $request->validate([
+            'tracks' => 'required|array|min:1',
+            'tracks.*.position' => 'nullable',
+            'tracks.*.artist' => 'nullable',
+            'tracks.*.song_title' => 'nullable',
+            'tracks.*.duration' => 'nullable'
+        ]);
 
 
-       
-
-    
+        foreach ($incomingFields['tracks'] as $data) {
+            $album->tracks()->create([
+                'position' => $data['position'],
+                'artist' => $data['artist'],
+                'song_title' => $data['song_title'],
+                'duration' => $data['duration'],
+            ]);
+        }
         return redirect('/');
     }
 
     public function filterGenre(Request $request)
     {
-        // Filter products by category if selected
+        
         if ($request->filled('genre')) {
             $albums = Album::where('genre', $request->genre)->get();
         } else {
@@ -54,26 +67,5 @@ class AlbumController extends Controller
     }
 
 
-     public function addTrack(Request $request) {
-
-
-         $incomingFields2 = $request->validate([
-            'tracks' => 'required|array|min:1',
-            'tracks.*.position' => 'nullable',
-            'tracks.*.artist' => 'nullable',
-            'tracks.*.song_title' => 'nullable',
-            'tracks.*.duration' => 'nullable'
-        ]);
-
-
-        foreach ($incomingFields2['tracks'] as $data) {
-            Track::create([
-                'position' => $data['position'],
-                'artist' => $data['artist'],
-                'song_title' => $data['song_title'],
-                'duration' => $data['duration'],
-            ]);
-        }
-        return redirect('/');
-     }
+     
 }
