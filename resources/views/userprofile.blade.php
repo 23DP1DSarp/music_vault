@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @vite(['resources/css/addalbum.css'])
-    <title>Add Album</title>
+    <title>Profile page</title>
+    @vite(['resources/css/userprofile.css'])
 </head>
 <body>
     <nav>
@@ -20,6 +20,9 @@
                 <li>Genres</li>
                 <li>Artists</li>
                 <li>Forums</li>
+                @auth
+                <li><a href="/showaddalbum">Add Album</a></li>
+                @endauth
             </ul>
         </div>
 
@@ -33,84 +36,55 @@
                 @csrf
                 <button id="logoutbtn">Log out</button>
             </form>
-            @else
+           @else
             <a href="/showlogin">Log In</a>
             <a href="/showsignup">Sign Up</a>
             @endauth
         </div>
     </div>
     </nav>
+
     <main>
-        @auth
-        <h1>Add Album</h1>
-        <div id="form_wrapper">
-        
-            <form id="add_album_with_tracks" action="/add_album_with_tracks" method="POST" enctype="multipart/form-data">
-            @csrf
-                <div id="album_wrapper">
-                    <div id="input_side">
-                        <label>Title</label>
-                        <input class="album_input" name="title" type="text">
-                        <label>Author</label>
-                        <input class="album_input" name="author" type="text">
-                        <label>Genre</label>
-                        <input class="album_input" name="genre" type="text">
-                        <label>Label</label>
-                        <input class="album_input" name="label" type="text">
-                        <label>Date of release</label>
-                        <input class="album_input" name="release_date" type="date">
-                        <label>Country</label>
-                        <input class="album_input" name="country" type="text">
-                        <label>Notes</label>
-                        <input class="album_input" name="notes" type="textarea">
-                    </div>
-                        
-                        <div id="album_cover_side">
-                            <label>Cover</label>
-                            <input name="cover" type="file" accept="image/*">
-                        </div>
+        <div id="profile_head">
+            <img>
+                <h2>{{Auth::user()->name}}</h2>
+        </div>
+
+        <div id="profile_main">
+            <aside id="profile_info">
+                <h3>Profile Information</h3>
+                <p><strong>Member Since: </strong><br>{{Auth::user()->created_at->format('M d, Y')}}</p>
+                <p><strong>Birthday: </strong> </p>
+                <p><strong>Country: </strong> </p>
+                <p><strong>Albums added: </strong> </p>
+                <p><strong>Comments written: </strong> </p>
+            </aside>
+
+            <div id="album_collection">
+                <h3>Collection</h3>
+                <div id="filters">
+                    <button class="filter_btn">Title</button>
+                    <button class="filter_btn">Artist</button>
+                    <button class="filter_btn">Genre</button>
+                    <button class="filter_btn">Year</button>
                 </div>
-            
-            
-            
-            
-                        
-                        <h1>Track List</h1>
-                        
-                        @for ($i = 0; $i < 5; $i++)
-                        <div id="track_list">
-                            <div class="track_info">
-                                <div class="input_labels">
-                                    <label>Track Nr.</label>
-                                    <input type="number" class="track_nr" name="tracks[{{ $i }}][position]">
-                                </div>
-                                <div class="input_labels">
-                                    <label>Author</label>
-                                    <input type="text" class="author" name="tracks[{{ $i }}][artist]">
-                                </div>
-                                <div class="input_labels">
-                                    <label>Title</label>
-                                    <input type="text" class="title" name="tracks[{{ $i }}][song_title]">
-                                </div>
-                                <div class="input_labels">
-                                    <label>Duration</label>
-                                    <input type="text" class="duration" name="tracks[{{ $i }}][duration]">
-                                </div>
-                            </div>
-                            @endfor
-                            
-                            
-                        </div> 
-                      </form>
-                
-                <input id="submit_btn" type="submit" value="Add Album">
-                </div> 
-                
-            
-        
-        @else
-        <h1>This page is only for registered users.</h1>
-        @endauth
+                <div id="albums_grid">
+                @forelse ($collections as $collection)
+                <div class="album_card">
+                    <img src="{{ asset('storage/'.$collection->cover) }}" width="150px" height="150px">
+                    <div id="text_info">
+                        <p>{{$collection->title}}</p>
+                        <p>{{$collection->author}}</p>
+                        <p>{{$collection->genre}}</p>
+                        <p>{{date('Y', strtotime($collection->release_date))}}</p>
+                    </div>
+                </div>
+                @empty
+                <p>No albums found.</p>
+                @endforelse
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>
@@ -187,6 +161,5 @@
         </div>
         </div>
     </footer>
-
 </body>
 </html>

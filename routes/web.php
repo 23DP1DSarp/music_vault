@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\CollectionController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/', function () {
@@ -51,3 +52,23 @@ Route::post('/email/verification-notification', function (Request $request) {
 Route::post('/add_album_with_tracks', [AlbumController::class, 'addAlbum'])->name('add.album');
 
 Route::get('/show_albums', [AlbumController::class, 'filterGenre']);
+
+Route::get('/showprofile', function() {
+    $collections = DB::table('collections')
+    ->where('user_id', '=', auth()->id())
+    ->join('albums', 'albums.id', '=', 'collections.album_id')
+    ->join('users', 'users.id', '=', 'collections.user_id')
+    ->select(
+        'collections.*',
+        'albums.title as title',
+        'albums.cover as cover',
+        'albums.author as author',
+        'albums.genre as genre',
+        'albums.release_date as release_date',
+    )
+    ->get();
+    return view('userprofile', ['collections' => $collections]);
+});
+
+
+Route::post('/add_to_collection/{album}', [CollectionController::class, 'addToCollection']);

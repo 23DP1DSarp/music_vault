@@ -31,7 +31,7 @@
             <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
             <img id="shoppingcart" src="images/nav_images/shopping_cart_icon.svg">
             @auth
-            <p>{{Auth::user()->name}}</p>
+            <a href="/showprofile">{{Auth::user()->name}}</a>
             <form action="/logout" method="POST">
                 @csrf
                 <button id="logoutbtn">Log out</button>
@@ -133,6 +133,7 @@
                     <p>&nbsp;•&nbsp;</p>
                     <p>{{date('Y', strtotime($album['release_date']))}}</p>
                     </div>
+                    <form action="/add_to_collection/{{$album->id}}" method="POST">@csrf<button>Add to collection</button></form>
                 </div>
             @empty
             <p>No albums found.</p>

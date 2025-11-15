@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Track;
+use App\Models\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,6 +33,10 @@ class Album extends Model
 
     public function tracks() {
         return $this->hasMany(Track::class);
+    }
+
+    public function collection() {
+        return $this->hasMany(Collection::class);
     }
     
 }

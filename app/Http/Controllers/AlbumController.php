@@ -13,13 +13,12 @@ class AlbumController extends Controller
             'title' => 'required',
             'author' => 'required',
             'genre' => 'required',
-            'label' => 'nullable',
+            'label' => 'required',
             'release_date' => 'required',
-            'country' => 'nullable',
-            'cover' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
+            'country' => 'required',
+            'cover' => 'required|image|mimes:png,jpg,jpeg|max:2048',
             'format' => 'nullable',
             'notes' => 'nullable'
-
         ]);
 
        
