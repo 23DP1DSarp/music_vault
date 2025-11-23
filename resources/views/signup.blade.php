@@ -130,7 +130,7 @@
                 <li>Returns</li>
             </ul>
 
-            <p>&copy; 2025 VinylVault. All rights reserved.</p>
+            <p>&copy; 2025 MusicVault. All rights reserved.</p>
 
         </div>
         </div>
