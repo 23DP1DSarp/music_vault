@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @vite(['resources/css/addalbum.css'])
+    
     <title>Add Album</title>
 </head>
 <body>
@@ -77,8 +77,9 @@
                         
                         <h1>Track List</h1>
                         
-                        @for ($i = 0; $i < 5; $i++)
+                        
                         <div id="track_list">
+                            @for ($i = 0; $i < 5; $i++)
                             <div class="track_info">
                                 <div class="input_labels">
                                     <label>Track Nr.</label>
@@ -98,13 +99,11 @@
                                 </div>
                             </div>
                             @endfor
-                            
-                            
-                        </div> 
-                      </form>
-                
-                <input id="submit_btn" type="submit" value="Add Album">
-                </div> 
+                        </div>
+                <p id="add_more_tracks">+ Add more tracks</p> 
+                <input id="submit_btn" type="submit" value="Add Album">        
+                </form>
+            </div> 
                 
             
         
@@ -187,6 +186,6 @@
         </div>
         </div>
     </footer>
-
+@vite(['resources/css/addalbum.css', 'resources/js/addalbum.js'])
 </body>
 </html>

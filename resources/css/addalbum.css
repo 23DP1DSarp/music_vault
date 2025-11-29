@@ -127,17 +127,19 @@ main h1 {
 #form_wrapper {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   width: fit-content;
   align-items: start;
   margin: 0 auto;
   gap: 85px;
 }
 
-#add_album {
+#add_album_with_tracks {
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
+
+
 
 #album_wrapper {
   display: flex;
@@ -178,6 +180,7 @@ label {
   font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   border-radius: 8px;
   border: none;
+  margin: 0 auto;
 }
 
 .album_input {
@@ -193,7 +196,6 @@ label {
 #track_list_form {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   width: 860px;
   margin: 0 auto;
 }
@@ -201,7 +203,6 @@ label {
 #track_list {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 30px;
 }
 
