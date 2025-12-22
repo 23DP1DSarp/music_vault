@@ -126,14 +126,14 @@
                     @if ($album->cover)
                         <img src="{{ asset('storage/'.$album->cover) }}">
                     @endif
-                    <h3>{{$album['title']}}</h3>
+                    <a href="/album_info/{{$album->id}}"><h3>{{$album['title']}}</h3></a>
                     <p>{{$album['author']}}</p>
                     <div id="genre_and_year">
                     <p>{{$album['genre']}}</p>
                     <p>&nbsp;•&nbsp;</p>
                     <p>{{date('Y', strtotime($album['release_date']))}}</p>
                     </div>
-                    <form action="/add_to_collection/{{$album->id}}" method="POST">@csrf<button>Add to collection</button></form>
+                    <form action="/add_to_collection/{{$album->id}}" method="POST">@csrf<button id="add_to_collection_btn">Add to collection</button></form>
                 </div>
             @empty
             <p>No albums found.</p>

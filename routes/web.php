@@ -72,3 +72,14 @@ Route::get('/showprofile', function() {
 
 
 Route::post('/add_to_collection/{album}', [CollectionController::class, 'addToCollection']);
+
+Route::get('/album_info/{album}', function(Album $album) {
+    $album = DB::table('albums')
+    ->where('id', '=', $album->id)
+    ->first();
+
+    $tracks = DB::table('tracks')
+    ->where('album_id', '=', $album->id)
+    ->get();
+    return view('albuminfo', ['album' => $album, 'tracks' => $tracks]);
+});
