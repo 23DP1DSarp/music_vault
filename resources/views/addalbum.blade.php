@@ -95,8 +95,8 @@
                                 </div>
                                 <div class="input_labels">
                                     <label>Duration</label>
-                                    <input type="text" class="duration" name="tracks[{{ $i }}][duration]">
-                                </div>
+                                    <input type="text" class="duration" name="tracks[{{ $i }}][duration]"> 
+                                </div><div class="error_box"[{{ $i }}]></div>
                             </div>
                             @endfor
                         </div>

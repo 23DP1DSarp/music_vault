@@ -1,0 +1,46 @@
+{
+  "resources/css/addalbum.css": {
+    "file": "assets/addalbum-BxGk3tsG.css",
+    "src": "resources/css/addalbum.css",
+    "isEntry": true,
+    "names": [
+      "addalbum.css"
+    ]
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-COwyR4_Z.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/css/login.css": {
+    "file": "assets/login-DRrI7wvX.css",
+    "src": "resources/css/login.css",
+    "isEntry": true,
+    "names": [
+      "login.css"
+    ]
+  },
+  "resources/css/userprofile.css": {
+    "file": "assets/userprofile-3x-SK2R4.css",
+    "src": "resources/css/userprofile.css",
+    "isEntry": true,
+    "names": [
+      "userprofile.css"
+    ]
+  },
+  "resources/js/addalbum.js": {
+    "file": "assets/addalbum-klHHth4K.js",
+    "name": "addalbum",
+    "src": "resources/js/addalbum.js",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-Bj43h_rG.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}

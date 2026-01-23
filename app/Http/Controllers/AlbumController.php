@@ -16,7 +16,7 @@ class AlbumController extends Controller
             'label' => 'required',
             'release_date' => 'required',
             'country' => 'required',
-            'cover' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+            'cover' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
             'format' => 'nullable',
             'notes' => 'nullable'
         ]);
@@ -35,20 +35,18 @@ class AlbumController extends Controller
 
         $incomingFields = $request->validate([
             'tracks' => 'required|array|min:1',
-            'tracks.*.position' => 'nullable',
-            'tracks.*.artist' => 'nullable',
-            'tracks.*.song_title' => 'nullable',
-            'tracks.*.duration' => 'nullable'
         ]);
 
 
         foreach ($incomingFields['tracks'] as $data) {
-            $album->tracks()->create([
-                'position' => $data['position'],
-                'artist' => $data['artist'],
-                'song_title' => $data['song_title'],
-                'duration' => $data['duration'],
-            ]);
+            if ($data['position'] !== null && $data['artist'] !== null && $data['song_title'] !== null && $data['duration'] !== null) {
+                $album->tracks()->create([
+                    'position' => $data['position'],
+                    'artist' => $data['artist'],
+                    'song_title' => $data['song_title'],
+                    'duration' => $data['duration'],
+                ]);
+            }
         }
         return redirect('/');
     }
