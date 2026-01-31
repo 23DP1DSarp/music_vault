@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @vite(['resources/css/app.css'])
-    <title>Main page</title>
+    @vite(['resources/css/catalog.css'])
+    <title>Catalog</title>
 </head>
 <body>
     <nav>
         <div id="navwrapper">
         <a href="/">
             <div id="logo">
-                <img src="/images/nav_images/vinyl_icon.svg">
+                <img src="images/nav_images/vinyl_icon.svg">
                 <p>MusicVault</p>
             </div>
         </a>
+
         <div id="navbuttons">
             <ul>
-                <li><a href="/showcatalog">Catalog</a></li>
+                <li><a href="/showcatalog"><b>Catalog</b></a></li>
                 <li>Genres</li>
                 <li>Artists</li>
                 <li>Forums</li>
@@ -47,80 +48,77 @@
 
 
     <main>
-        <div id="hero_section">
-            <div id="left_side">
-                <h1>Discover Your Next Favorite Record</h1>
-                <p id="subtext">From rare pressings to the latest releases. Curated vinyl records for every music lover.</p>
-
-                <div id="hero_buttons">
-                    <button id="shop_button">Shop New Releases</button>
-                    <button id="browse_button">Browse Collection</button>
+        
+       <form id="filters">
+        <h1>Filters</h1>
+            <div id="genre_filters">
+                <h2>Genre</h2>
+                <div class="genre_filter">
+                    <input type="checkbox" name="genre1" value="Rock">
+                    <label for="genre1"> Rock</label>
                 </div>
-
-                <div id="stats">
-                    <div class="stat">
-                        <h2>10K+</h2>
-                        <p>Records in Stock</p>
-                    </div>
-
-                    <div class="stat">
-                        <h2>500+</h2>
-                        <p>Artists</p>
-                    </div>
-
-                    <div class="stat">
-                        <h2>50+</h2>
-                        <p>Genres</p>
-                    </div>
+                <div class="genre_filter">
+                    <input type="checkbox" name="genre2" value="Jazz">
+                    <label for="genre2"> Jazz</label>
+                </div>
+                <div class="genre_filter">
+                    <input type="checkbox" name="genre3" value="Electronic">
+                    <label for="genre3"> Electronic</label>
+                </div>
+                <div class="genre_filter">
+                    <input type="checkbox" name="genre4" value="Pop">
+                    <label for="genre4"> Pop</label>
+                </div>
+                <div class="genre_filter">
+                    <input type="checkbox" name="genre5" value="Hip-Hop">
+                    <label for="genre5"> Hip-Hop</label>
+                </div>
+                <div class="genre_filter">
+                    <input type="checkbox" name="genre6" value="Classical">
+                    <label for="genre6"> Classical</label>
                 </div>
             </div>
 
-            <div id="right_side">
-                <img src="images/main_page_images/Vinyl_records_collection.png">
+            <div id="price_range_filters">
+                <h2>Price Range</h2>
+                <div id="price_range_filters_inputs">
+                    <input type="text" name="min">
+                    <p> - </p>
+                    <input type="text" name="max"> 
+                </div>
             </div>
 
-        </div>
-
-
-        <div id="record_browse">
-            <h4>Browse Records</h4>
-            <p id="results_count">6 records found</p>
-
-            <div id="filters">
-                <form action="/show_albums" method="GET">
-                    <label>Genre:</label>
-                    <button class="form_button">All</button>
-                    <button class="form_button" type="submit" name="genre" value="Rock">Rock</button>
-                    <button class="form_button" name="genre" value="Jazz">Jazz</button>
-                    <button class="form_button" name="genre" value="Electronic">Electronic</button>
-                    <button class="form_button" name="genre" value="Pop">Pop</button>
-                    <button class="form_button" name="genre" value="Hip-Hop">Hip-Hop</button>
-                    <button class="form_button" name="genre" value="Classical">Classical</button>
-
-                    <label>Condition:</label>
-                    <select name="condition" id="condtion_select">
-                        <option value="brand_new">Brand New</option>
-                        <option value="new">New</option>
-                        <option value="used">Used</option>
-                    </select>
-
-                    <label>Sort By:</label>
-                    <select name="sort" id="sort_select">
-                        <option>Name: A-Z</option>
-                        <option>Name: Z-A</option>
-                        <option>Price: Highest</option>
-                        <option>Price: Lowest</option>
-                    </select>
-                </form>
-
-                
-
-
+            <div id="decade_filters">
+                <h2>Decade</h2>
+                <div class="decade_filter">
+                    <input type="checkbox" name="decade1" value="2020">
+                    <label for="decade1"> 2020</label>
+                </div>
+                <div class="decade_filter">
+                    <input type="checkbox" name="decade2" value="2010">
+                    <label for="decade2"> 2010</label>
+                </div>
+                <div class="decade_filter">
+                    <input type="checkbox" name="decade3" value="2000">
+                    <label for="decade3"> 2000</label>
+                </div>
+                <div class="decade_filter">
+                    <input type="checkbox" name="decade4" value="1990">
+                    <label for="decade4"> 1990</label>
+                </div>
+                <div class="decade_filter">
+                    <input type="checkbox" name="decade5" value="1980">
+                    <label for="decade5"> 1980</label>
+                </div>
+                <div class="decade_filter">
+                    <input type="checkbox" name="decade6" value="1970">
+                    <label for="decade6"> 1970</label>
+                </div>
             </div>
-        </div>
+       </form>
 
-        <div id="albums">
-            <h2>All Albums</h2>
+       <div id="albums">
+            <h1>Catalog</h1>
             <div id="album_cards">
             @forelse ($albums as $album)
                 <div id="album_data">
@@ -134,14 +132,14 @@
                     <p>&nbsp;•&nbsp;</p>
                     <p>{{date('Y', strtotime($album['release_date']))}}</p>
                     </div>
-                    <form action="/add_to_collection/{{$album->id}}" method="POST">@csrf<button id="add_to_collection_btn">Add to collection</button></form>
                 </div>
             @empty
             <p>No albums found.</p>
             @endforelse
             </div>
+            </div>
         </div>
-    </div>
+
     </main>
 
     <footer>

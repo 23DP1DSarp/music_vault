@@ -115,80 +115,120 @@ nav {
 main {
   width: 80vw;
   margin: 0 auto;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  display: flex;
+  flex-direction: row;
+  gap: 150px;
+  padding-bottom: 50px;
 }
 
-#profile_main {
+#album_section {
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+}
+
+#album_info {
     display: flex;
     flex-direction: row;
-    gap: 40px;
-    margin-top: 30px;
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+#album_cover {
+  width: 250px;
+  height: 250px;
+  border-radius: 16px;
+}
+
+#tracklist  {
+  background-color: #ECECF0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 35px;
+  padding-right: 35px;
+}
+
+#tracklist h4 {
+  padding-bottom: 20px;
+}
+
+#tracklist p {
+  padding-bottom: 15px;
 }
 
 
-#profile_info {
-    width: 250px;
+.track_data {
+  display: flex;
+  flex-direction: row;
+  margin-left: 35px;
+  margin-right: 35px;
+  justify-content: space-between;
+}
+
+.duration {
+  text-align: right;
+}
+
+#album_data {
     height: fit-content;
-    padding: 20px;
-    border: #ECECF0 solid 1px;
-    border-radius: 8px;
-    font-size: 16px;
-    line-height: 20px;
-    letter-spacing: 0px;
-    color: #0A0A0A;
+    width: 300px;
+    margin-top: 50px;
     background-color: #ECECF0;
+    border-radius: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 21.440px;
 }
 
-#album_collection {
-    width: 100%;
-    height: fit-content;
-    padding: 20px;
-    border: #ECECF0 solid 1px;
-    border-radius: 8px;
-    font-size: 16px;
-    line-height: 20px;
-    letter-spacing: 0px;
-    color: #0A0A0A;
+#album_data h1 {
+  padding-bottom: 20px;
 }
 
-#filters {
-    width: 100%;
-    height: fit-content;
-    padding: 0px 0px 0px 0px;
-    display: flex;
-    flex-direction: row;
-    border: #ECECF0 solid 1px;
-    border-radius: 8px;
-    font-size: 16px;
-    line-height: 20px;
-    letter-spacing: 0px;
-    color: #0A0A0A;
-    background-color: #ECECF0;
+#album_data p {
+  padding-bottom: 10px;
 }
 
-.filter_btn {
-    font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: transparent;
-    border-style: solid;
-    border: #030213 1px;
-    border-radius: 8px;
-    padding: 6px 12px 6px 12px;
-    font-size: 16px;
-    line-height: 20px;
-    letter-spacing: 0px;
-    cursor: pointer;
+#button_sec {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.album_card {
-    width: 100%;
-    height: 200px;
-    padding: 20px 0px 20px 0px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: row;
-    gap: 33px;
+#add_to_cart_btn {
+  width: 100%;
+  height: 40px;
+  background-color: #030213;
+  color: #FFFFFF;
+  border-style: none;
+  border-radius: 8px;
+  text-align: center;
+  vertical-align: middle;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:18px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  cursor: pointer;
 }
+
+#add_to_collection_btn {
+  width: 100%;
+  height: 40px;
+  background-color: #FFFFFF;
+  color: #0A0A0A;
+  border: solid rgba(0, 0, 0, .1) 1px;
+  border-radius: 8px;
+  text-align: center;
+  vertical-align: middle;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:18px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  cursor: pointer;
+}
+
+
 
 footer {
   border-top: solid #ECECF0 1px;

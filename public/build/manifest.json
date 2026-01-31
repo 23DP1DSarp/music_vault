@@ -1,6 +1,6 @@
 {
   "resources/css/addalbum.css": {
-    "file": "assets/addalbum-BxGk3tsG.css",
+    "file": "assets/addalbum-PSQFKV9v.css",
     "src": "resources/css/addalbum.css",
     "isEntry": true,
     "names": [
@@ -8,15 +8,23 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-COwyR4_Z.css",
+    "file": "assets/app-B7Tszyk5.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
       "app.css"
     ]
   },
+  "resources/css/catalog.css": {
+    "file": "assets/catalog-BidwsdxJ.css",
+    "src": "resources/css/catalog.css",
+    "isEntry": true,
+    "names": [
+      "catalog.css"
+    ]
+  },
   "resources/css/login.css": {
-    "file": "assets/login-DRrI7wvX.css",
+    "file": "assets/login-fg3J-GTB.css",
     "src": "resources/css/login.css",
     "isEntry": true,
     "names": [
@@ -24,7 +32,7 @@
     ]
   },
   "resources/css/userprofile.css": {
-    "file": "assets/userprofile-3x-SK2R4.css",
+    "file": "assets/userprofile-BYpetdRk.css",
     "src": "resources/css/userprofile.css",
     "isEntry": true,
     "names": [
@@ -32,7 +40,7 @@
     ]
   },
   "resources/js/addalbum.js": {
-    "file": "assets/addalbum-klHHth4K.js",
+    "file": "assets/addalbum-aAMIGxAE.js",
     "name": "addalbum",
     "src": "resources/js/addalbum.js",
     "isEntry": true

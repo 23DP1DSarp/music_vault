@@ -23,12 +23,12 @@ a:visited {
 
 
 nav {
+  width: 80vw;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-left: 200px;
-  margin-right: 200px;
+  margin: 0 auto;
   padding: 0;
   font-size: 19.53px;
   line-height: 28px;
@@ -54,7 +54,7 @@ ul {
 }
 
 main {
-  width: 400px;
+  width: 20vw;
   padding-top: 65px;
   padding-bottom: 65px;
   margin: 0 auto;

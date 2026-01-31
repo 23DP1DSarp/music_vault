@@ -115,79 +115,116 @@ nav {
 main {
   width: 80vw;
   margin: 0 auto;
-  padding-top: 40px;
-  padding-bottom: 40px;
-}
-
-#profile_main {
-    display: flex;
-    flex-direction: row;
-    gap: 40px;
-    margin-top: 30px;
-}
-
-
-#profile_info {
-    width: 250px;
-    height: fit-content;
-    padding: 20px;
-    border: #ECECF0 solid 1px;
-    border-radius: 8px;
-    font-size: 16px;
-    line-height: 20px;
-    letter-spacing: 0px;
-    color: #0A0A0A;
-    background-color: #ECECF0;
-}
-
-#album_collection {
-    width: 100%;
-    height: fit-content;
-    padding: 20px;
-    border: #ECECF0 solid 1px;
-    border-radius: 8px;
-    font-size: 16px;
-    line-height: 20px;
-    letter-spacing: 0px;
-    color: #0A0A0A;
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  padding-bottom: 50px;
 }
 
 #filters {
-    width: 100%;
-    height: fit-content;
-    padding: 0px 0px 0px 0px;
-    display: flex;
-    flex-direction: row;
-    border: #ECECF0 solid 1px;
-    border-radius: 8px;
-    font-size: 16px;
-    line-height: 20px;
-    letter-spacing: 0px;
-    color: #0A0A0A;
-    background-color: #ECECF0;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
-.filter_btn {
-    font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: transparent;
-    border-style: solid;
-    border: #030213 1px;
-    border-radius: 8px;
-    padding: 6px 12px 6px 12px;
-    font-size: 16px;
-    line-height: 20px;
-    letter-spacing: 0px;
-    cursor: pointer;
+#filters h1 {
+  font-size: 24px;
 }
 
-.album_card {
-    width: 100%;
-    height: 200px;
-    padding: 20px 0px 20px 0px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: row;
-    gap: 33px;
+#filters h2 {
+  font-size: 18px;
+  margin-top: 0;
+}
+
+#filters input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+.genre_filter, .decade_filter {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+
+#price_range_filters_inputs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  height: 25px;
+}
+
+#price_range_filters_inputs input{
+  width: 100px;
+  height: 20px;
+}
+
+#albums h1 {
+  font-size: 24px;
+  padding-bottom: 30px;
+}
+
+#album_cards {
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+  width: fit-content;
+  margin-bottom: 50px;
+}
+
+#album_data {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 220px;
+  height: 325px;
+  border: solid #E4E4E4 1px;
+  border-radius: 14px;
+}
+
+#album_data img {
+  width: 100%;
+  height: 220px;
+  border-radius: 14px;
+}
+
+#album_data h3 {
+  font-size: 20px;
+  line-height: 24px;
+  margin: 0;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+#album_data p {
+  margin: 0;
+  margin-left: 15px;
+  font-size: 16px;
+  line-height: 20px;
+  color: #717182;
+}
+
+#genre_and_year {
+  display: flex;
+  flex-direction: row;
+}
+
+.form_button {
+  height: 32px;
+  background-color: #FFFFFF;
+  border: solid rgba(0, 0, 0, .1) 1px;
+  border-radius: 8px;
+  padding: 15px;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:14px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
 }
 
 footer {

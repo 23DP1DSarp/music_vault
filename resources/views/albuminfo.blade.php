@@ -9,10 +9,12 @@
 <body>
      <nav>
         <div id="navwrapper">
-        <div id="logo">
-            <img src="/images/nav_images/vinyl_icon.svg">
-            <p>MusicVault</p>
-        </div>
+        <a href="/">
+            <div id="logo">
+                <img src="/images/nav_images/vinyl_icon.svg">
+                <p>MusicVault</p>
+            </div>
+        </a>
 
         <div id="navbuttons">
             <ul>
@@ -55,7 +57,43 @@
                 </div>
             </div>
 
-        <div id="album_data">
+            <h1>Tracklist</h1>
+            <div id="tracklist">
+                <div id="track_position_col">
+                    <h4 id="track_position_title">№</h4>
+                    @foreach ($tracks as $track)
+                    <p class="track_nr">{{$track->position}}</p>
+                    @endforeach
+                </div>
+
+                <div id="track_title_col">
+                    <h4 id="track_title">Title</h4>
+                    @foreach ($tracks as $track)
+                    <p class="title">{{$track->song_title}}</p>
+                    @endforeach
+                </div>
+
+                <div id="track_artist_col">
+                    <h4 id="artist_title">Artist</h4>
+                    @foreach ($tracks as $track)
+                    <p class="artist">{{$track->artist}}</p>
+                    @endforeach
+                </div>
+
+                <div id="track_duration_col">
+                    <h4 id="duration_title">Duration</h4>
+                    @foreach ($tracks as $track)
+                    <p class="duration">{{$track->duration}}</p>
+                    @endforeach
+                </div>
+                
+            </div>
+            
+
+        </div>
+
+            <div id="album_data">
+                <h1>Album data</h1>
                 <p id="author">Author: {{$album->author}}</p>
                 <p id="release_date">Release date: {{$album->release_date}}</p>
                 <p id="country">Country: {{$album->country}}</p>
@@ -69,29 +107,6 @@
                     <button id="add_to_cart_btn">Add to cart</button>
                     <form action="/add_to_collection/{{$album->id}}" method="POST">@csrf<button id="add_to_collection_btn">Add to collection</button></form>
                 </div>
-            </div>
-
-        </div>
-
-            <h1>Tracklist</h1>
-            <div id="tracklist">
-                <div id="tracklist_titles">
-                    <h4>№</h4>
-                    <h4>Title</h4>
-                    <h4>Artist</h4>
-                    <h4>Duration</h4>
-                </div>
-                @foreach ($tracks as $track)
-                    
-                
-                <div class="track_data">
-                    <p class="track_nr">{{$track->position}}</p>
-                    <p class="title">{{$track->song_title}}</p>
-                    <p class="artist">{{$track->artist}}</p>
-                    <p class="duration">{{$track->duration}}</p>
-                </div>
-                @endforeach
-                
             </div>
 
             

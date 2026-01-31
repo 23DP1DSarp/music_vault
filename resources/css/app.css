@@ -26,12 +26,11 @@ nav {
 }
 
 #navwrapper {
-  width: 78.125vw;
+  width: 80vw;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-left: 200px;
-  margin-right: 200px;
+  margin: 0 auto;
   padding: 0;
   font-size: 19.53px;
   color: #0A0A0A;

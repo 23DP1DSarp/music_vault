@@ -32,6 +32,11 @@ Route::get('/showaddalbum', function() {
     return view('addalbum');
 });
 
+Route::get('/showcatalog', function () {
+    $albums = Album::all();
+    return view('catalog', ['albums' => $albums]);
+});
+
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');

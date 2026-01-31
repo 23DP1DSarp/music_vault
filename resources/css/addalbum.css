@@ -26,12 +26,11 @@ nav {
 }
 
 #navwrapper {
-  width: 1500px;
+  width: 80vw;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-left: 200px;
-  margin-right: 200px;
+  margin: 0 auto;
   padding: 0;
   font-size: 19.53px;
   color: #0A0A0A;
@@ -114,6 +113,7 @@ nav {
 }
 
 main {
+  width: 80vw;
   padding-top: 65px;
   padding-bottom: 65px;
   margin: 0 auto;
@@ -127,11 +127,10 @@ main h1 {
 #form_wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 85px;
   width: fit-content;
   align-items: start;
   margin: 0 auto;
-  gap: 85px;
 }
 
 #add_album_with_tracks {
@@ -145,6 +144,7 @@ main h1 {
   display: flex;
   flex-direction: row;
   gap: 150px;
+  padding-bottom: 100px;
 }
 
 #input_side {

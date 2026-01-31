@@ -8,10 +8,12 @@
 </head>
 <body>
     <nav>
-        <div id="logo">
-            <img src="images/nav_images/vinyl_icon.svg">
-            <p>MusicVault</p>
-        </div>
+        <a href="/">
+            <div id="logo">
+                <img src="/images/nav_images/vinyl_icon.svg">
+                <p>MusicVault</p>
+            </div>
+        </a>
 
         <a href="/showsignup">Sign Up</a>
        
@@ -62,10 +64,10 @@
                 </p>
 
                 <div id="icons">
-                    <img class="icon" src="images/facebook_icon.svg">
-                    <img class="icon" src="images/instagram_icon.svg">
-                    <img class="icon" src="images/twitter_icon.svg">
-                    <img class="icon" src="images/youtube_icon.svg">
+                    <img class="icon" src="/images/footer_images/facebook_icon.svg">
+                    <img class="icon" src="/images/footer_images/instagram_icon.svg">
+                    <img class="icon" src="/images/footer_images/twitter_icon.svg">
+                    <img class="icon" src="/images/footer_images/youtube_icon.svg">
                 </div>
                 
             </div>
