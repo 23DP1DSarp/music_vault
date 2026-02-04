@@ -7,6 +7,15 @@
       "addalbum.css"
     ]
   },
+  "resources/css/albumoffers.css": {
+    "file": "assets/albumoffers-CLgrqPKZ.css",
+    "src": "resources/css/albumoffers.css",
+    "isEntry": true,
+    "names": [
+      "albumoffers.css",
+      "sellersform.css"
+    ]
+  },
   "resources/css/app.css": {
     "file": "assets/app-B7Tszyk5.css",
     "src": "resources/css/app.css",
@@ -29,6 +38,15 @@
     "isEntry": true,
     "names": [
       "login.css"
+    ]
+  },
+  "resources/css/sellersform.css": {
+    "file": "assets/albumoffers-CLgrqPKZ.css",
+    "src": "resources/css/albumoffers.css",
+    "isEntry": true,
+    "names": [
+      "albumoffers.css",
+      "sellersform.css"
     ]
   },
   "resources/css/userprofile.css": {

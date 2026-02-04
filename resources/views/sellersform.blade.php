@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Add Album</title>
+    @vite(['resources/css/sellersform.css'])
+    <title>Sellers Form</title>
 </head>
 <body>
     <nav>
@@ -15,13 +15,15 @@
                 <p>MusicVault</p>
             </div>
         </a>
-
         <div id="navbuttons">
             <ul>
-                <li>New Releases</li>
+                <li><a href="/showcatalog">Catalog</a></li>
                 <li>Genres</li>
                 <li>Artists</li>
                 <li>Forums</li>
+                @auth
+                <li><a href="/showaddalbum">Add Album</a></li>
+                @endauth
             </ul>
         </div>
 
@@ -30,7 +32,7 @@
             <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
             <img id="shoppingcart" src="images/nav_images/shopping_cart_icon.svg">
             @auth
-            <p>{{Auth::user()->name}}</p>
+            <a href="/showprofile">{{Auth::user()->name}}</a>
             <form action="/logout" method="POST">
                 @csrf
                 <button id="logoutbtn">Log out</button>
@@ -42,77 +44,52 @@
         </div>
     </div>
     </nav>
+
+
     <main>
-        @auth
-        <h1>Add Album</h1>
-        <div id="form_wrapper">
-        
-            <form id="add_album_with_tracks" action="/add_album_with_tracks" method="POST" enctype="multipart/form-data">
-            @csrf
-                <div id="album_wrapper">
-                    <div id="input_side">
-                        <label>Title</label>
-                        <input class="album_input" name="title" type="text">
-                        <label>Author</label>
-                        <input class="album_input" name="author" type="text">
-                        <label>Genre</label>
-                        <input class="album_input" name="genre" type="text">
-                        <label>Label</label>
-                        <input class="album_input" name="label" type="text">
-                        <label>Date of release</label>
-                        <input class="album_input" name="release_date" type="date">
-                        <label>Country</label>
-                        <input class="album_input" name="country" type="text">
-                        <label>Notes</label>
-                        <input class="album_input" name="notes" type="textarea">
-                    </div>
-                        
-                        <div id="album_cover_side">
-                            <label>Cover</label>
-                            <input name="cover" type="file" accept="image/*">
-                        </div>
+        <h1>Seller’s Form</h1>
+
+        <form id="sellers_form" action="/login" method="post">
+                @csrf
+                <div class="form_parts">
+                    <label>Type of Business</label>
+                    <input name="type_of_business" type="name">
                 </div>
-            
-            
-            
-            
-                        
-                        <h1>Track List</h1>
-                        
-                        
-                        <div id="track_list">
-                            @for ($i = 0; $i < 5; $i++)
-                            <div class="track_info">
-                                <div class="input_labels">
-                                    <label>Track Nr.</label>
-                                    <input type="number" class="track_nr" name="tracks[{{ $i }}][position]">
-                                </div>
-                                <div class="input_labels">
-                                    <label>Author</label>
-                                    <input type="text" class="author" name="tracks[{{ $i }}][artist]">
-                                </div>
-                                <div class="input_labels">
-                                    <label>Title</label>
-                                    <input type="text" class="title" name="tracks[{{ $i }}][song_title]">
-                                </div>
-                                <div class="input_labels">
-                                    <label>Duration</label>
-                                    <input type="text" class="duration" name="tracks[{{ $i }}][duration]"> 
-                                </div><div class="error_box"[{{ $i }}]></div>
-                            </div>
-                            @endfor
-                        </div>
-                <p id="add_more_tracks">+ Add more tracks</p> 
-                <input id="submit_btn" type="submit" value="Add Album">        
-                </form>
-            </div> 
-                
-            
-        
-        @else
-        <h1>This page is only for registered users.</h1>
-        @endauth
+
+                <div class="form_parts">
+                    <label>Currency</label>
+                    <input name="currency" type="text">
+                </div>
+
+                <div class="form_parts">
+                    <label>Full Name</label>
+                    <input name="full_name" type="text">
+                </div>
+
+                <div class="form_parts">
+                    <label>Shipping Address</label>
+                    <input name="shipping_address" type="text">
+                </div>
+
+                <div class="form_parts">
+                    <label>Minimum Order Total</label>
+                    <input name="min_order_total" type="text">
+                </div>
+
+                <div class="form_parts">
+                    <label>Seller Terms</label>
+                    <input name="seller_terms" type="text">
+                </div>
+
+                <div class="form_parts">
+                    <input id="submit_btn" type="submit" value="Log In">
+                </div>
+
+        </form>
     </main>
+
+
+
 
     <footer>
         <div id="footer_wrapper">
@@ -188,6 +165,6 @@
         </div>
         </div>
     </footer>
-@vite(['resources/css/addalbum.css', 'resources/js/addalbum.js'])
+
 </body>
 </html>

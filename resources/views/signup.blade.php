@@ -68,7 +68,7 @@
         <div id="footer_top">
             <div id="footer_info">
                 <div id="footer_logo">
-                    <img src="images/footer_images/vinyl_icon.svg">
+                    <img src="/images/footer_images/vinyl_icon.svg">
                     <p>MusicVault</p>
                 </div>
                 <p id="footer_info_text">

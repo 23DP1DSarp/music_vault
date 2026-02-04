@@ -14,6 +14,11 @@ Route::get('/', function () {
     return view('main', ['albums' => $albums]);
 });
 
+Route::get('/getalbums', function () {
+    return Album::all();
+});
+
+
 Route::post('/register', [UserController::class, 'register']);
 
 Route::post('/logout', [UserController::class, 'logout']);
@@ -87,4 +92,32 @@ Route::get('/album_info/{album}', function(Album $album) {
     ->where('album_id', '=', $album->id)
     ->get();
     return view('albuminfo', ['album' => $album, 'tracks' => $tracks]);
+});
+
+
+Route::get('/albumoffers/{album}', function(Album $album) {
+    $album = DB::table('albums')
+    ->where('id', '=', $album->id)
+    ->first();
+
+    $collections = DB::table('collections')
+    ->where('user_id', '=', auth()->id())
+    ->join('albums', 'albums.id', '=', 'collections.album_id')
+    ->join('users', 'users.id', '=', 'collections.user_id')
+    ->select(
+        'collections.*',
+        'albums.title as title',
+        'albums.cover as cover',
+        'albums.author as author',
+        'albums.genre as genre',
+        'albums.release_date as release_date',
+    )
+    ->get();
+
+    return view('albumoffers', ['album' => $album, 'collections' => $collections]);
+});
+
+
+Route::get('/showsellersform', function () {
+    return view('sellersform');
 });

@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile page</title>
-    @vite(['resources/css/userprofile.css'])
+    <title>Album Offers</title>
+    @vite(['resources/css/albumoffers.css'])
 </head>
 <body>
-    <nav>
+     <nav>
         <div id="navwrapper">
         <a href="/">
             <div id="logo">
@@ -31,14 +31,14 @@
         <div id="rightbuttons">
             
             <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
-            <img id="shoppingcart" src="images/nav_images/shopping_cart_icon.svg">
+            <img id="shoppingcart" src="/images/nav_images/shopping_cart_icon.svg">
             @auth
-            <p>{{Auth::user()->name}}</p>
+            <a href="/showprofile">{{Auth::user()->name}}</a>
             <form action="/logout" method="POST">
                 @csrf
                 <button id="logoutbtn">Log out</button>
             </form>
-           @else
+            @else
             <a href="/showlogin">Log In</a>
             <a href="/showsignup">Sign Up</a>
             @endauth
@@ -46,23 +46,89 @@
     </div>
     </nav>
 
+
     <main>
-        <div id="profile_head">
-            <img>
-                <h2>{{Auth::user()->name}}</h2>
+        <div id="album_info">
+                <img id="album_cover" src="{{ asset('storage/'.$album->cover) }}">
+                <div id="album_text_info">
+                    <h1>{{$album->title}} - {{$album->author}}</h1>
+                    <p>{{$album->notes}}</p>
+                </div>
         </div>
 
-        <div id="profile_main">
-            <aside id="profile_info">
-                <h3>Profile Information</h3>
-                <p><strong>Member Since: </strong><br>{{Auth::user()->created_at->format('M d, Y')}}</p>
-                <p><strong>Birthday: </strong> </p>
-                <p><strong>Country: </strong> </p>
-                <p><strong>Albums added: </strong> </p>
-                <p><strong>Comments written: </strong> </p>
-            </aside>
 
-            <div id="album_collection">
+        <div id="offers_section">
+
+            <form id="filters">
+                <h1>Filters</h1>
+                    <div id="genre_filters">
+                        <h2>Genre</h2>
+                        <div class="genre_filter">
+                            <input type="checkbox" name="genre1" value="Rock">
+                            <label for="genre1"> Rock</label>
+                        </div>
+                        <div class="genre_filter">
+                            <input type="checkbox" name="genre2" value="Jazz">
+                            <label for="genre2"> Jazz</label>
+                        </div>
+                        <div class="genre_filter">
+                            <input type="checkbox" name="genre3" value="Electronic">
+                            <label for="genre3"> Electronic</label>
+                        </div>
+                        <div class="genre_filter">
+                            <input type="checkbox" name="genre4" value="Pop">
+                            <label for="genre4"> Pop</label>
+                        </div>
+                        <div class="genre_filter">
+                            <input type="checkbox" name="genre5" value="Hip-Hop">
+                            <label for="genre5"> Hip-Hop</label>
+                        </div>
+                        <div class="genre_filter">
+                            <input type="checkbox" name="genre6" value="Classical">
+                            <label for="genre6"> Classical</label>
+                        </div>
+                    </div>
+
+                    <div id="price_range_filters">
+                        <h2>Price Range</h2>
+                        <div id="price_range_filters_inputs">
+                            <input type="text" name="min">
+                            <p> - </p>
+                            <input type="text" name="max"> 
+                        </div>
+                    </div>
+
+                    <div id="decade_filters">
+                        <h2>Decade</h2>
+                        <div class="decade_filter">
+                            <input type="checkbox" name="decade1" value="2020">
+                            <label for="decade1"> 2020</label>
+                        </div>
+                        <div class="decade_filter">
+                            <input type="checkbox" name="decade2" value="2010">
+                            <label for="decade2"> 2010</label>
+                        </div>
+                        <div class="decade_filter">
+                            <input type="checkbox" name="decade3" value="2000">
+                            <label for="decade3"> 2000</label>
+                        </div>
+                        <div class="decade_filter">
+                            <input type="checkbox" name="decade4" value="1990">
+                            <label for="decade4"> 1990</label>
+                        </div>
+                        <div class="decade_filter">
+                            <input type="checkbox" name="decade5" value="1980">
+                            <label for="decade5"> 1980</label>
+                        </div>
+                        <div class="decade_filter">
+                            <input type="checkbox" name="decade6" value="1970">
+                            <label for="decade6"> 1970</label>
+                        </div>
+                    </div>
+            </form>
+
+
+            <div id="offers_list">
                 <h3>Collection</h3>
                 <div id="filters">
                     <button class="filter_btn">Title</button>
@@ -84,8 +150,8 @@
                 @empty
                 <p>No albums found.</p>
                 @endforelse
-                </div>
             </div>
+
         </div>
     </main>
 
@@ -163,5 +229,6 @@
         </div>
         </div>
     </footer>
+
 </body>
 </html>
