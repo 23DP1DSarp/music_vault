@@ -8,23 +8,49 @@ return new class extends Migration
 {
     public function up(): void
     {
+
+        Schema::create('genres', function(Blueprint $table) {
+            $table->id();
+            $table->string('genre_title');
+        });
+
+        Schema::create('countries', function(Blueprint $table) {
+            $table->id();
+            $table->string('country_name');
+        });
+
         Schema::create('albums', function(Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('title');
             $table->string('author');
-            $table->string('genre');
+            $table->foreignId('genre_id')->constrained()->onDelete('cascade');
             $table->string('label')->nullable();
             $table->date('release_date');
-            $table->string('country')->nullable();
+            $table->foreignId('country_id')->constrained()->onDelete('cascade');
             $table->string('cover')->nullable();
-            $table->string('format')->nullable();
             $table->text('notes')->nullable();
+        });
+
+        Schema::create('formats', function(Blueprint $table) {
+            $table->id();
+            $table->string('format_name');
+        });
+
+        Schema::create('album_formats', function(Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->foreignId('album_id')->constrained()->onDelete('cascade');
+            $table->foreignId('format_id')->constrained()->onDelete('cascade');
         });
     }
 
     public function down(): void
-    {
+    {   
+        Schema::dropIfExists('genres');
+        Schema::dropIfExists('countries');
         Schema::dropIfExists('albums');
+        Schema::dropIfExists('formats');
+        Schema::dropIfExists('album_formats');
     }
 };
