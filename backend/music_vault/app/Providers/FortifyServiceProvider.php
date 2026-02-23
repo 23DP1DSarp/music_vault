@@ -2,19 +2,19 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Laravel\Fortify\Fortify;
 use App\Actions\Fortify\CreateNewUser;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Cache\RateLimiting\Limit;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
-use Illuminate\Support\Facades\RateLimiter;
-use Laravel\Fortify\Contracts\LogoutResponse;
-use Laravel\Fortify\Contracts\RegisterResponse;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
+use Laravel\Fortify\Contracts\RegisterResponse;
+use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -26,7 +26,7 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->instance(RegisterResponse::class, new class implements RegisterResponse {
             public function toResponse($request)
             {
-                return redirect('/');
+                return response()->json(['message' => 'Registration successful']);
             }
         });
     }
@@ -50,6 +50,13 @@ class FortifyServiceProvider extends ServiceProvider
 
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
+        });
+
+        VerifyEmail::createUrlUsing(function ($notifiable) {
+        return config('app.frontend_url') .
+               '/email/verify/' .
+               $notifiable->getKey() . '/' .
+               sha1($notifiable->getEmailForVerification());
         });
     }
 }

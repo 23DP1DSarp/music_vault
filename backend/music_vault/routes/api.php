@@ -102,3 +102,19 @@ Route::get('/getcollection', [CollectionController::class, 'getCollection']);
 Route::get('/ordercollectionalbums', [CollectionController::class, 'orderCollectionAlbums']);
 
 Route::post('/createseller', [App\Http\Controllers\SellerController::class, 'createSeller']);
+
+Route::post('/email/verification-notification', function(Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return response()->json(['status' => 'verification-link-sent']);
+})->middleware(['auth:sanctum', 'throttle:6,1']);
+
+Route::get('/email/verify/{id}/{hash}', function ($id, $hash) {
+    $user = User::findOrFail($id);
+
+    if (! hash_equals((string) $hash, sha1($user->email))) {
+        return response()->json(['message' => 'Invalid verification'], 403);
+    }
+
+    $user->markEmailAsVerified();
+    return response()->json(['message' => 'Email verified!']);
+});
