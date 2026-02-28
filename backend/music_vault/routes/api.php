@@ -1,5 +1,7 @@
 <?php
 
+use App\Actions\Fortify\UpdateUserPassword;
+use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\CollectionController;
 use App\Models\Album;
@@ -117,4 +119,31 @@ Route::get('/email/verify/{id}/{hash}', function ($id, $hash) {
 
     $user->markEmailAsVerified();
     return response()->json(['message' => 'Email verified!']);
+});
+
+Route::middleware('auth:sanctum')->put('/change-user-info', function (
+    Request $request,
+    UpdateUserProfileInformation $updater
+) {
+    $updater->update($request->user(), $request->all());
+
+    return response()->json([
+        'message' => 'Profile updated successfully'
+    ]);
+});
+
+Route::middleware('auth:sanctum')->put('/reset-password', function (
+    Request $request,
+    UpdateUserPassword $updater
+) {
+    $updater->update($request->user(), $request->all());
+
+    return response()->json([
+        'message' => 'Password updated successfully'
+    ]);
+});
+
+Route::delete('/delete-account', function (Request $request) {
+    $user = $request->user();
+    $user->delete();
 });

@@ -8,7 +8,8 @@ import AlbumInfo from '@/views/AlbumInfo.vue'
 import UserProfile from '@/views/UserProfile.vue'
 import AlbumOffers from '@/views/AlbumOffers.vue'
 import SellerForm from '@/views/SellerForm.vue'
-import EmailVerification from '@/views/EmailVerification.vue'
+import EmailVerification from '@/views/auth/EmailVerification.vue'
+import ProfileSettings from '@/views/ProfileSettings.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -62,6 +63,11 @@ const router = createRouter({
       path: '/email/verify/:id/:hash',
       name: 'emailverification',
       component: EmailVerification,
+    },
+     {
+      path: '/profilesettings',
+      name: 'profilesettings',
+      component: ProfileSettings,
     },
   ],
 })
