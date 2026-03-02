@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('goods', function (Blueprint $table) {
+        Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->enum('category', ['album', 'instrument', 'service']);
@@ -25,19 +25,19 @@ return new class extends Migration
 
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('good_id')->constrained()->onDelete('cascade');
+            $table->foreignId('item_id')->constrained()->onDelete('cascade');
             $table->integer('duration');
         });
 
-        Schema::create('album_goods', function (Blueprint $table) {
+        Schema::create('album_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('album_id')->constrained()->onDelete('cascade');
-            $table->foreignId('good_id')->constrained()->onDelete('cascade');
+            $table->foreignId('item_id')->constrained()->onDelete('cascade');
         });
 
         Schema::create('instruments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('good_id')->constrained()->onDelete('cascade');
+            $table->foreignId('item_id')->constrained()->onDelete('cascade');
             $table->string('model');
             $table->string('type');
         });
@@ -49,9 +49,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('goods');
+        Schema::dropIfExists('items');
         Schema::dropIfExists('services');
-        Schema::dropIfExists('album_goods');
+        Schema::dropIfExists('album_items');
         Schema::dropIfExists('instruments');
     }
 };

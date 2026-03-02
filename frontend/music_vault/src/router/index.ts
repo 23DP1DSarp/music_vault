@@ -10,6 +10,7 @@ import AlbumOffers from '@/views/AlbumOffers.vue'
 import SellerForm from '@/views/SellerForm.vue'
 import EmailVerification from '@/views/auth/EmailVerification.vue'
 import ProfileSettings from '@/views/ProfileSettings.vue'
+import SellItem from '@/views/SellItem.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,10 +65,15 @@ const router = createRouter({
       name: 'emailverification',
       component: EmailVerification,
     },
-     {
+    {
       path: '/profilesettings',
       name: 'profilesettings',
       component: ProfileSettings,
+    },
+    {
+      path: '/sell-item',
+      name: 'sell-item',
+      component: SellItem,
     },
   ],
 })
