@@ -12,6 +12,20 @@ const user = ref({
     email: '',
 });
 
+const albums = ref<{id: number, title: string}[]>([]);
+
+const categories = ref<string[]>([
+    'Album',
+    'Instrument',
+    'Service',
+]);
+
+const conditions = ref<string[]>([
+    'good',
+    'used',
+    'bad',
+]);
+
 interface SellItemForm {
     title: string;
     category: string;
@@ -19,7 +33,8 @@ interface SellItemForm {
     price: number;
     condition: string;
     description: string;
-    item_picture: File | null;
+    picture: File | null;
+    album_id: number | null;
 }
 
 const item = ref<SellItemForm>({
@@ -29,8 +44,10 @@ const item = ref<SellItemForm>({
     price: 0,
     condition: '',
     description: '',
-    item_picture: null,
+    picture: null as File | null,
+    album_id: null,
 });
+
 
 const isLoggedIn = ref(false);
 
@@ -59,17 +76,39 @@ const logout = async () => {
     }
 }
 
-const getImageUrl = (path: string): string => {
-  if (path.startsWith('http')) {
-    return path;
+const getAlbums = async () => {
+  try {
+    const response = await axiosInstance.get('/');
+    albums.value = response.data;
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
   }
+}
 
-  return `${'http://localhost:8000'}/storage/${path}`;
+const handleFileChange = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  console.log('Selected file:', file);
+  if (file) {
+    item.value.picture = file;
+  }
 };
 
 const sellItem = async (payload: SellItemForm) => {
   try {
-    const response = await axiosInstance.post('/sellitem', payload);
+    const formData = new FormData();
+    Object.entries(payload).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        formData.append(key, value as any);
+      }
+    });
+    if (item.value.picture) {
+      formData.append('picture', item.value.picture);
+    }
+    const response = await axiosInstance.post('/sellitem', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
     console.log(response.data);
     if (response.status === 200) {
         router.push('/');
@@ -80,6 +119,7 @@ const sellItem = async (payload: SellItemForm) => {
 }
 
 getUser();
+getAlbums();
 </script>
 
 <template>
@@ -126,28 +166,34 @@ getUser();
                         <label>Title</label>
                         <input class="album_input" v-model="item.title" name="title" type="text">
                         <label>Category</label>
-                        <select class="album_input" name="category" >
+                        <select class="album_input" name="category" v-model="item.category">
                           <option value="" disabled>Select category</option>
-                          <option></option>
+                          <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
+                        </select>
+                        <label v-show="item.category === 'Album'">Album Title</label>
+                        <select class="album_input" name="album_id" v-model="item.album_id" v-show="item.category === 'Album'">
+                          <option value="" disabled>Select album</option>
+                          <option v-for="album in albums" :key="album.id" :value="album.id">{{ album.title }}</option>
                         </select>
                         <label>Quantity</label>
                         <input class="album_input" v-model.number="item.quantity" name="quantity" type="number" >
                         <label>Price</label>
                         <input class="album_input" v-model.number="item.price" name="price" type="number" step="0.01">
                         <label>Condition</label>
-                        <select class="album_input" name="condition" >
+                        <select class="album_input" name="condition" v-model="item.condition">
                           <option value="" disabled>Select condition</option>
-                          <option></option>
+                          <option v-for="condition in conditions" :key="condition" :value="condition">{{ condition }}</option>
                         </select>
                         <label>Description</label>
                         <input class="album_input" v-model="item.description" name="description" type="text">
                     </div>
                         
-                        <div id="album_cover_side">
-                            <label>Item Picture</label>
-                            <input name="item_picture" type="file" accept="image/*">
-                        </div>
+                    <div id="album_cover_side">
+                        <label>Item Picture</label>
+                        <input name="item_picture" type="file" accept="image/*" @change="handleFileChange">
+                    </div>
                 </div>
+                <input id="submit_btn" type="submit" value="Sell Item">
             </form>
     </main>
 
@@ -390,9 +436,8 @@ label {
 }
 
 #submit_btn {
-  min-width: 386px;
+  width: 386px;
   min-height: 54px;
-  margin-top: 50px;
   background-color: #000000;
   color: #E4E4E4;
   font-size: 18px;
@@ -402,7 +447,8 @@ label {
   font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   border-radius: 8px;
   border: none;
-  margin: 0 auto;
+  margin-top: 50px;
+  align-self: center;
 }
 
 .album_input {

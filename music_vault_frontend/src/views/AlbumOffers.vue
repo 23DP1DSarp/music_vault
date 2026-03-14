@@ -31,17 +31,18 @@ const user = ref({
 
 const isLoggedIn = ref(false);
 
-interface Album {
+interface AlbumItem {
   id: number;
   title: string;
-  author: string;
-  release_date: Date;
-  genre: string;
-  country: string;
-  cover: string;
+  condition: string;
+  quantity: number;
+  price: number;
+  notes: string;
+  picture: string;
+  seller_name: string;
 }
 
-const albums = ref<Album[]>([]);
+const albumItems = ref<AlbumItem[]>([]);
 
 const getUser = async () => {
     try {
@@ -77,6 +78,29 @@ const getImageUrl = (path: string): string => {
 };
 
 
+const getAlbumItems = async () => {
+  loading.value = true
+
+  try {
+    const { data } = await axiosInstance.get('/get_album_items', {
+      params: {
+        genres: selectedGenres.value,
+        countries: selectedCountries.value,
+        decades: selectedDecades.value,
+      }
+    })
+    albumItems.value = data;
+  } catch (err) {
+    console.error(err)
+  } finally {
+   /* getGenres();
+    getCountries();
+    getDecades();*/
+    loading.value = false;
+  }
+}
+
+
 const filterAlbums = async () => {
   loading.value = true
 
@@ -88,31 +112,32 @@ const filterAlbums = async () => {
         decades: selectedDecades.value,
       }
     })
-    albums.value = data;
+    albumItems.value = data;
   } catch (err) {
     console.error(err)
   } finally {
-    getGenres();
+   /* getGenres();
     getCountries();
-    getDecades();
+    getDecades();*/
     loading.value = false;
   }
 }
 
+/*
 const getGenres = async () => {
   console.log('Function called...')
-  albums.value.forEach(album => {
-  if (!genres.includes(album.genre)) {
-    genres.push(album.genre)
+  albumItems.value.forEach(albumItem => {
+  if (!genres.includes(albumItem.genre)) {
+    genres.push(albumItem.genre)
   }
   })
 }
 
 const getCountries = async () => {
   console.log('Function called...')
-  albums.value.forEach(album => {
-  if (!countries.includes(album.country)) {
-    countries.push(album.country)
+  albumItems.value.forEach(albumItem => {
+  if (!countries.includes(albumItem.country)) {
+    countries.push(albumItem.country)
   }
   })
 }
@@ -155,9 +180,10 @@ const sortAlbums = async (sortBy: string) => {
     loading.value = false;
   }
 }
+*/
 
 getUser();
-filterAlbums();
+getAlbumItems();
 </script>
 
 <template>
@@ -246,23 +272,37 @@ filterAlbums();
             <div id="offers_list">
                 <h2>Offers</h2>
                 <div id="list_filters">
-                    <button class="filter_btn" @click="sortAlbums('title')">Title</button>
-                    <button class="filter_btn" @click="sortAlbums('author')">Artist</button>
-                    <button class="filter_btn" @click="sortAlbums('genre')">Genre</button>
-                    <button class="filter_btn" @click="sortAlbums('release_date')">Year</button>
+                  <p>Sort by:</p>
+                  <button class="filter_btn" >Title</button>
+                  <button class="filter_btn" >Artist</button>
+                  <button class="filter_btn">Genre</button>
+                  <button class="filter_btn">Year</button>
+                  <button class="filter_btn">Seller</button>
+                  <button class="filter_btn" >Price</button> 
                 </div>
-                <div id="albums_grid"  v-if="loading == false">
-                <div class="album_card" v-for="album in albums" :key="album.id">
-                    <img v-if="album.cover" :src="getImageUrl(album.cover)" :alt="album.title">
-                    <div id="text_info">
-                        <p>{{ album.title }}</p>
-                        <p>{{ album.author }}</p>
-                        <p>{{ album.genre }}</p>
-                        <p>{{ album.release_date }}</p>
-                    </div>
+                <div class="album_card" v-for="albumItem in albumItems" :key="albumItem.id">
+                  
+                
+                <div id="item_info_col">
+                    <p>Title: {{ albumItem.title }}</p>
+                    <p>Condition: {{ albumItem.condition }}</p>
+                    <p>Quantity: {{ albumItem.quantity }}</p>
                 </div>
+
+                <div id="item_seller_col">
+                    
+                    <p  v-for="albumItem in albumItems" :key="albumItem.id">{{ albumItem.seller_name }}</p>
+                    
+                   
                 </div>
+
+                <div id="item_price_col">
+                    <p  v-for="albumItem in albumItems" :key="albumItem.id">{{ albumItem.price }}</p>
                 </div>
+
+                </div>
+            </div>
+               
             </div> 
             
 
@@ -568,6 +608,12 @@ main {
     display: flex;
     flex-direction: row;
     gap: 33px;
+}
+
+.item_info_col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .album_card img {

@@ -4,6 +4,8 @@ use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\SellerController;
 use App\Models\Album;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -103,7 +105,7 @@ Route::get('/getcollection', [CollectionController::class, 'getCollection']);
 
 Route::get('/ordercollectionalbums', [CollectionController::class, 'orderCollectionAlbums']);
 
-Route::post('/createseller', [App\Http\Controllers\SellerController::class, 'createSeller']);
+Route::post('/createseller', [SellerController::class, 'createSeller']);
 
 Route::post('/email/verification-notification', function(Request $request) {
     $request->user()->sendEmailVerificationNotification();
@@ -147,3 +149,7 @@ Route::delete('/delete-account', function (Request $request) {
     $user = $request->user();
     $user->delete();
 });
+
+Route::post('/sellitem', [ItemController::class, 'sellItem']);
+
+Route::get('/get_album_items', [ItemController::class, 'getAlbumItems']);
