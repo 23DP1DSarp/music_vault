@@ -19,7 +19,7 @@ const form = ref(<LoginForm>({
 
 const login = async (payload: LoginForm) => {
     console.log('Login function called');
-    const authCookie = await axiosInstance.get("/sanctum/csrf-cookie", {baseURL: 'http://localhost:8000',});
+    const authCookie = await axiosInstance.get("/sanctum/csrf-cookie", {baseURL: 'https://music-vault-main-0eyyqx.laravel.cloud',});
     try {
     const response = await axiosInstance.post("/login", payload);
     console.log(response.data);

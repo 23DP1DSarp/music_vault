@@ -20,7 +20,7 @@ const form = <RegisterForm>({
 
 const register = async (payload: RegisterForm) => {
     console.log('Register function called');
-    await axiosInstance.get("/sanctum/csrf-cookie", {baseURL: 'http://localhost:8000',});
+    await axiosInstance.get("/sanctum/csrf-cookie", {baseURL: 'https://music-vault-main-0eyyqx.laravel.cloud',});
     try {
     const response = await axiosInstance.post("/register", payload);
     console.log(response.data);
