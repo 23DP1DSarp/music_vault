@@ -13,16 +13,16 @@ class CollectionController extends Controller
     public function addToCollection(Album $album, Request $request) {
 
         $incomingFields['album_id'] = $album->id;
-        $incomingFields['user_id'] = auth()->id();
+        
 
         Collection::create($incomingFields);
 
         return redirect('/');
     }
 
-    public function getCollection() {
+    public function getCollection(Request $request) {
         $collections = DB::table('collections')
-        ->where('user_id', '=', auth()->id())
+        ->where('user_id', '=', $request->user()->id)
         ->join('albums', 'albums.id', '=', 'collections.album_id')
         ->join('genres', 'albums.genre_id', '=', 'genres.id')
         ->join('users', 'users.id', '=', 'collections.user_id')
@@ -43,7 +43,7 @@ class CollectionController extends Controller
         $sortBy = $request->input('sortBy');
         $order = $request->input('sortOrder');
         $albums = DB::table('collections')
-            ->where('collections.user_id', '=', auth()->id())
+            ->where('collections.user_id', '=', $request->user()->id)
             ->join('albums', 'collections.album_id', '=', 'albums.id')
             ->join('genres', 'albums.genre_id', '=', 'genres.id')
             ->select(

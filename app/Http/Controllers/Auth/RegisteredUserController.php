@@ -34,8 +34,13 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+        // Generate both API and CSRF tokens
+        $tokens = $user->generateTokens();
 
-        return response()->noContent();
+        return response()->json([
+            'user' => $user,
+            'api_token' => $tokens['api_token'],
+            'csrf_token' => $tokens['csrf_token'],
+        ], 201);
     }
 }

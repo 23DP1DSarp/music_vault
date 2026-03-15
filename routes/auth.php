@@ -6,8 +6,17 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
+// Get CSRF token for unauthenticated requests
+Route::post('/csrf-token', function (Request $request) {
+    return response()->json([
+        'csrf_token' => Str::random(80),
+    ]);
+})->middleware('guest')->name('csrf.token');
+/*
 Route::post('/register', [RegisteredUserController::class, 'store'])
     ->middleware('guest')
     ->name('register');
@@ -33,5 +42,7 @@ Route::post('/email/verification-notification', [EmailVerificationNotificationCo
     ->name('verification.send');
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->middleware('auth')
+    ->middleware(['check.api.token', 'verify.csrf'])
     ->name('logout');
+
+*/

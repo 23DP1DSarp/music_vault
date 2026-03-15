@@ -13,7 +13,7 @@ class Collection extends Model
 
     protected $fillable = [
         'album_id',
-        'user_id'
+        'user_id',
     ];
 
     public function album()

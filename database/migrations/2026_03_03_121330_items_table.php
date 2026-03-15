@@ -11,37 +11,45 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('items', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->string('title');
-            $table->enum('category', ['album', 'instrument', 'service']);
-            $table->integer('quantity');
-            $table->float('price');
-            $table->enum('condition', ['good', 'used', 'bad']);
-            $table->text('description', 200);
-            $table->string('picture')->nullable();
-            $table->foreignId('seller_id')->constrained()->onDelete('cascade');
-        });
+        if (!Schema::hasTable('items')) {
+            Schema::create('items', function (Blueprint $table) {
+                $table->id();
+                $table->timestamps();
+                $table->string('title');
+                $table->enum('category', ['album', 'instrument', 'service']);
+                $table->integer('quantity');
+                $table->float('price');
+                $table->enum('condition', ['good', 'used', 'bad']);
+                $table->text('description', 200);
+                $table->string('picture')->nullable();
+                $table->foreignId('seller_id')->constrained()->onDelete('cascade');
+            });
+        }
 
-        Schema::create('services', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('item_id')->constrained()->onDelete('cascade');
-            $table->integer('duration');
-        });
+        if (!Schema::hasTable('services')) {
+            Schema::create('services', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('item_id')->constrained()->onDelete('cascade');
+                $table->integer('duration');
+            });
+        }
 
-        Schema::create('album_items', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('album_id')->constrained()->onDelete('cascade');
-            $table->foreignId('item_id')->constrained()->onDelete('cascade');
-        });
+        if (!Schema::hasTable('album_items')) {
+            Schema::create('album_items', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('album_id')->constrained()->onDelete('cascade');
+                $table->foreignId('item_id')->constrained()->onDelete('cascade');
+            });
+        }
 
-        Schema::create('instruments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('item_id')->constrained()->onDelete('cascade');
-            $table->string('model');
-            $table->string('type');
-        });
+        if (!Schema::hasTable('instruments')) {
+            Schema::create('instruments', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('item_id')->constrained()->onDelete('cascade');
+                $table->string('model');
+                $table->string('type');
+            });
+        }
 
     }
 

@@ -13,13 +13,18 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): Response
+    public function store(LoginRequest $request)
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
+        // Generate both API and CSRF tokens
+        $tokens = $request->user()->generateTokens();
 
-        return response()->noContent();
+        return response()->json([
+            'user' => $request->user(),
+            'api_token' => $tokens['api_token'],
+            'csrf_token' => $tokens['csrf_token'],
+        ], 200);
     }
 
     /**
@@ -27,12 +32,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): Response
     {
-        Auth::guard('web')->logout();
+        // Clear the API and CSRF tokens
+        if ($request->user()) {
+            $request->user()->update([
+                'api_token' => null,
+                'csrf_token' => null,
+            ]);
+        }
 
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return response()->noContent();
+        return response()->json(['message' => 'Logged out successfully'], 200);
     }
 }

@@ -1,10 +1,23 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://music-vault-main-0eyyqx.laravel.cloud/api',
-    withCredentials: true,
-    withXSRFToken: true,
+    baseURL: 'https://music-vault-main-sjukhk.laravel.cloud/api',
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+});
+
+axiosInstance.interceptors.request.use((config) => {
+    const token = localStorage.getItem('auth_token');
+
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
 });
 
 
 export default axiosInstance;
+export { axiosInstance };

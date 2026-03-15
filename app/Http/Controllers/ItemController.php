@@ -27,7 +27,7 @@ class ItemController extends Controller
             $incomingFields['picture'] = $request->file('picture')->store('images', 'public');
         }
 
-        $incomingFields['seller_id'] = Seller::where('user_id', auth()->id())->value('id');
+        $incomingFields['seller_id'] = Seller::where('user_id', $request->user()->id)->value('id');
 
         $item = Item::create($incomingFields);
 

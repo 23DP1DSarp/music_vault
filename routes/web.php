@@ -19,11 +19,7 @@ Route::get('/getalbums', function () {
 });
 
 
-Route::post('/register', [UserController::class, 'register']);
-
-Route::post('/logout', [UserController::class, 'logout']);
-
-Route::post('/login', [UserController::class, 'login']);
+// Authentication routes moved to api.php
 
 Route::get('/showlogin', function () {
     return view('login');

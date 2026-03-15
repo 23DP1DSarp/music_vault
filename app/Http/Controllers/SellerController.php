@@ -19,12 +19,12 @@ class SellerController extends Controller
             'seller_terms' => 'required'
         ]);
 
-        $incomingFields['user_id'] = auth()->id();
+        $incomingFields['user_id'] = $request->user()->id;
 
         Seller::create($incomingFields);
 
         DB::table('users')
-            ->where('id', auth()->id())
+            ->where('id', $request->user()->id)
             ->update(['user_role_id' => 2]);
 
         return response()->json(['message' => 'Seller created successfully']);

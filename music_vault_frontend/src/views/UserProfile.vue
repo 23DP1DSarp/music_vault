@@ -70,7 +70,7 @@ const getImageUrl = (path: string): string => {
     return path;
   }
 
-  return `${'http://localhost:8000'}/storage/${path}`;
+  return `${'http://music-vault-main-sjukhk.laravel.cloud'}/storage/${path}`;
 };
 
 const sortAlbums = async (sortBy: string) => {

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import axiosInstance from '@/axios';
+import { ref } from 'vue';
 
 
 interface RegisterForm {
@@ -7,28 +8,39 @@ interface RegisterForm {
     email: string;
     password: string;
     password_confirmation: string;
+    error?: string;
 }
 
 
-const form = <RegisterForm>({
+const form = ref<RegisterForm>({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
+    error: '',
 });
 
 
 const register = async (payload: RegisterForm) => {
     console.log('Register function called');
-    await axiosInstance.get("/sanctum/csrf-cookie", {baseURL: 'https://music-vault-main-0eyyqx.laravel.cloud',});
     try {
-    const response = await axiosInstance.post("/register", payload);
-    console.log(response.data);
-    if (response.status === 200) {
-        window.location.href = "/"
-    }
+        const response = await axiosInstance.post("/register", payload);
+        console.log(response.data);
+        if (response.status === 201 || response.status === 200) {
+            // Store tokens in localStorage
+            localStorage.setItem('auth_token', response.data.api_token);
+            localStorage.setItem('csrf_token', response.data.csrf_token);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+            
+            // Update axios default headers with tokens
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.api_token}`;
+            axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = response.data.csrf_token;
+            
+            window.location.href = "/";
+        }
     } catch (error) {
         console.error(error);
+        form.value.error = 'Registration failed. Please try again.';
     }
 };
 
@@ -48,6 +60,8 @@ const register = async (payload: RegisterForm) => {
     <main>
             <h1>Sign Up</h1>
             <form id="sign_up_form" @submit.prevent="register(form)"  method="post">
+                <p v-if="form.error" style="color: red;">{{ form.error }}</p>
+
                 <div class="form_parts">
                     <label>Username</label>
                     <input name="name" type="text" v-model="form.name">

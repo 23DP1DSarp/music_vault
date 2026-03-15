@@ -1,27 +1,45 @@
 <?php
 
-use App\Actions\Fortify\UpdateUserPassword;
-use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\SellerController;
+use App\Http\Controllers\UserController;
 use App\Models\Album;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
-    return $request->user();
+// Authentication endpoints (no middleware required)
+Route::post('/register', [UserController::class, 'register'])->middleware('guest');
+Route::post('/login', [UserController::class, 'login'])->middleware('guest');
+Route::post('/add_to_collection/{album}', [CollectionController::class, 'addToCollection']);
+Route::get('/getcollection', [CollectionController::class, 'getCollection']);
+Route::get('/ordercollectionalbums', [CollectionController::class, 'orderCollectionAlbums']);
+
+// Protected endpoints (require authentication token)
+Route::middleware(['check.api.token'])->group(function () {
+    Route::post('/logout', [UserController::class, 'logout']);
+    Route::get('/user', [UserController::class, 'getCurrentUser']);
+    
+    // Collection routes
+    
+    
+    // Seller routes
+    Route::post('/createseller', [SellerController::class, 'createSeller']);
+    
+    // Item routes
+    Route::post('/sellitem', [ItemController::class, 'sellItem']);
+    
+    // Album routes
+    Route::post('/add_album_with_tracks', [AlbumController::class, 'addAlbum'])->name('add.album');
 });
 
 
 Route::get('/users', function(Request $request) {
     return User::all();
 });
-
-Route::post('/add_album_with_tracks', [AlbumController::class, 'addAlbum'])->name('add.album');
 
 Route::get('/', function () {
     $album = DB::table('albums')
@@ -99,14 +117,6 @@ Route::get('/album_info/{album}', function(Album $album) {
     return [$album, $tracks];
 });
 
-Route::post('/add_to_collection/{album}', [CollectionController::class, 'addToCollection']);
-
-Route::get('/getcollection', [CollectionController::class, 'getCollection']);
-
-Route::get('/ordercollectionalbums', [CollectionController::class, 'orderCollectionAlbums']);
-
-Route::post('/createseller', [SellerController::class, 'createSeller']);
-
 Route::post('/email/verification-notification', function(Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return response()->json(['status' => 'verification-link-sent']);
@@ -149,7 +159,5 @@ Route::delete('/delete-account', function (Request $request) {
     $user = $request->user();
     $user->delete();
 });
-
-Route::post('/sellitem', [ItemController::class, 'sellItem']);
 
 Route::get('/get_album_items', [ItemController::class, 'getAlbumItems']);

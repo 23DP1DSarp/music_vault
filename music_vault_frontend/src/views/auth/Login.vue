@@ -3,32 +3,39 @@ import axiosInstance from '@/axios';
 import { ref } from 'vue';
 
 interface LoginForm {
-    name: string;
     email: string;
     password: string;
-    password_confirmation: string;
     error?: string;
 }
 
-const form = ref(<LoginForm>({
+const form = ref<LoginForm>({
     email: '',
     password: '',
     error: '',
-}));
+});
 
 
 const login = async (payload: LoginForm) => {
     console.log('Login function called');
-    const authCookie = await axiosInstance.get("/sanctum/csrf-cookie", {baseURL: 'https://music-vault-main-0eyyqx.laravel.cloud',});
-    try {
-    const response = await axiosInstance.post("/login", payload);
-    console.log(response.data);
-    if (response.status === 200) {
-        window.location.href = "/"
-    }
+    try { 
+        
+        const response = await axiosInstance.post("/login", payload);
+        console.log(response.data);
+        if (response.status === 200) {
+            // Store token in localStorage
+            localStorage.setItem('auth_token', response.data.api_token);
+            localStorage.setItem('csrf_token', response.data.csrf_token);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+            
+            // Update axios default header with token
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.api_token}`;
+            axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = response.data.csrf_token;
+            
+            window.location.href = "/";
+        }
     } catch (error) {
-    console.error(error);
-    form.value.error = 'Login failed. Please check your credentials and try again.';
+        console.error(error);
+        form.value.error = 'Login failed. Please check your credentials and try again.';
     }
 };
 
