@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Album;
 use App\Models\Collection;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -12,8 +13,13 @@ class CollectionController extends Controller
 {
     public function addToCollection(Album $album, Request $request) {
 
+        $userId = $this->getUserId($request);
+        if (!$userId) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
         $incomingFields['album_id'] = $album->id;
-        
+        $incomingFields['user_id'] = $userId;
 
         Collection::create($incomingFields);
 
@@ -21,8 +27,13 @@ class CollectionController extends Controller
     }
 
     public function getCollection(Request $request) {
+        $userId = $this->getUserId($request);
+        if (!$userId) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
         $collections = DB::table('collections')
-        ->where('user_id', '=', $request->user()->id)
+        ->where('user_id', '=', $userId)
         ->join('albums', 'albums.id', '=', 'collections.album_id')
         ->join('genres', 'albums.genre_id', '=', 'genres.id')
         ->join('users', 'users.id', '=', 'collections.user_id')
@@ -42,8 +53,13 @@ class CollectionController extends Controller
     public function orderCollectionAlbums(Request $request) {
         $sortBy = $request->input('sortBy');
         $order = $request->input('sortOrder');
+        $userId = $this->getUserId($request);
+        if (!$userId) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
         $albums = DB::table('collections')
-            ->where('collections.user_id', '=', $request->user()->id)
+            ->where('collections.user_id', '=', $userId)
             ->join('albums', 'collections.album_id', '=', 'albums.id')
             ->join('genres', 'albums.genre_id', '=', 'genres.id')
             ->select(
@@ -54,5 +70,23 @@ class CollectionController extends Controller
             ->get();
 
         return response()->json($albums);
+    }
+
+    private function getUserId(Request $request)
+    {
+        $user = $request->user();
+        if ($user) {
+            return $user->id;
+        }
+
+        $token = $request->bearerToken();
+        if ($token) {
+            $user = User::where('api_token', $token)->first();
+            if ($user) {
+                return $user->id;
+            }
+        }
+
+        return null;
     }
 }
