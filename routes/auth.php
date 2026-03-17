@@ -16,7 +16,7 @@ Route::post('/csrf-token', function (Request $request) {
         'csrf_token' => Str::random(80),
     ]);
 })->middleware('guest')->name('csrf.token');
-/*
+
 Route::post('/register', [RegisteredUserController::class, 'store'])
     ->middleware('guest')
     ->name('register');
@@ -45,4 +45,3 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware(['check.api.token', 'verify.csrf'])
     ->name('logout');
 
-*/

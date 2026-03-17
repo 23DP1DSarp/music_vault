@@ -1,5 +1,7 @@
 <?php
 
+use App\Actions\Fortify\UpdateUserPassword;
+use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\ItemController;
@@ -7,7 +9,8 @@ use App\Http\Controllers\SellerController;
 use App\Http\Controllers\UserController;
 use App\Models\Album;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request; 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +20,22 @@ Route::post('/login', [UserController::class, 'login'])->middleware('guest');
 Route::post('/add_to_collection/{album}', [CollectionController::class, 'addToCollection']);
 Route::get('/getcollection', [CollectionController::class, 'getCollection']);
 Route::get('/ordercollectionalbums', [CollectionController::class, 'orderCollectionAlbums']);
+
+Route::get('/email/verify', function () {
+    return 200;
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+ 
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
+ 
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+ 
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 // Protected endpoints (require authentication token)
 Route::middleware(['check.api.token'])->group(function () {
@@ -116,7 +135,7 @@ Route::get('/album_info/{album}', function(Album $album) {
     ->get();
     return [$album, $tracks];
 });
-
+/*
 Route::post('/email/verification-notification', function(Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return response()->json(['status' => 'verification-link-sent']);
@@ -132,7 +151,7 @@ Route::get('/email/verify/{id}/{hash}', function ($id, $hash) {
     $user->markEmailAsVerified();
     return response()->json(['message' => 'Email verified!']);
 });
-
+*/
 Route::middleware('auth:sanctum')->put('/change-user-info', function (
     Request $request,
     UpdateUserProfileInformation $updater
