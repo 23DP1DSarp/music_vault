@@ -118,6 +118,7 @@ const getDecades = async () => {
   if (!decades.includes(decade.toString())) {
     decades.push(decade.toString())
   }
+  decades.sort((b, a) => Number(a) - Number(b));
   })
 }
 
