@@ -23,19 +23,18 @@ Route::get('/ordercollectionalbums', [CollectionController::class, 'orderCollect
 
 Route::get('/email/verify', function () {
     return 200;
-})->middleware('auth')->name('verification.notice');
+})->middleware('check.api.token')->name('verification.notice');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
- 
-    return redirect('/home');
-})->middleware(['auth', 'signed'])->name('verification.verify');
+    return response()->json(['message' => 'Email verified successfully']);
+})->middleware('check.api.token')->name('verification.verify');
  
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
  
-    return back()->with('message', 'Verification link sent!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+    return response()->json(['message' => 'Verification link sent!']);
+})->middleware(['check.api.token', 'throttle:6,1'])->name('verification.send');
 
 // Protected endpoints (require authentication token)
 Route::middleware(['check.api.token'])->group(function () {

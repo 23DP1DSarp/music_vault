@@ -11,7 +11,7 @@ onMounted(async () => {
     // call backend verify
     await axios.get(`/email/verify/${route.params.id}/${route.params.hash}`)
     alert('Your email is verified!')
-    router.push('/login')
+    router.push('/')
   } catch (err) {
     alert('Verification failed.')
   }
