@@ -8,18 +8,37 @@ interface RegisterForm {
     email: string;
     password: string;
     password_confirmation: string;
+    country_id: number;
+    date_of_birth: Date | null;
     error?: string;
 }
 
+interface Country {
+  id: number;
+  country_name: string;
+}
+
+const countries = ref<Country[]>([]);
 
 const form = ref<RegisterForm>({
     name: '',
     email: '',
     password: '',
     password_confirmation: '',
+    country_id: 0,
+    date_of_birth: null,
     error: '',
 });
 
+const getCountries = async () => {
+    try {
+      const response = await axiosInstance.get('/getcountries');
+      countries.value = response.data;
+      console.log(countries.value);
+    } catch (error) {
+      console.error(error);
+    }
+}
 
 const register = async (payload: RegisterForm) => {
     console.log('Register function called');
@@ -44,6 +63,7 @@ const register = async (payload: RegisterForm) => {
     }
 };
 
+getCountries();
 </script>
 
 <template>
@@ -83,8 +103,16 @@ const register = async (payload: RegisterForm) => {
                 </div>
 
                 <div class="form_parts">
+                    <label>Country</label>
+                    <select class="album_input" name="country" v-model="form.country_id">
+                      <option value="" disabled>Select country</option>
+                      <option v-for="country in countries" :key="country.id" :value="country.id">{{ country.country_name }}</option>
+                    </select>
+                </div>
+
+                <div class="form_parts">
                     <label>Date of Birth</label>
-                    <input name="date_of_birth" type="date">
+                    <input name="date_of_birth" type="date" v-model="form.date_of_birth">
                 </div>
 
                 <div class="form_parts">
@@ -231,7 +259,7 @@ ul {
 }
 
 main {
-  width: 400px;
+  width: fit-content;
   padding-top: 65px;
   padding-bottom: 65px;
   margin: 0 auto;
@@ -247,6 +275,8 @@ main h1 {
 #sign_up_form {
   display: flex;
   flex-direction: column;
+  width: fit-content;
+  align-items: center;
 }
 
 #sign_up_form input {
@@ -259,7 +289,15 @@ main h1 {
   padding: 1px 2px;
 }
 
-
+#sign_up_form select {
+  width: 385.6px;
+  height: 53.6px;
+  border-style: solid;
+  border-color: #000000;
+  border-radius: 8px;
+  border-width: 1px;
+  padding: 1px 2px;
+}
 
 #sign_up_form label {
   line-height: 28px;
@@ -286,6 +324,7 @@ main h1 {
 .form_parts {
   display: flex;
   flex-direction: column;
+  width: fit-content;
 }
 
 form {

@@ -22,13 +22,16 @@ class UserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'password_confirmation' => ['required'],
-            'date_of_birth' => ['nullable', 'date'],
+            'country_id' => ['required'],
+            'date_of_birth' => ['required', 'date'],
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'country_id' => $validated['country_id'],
+            'date_of_birth' => $validated['date_of_birth'],
         ]);
 
         event(new Registered($user));
