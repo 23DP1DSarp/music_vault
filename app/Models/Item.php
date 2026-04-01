@@ -13,7 +13,7 @@ class Item extends Model
         'price',
         'condition',
         'description',
-        'item_picture',
+        'picture',
         'seller_id',
     ];
 

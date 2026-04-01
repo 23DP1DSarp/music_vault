@@ -272,7 +272,6 @@ getAlbumItems();
             <div id="offers_list">
                 <h2>Offers</h2>
                 <div id="list_filters">
-                  <p>Sort by:</p>
                   <button class="filter_btn" >Title</button>
                   <button class="filter_btn" >Artist</button>
                   <button class="filter_btn">Genre</button>
@@ -289,15 +288,12 @@ getAlbumItems();
                     <p>Quantity: {{ albumItem.quantity }}</p>
                 </div>
 
-                <div id="item_seller_col">
-                    
-                    <p  v-for="albumItem in albumItems" :key="albumItem.id">{{ albumItem.seller_name }}</p>
-                    
-                   
+                <div id="item_seller_col">  
+                    <p>{{ albumItem.seller_name }}</p>
                 </div>
 
                 <div id="item_price_col">
-                    <p  v-for="albumItem in albumItems" :key="albumItem.id">{{ albumItem.price }}</p>
+                    <p>{{ albumItem.price }}</p>
                 </div>
 
                 </div>

@@ -21,9 +21,9 @@ const categories = ref<string[]>([
 ]);
 
 const conditions = ref<string[]>([
-    'good',
-    'used',
-    'bad',
+    'Good',
+    'Used',
+    'Bad',
 ]);
 
 interface SellItemForm {
@@ -31,6 +31,9 @@ interface SellItemForm {
     category: string;
     quantity: number;
     price: number;
+    model: string | null;
+    type: string | null;
+    duration: number;
     condition: string;
     description: string;
     picture: File | null;
@@ -42,6 +45,9 @@ const item = ref<SellItemForm>({
     category: '',
     quantity: 0,
     price: 0,
+    model: null,
+    type: null,
+    duration: 0,
     condition: '',
     description: '',
     picture: null as File | null,
@@ -175,15 +181,28 @@ getAlbums();
                           <option value="" disabled>Select album</option>
                           <option v-for="album in albums" :key="album.id" :value="album.id">{{ album.title }}</option>
                         </select>
-                        <label>Quantity</label>
-                        <input class="album_input" v-model.number="item.quantity" name="quantity" type="number" >
+                        <div v-show="item.category === 'Instrument'">
+                        <label>Model</label>
+                        <input class="album_input" v-model="item.model" name="model" type="text">
+
+                        <label>Type</label>
+                        <input class="album_input" v-model="item.type" name="type" type="text">
+                        </div>
+
+
+                        <label v-show="item.category !== 'Service'">Quantity</label>
+                        <input class="album_input" v-show="item.category !== 'Service'" v-model.number="item.quantity" name="quantity" type="number" >
                         <label>Price</label>
                         <input class="album_input" v-model.number="item.price" name="price" type="number" step="0.01">
-                        <label>Condition</label>
-                        <select class="album_input" name="condition" v-model="item.condition">
+                        <label v-show="item.category !== 'Service'">Condition</label>
+                        <select v-show="item.category !== 'Service'" class="album_input" name="condition" v-model="item.condition">
                           <option value="" disabled>Select condition</option>
                           <option v-for="condition in conditions" :key="condition" :value="condition">{{ condition }}</option>
                         </select>
+
+                        <label v-show="item.category === 'Service'">Duration</label>
+                        <input class="album_input" v-show="item.category === 'Service'" v-model.number="item.duration" name="price" type="number" step="0.01">
+
                         <label>Description</label>
                         <input class="album_input" v-model="item.description" name="description" type="text">
                     </div>

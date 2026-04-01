@@ -16,9 +16,11 @@ class ItemController extends Controller
             'category' => 'required', 
             'album_id' => 'required_if:category,album|exists:albums,id',
             'model' => 'required_if:category,instrument|string',
-            'quantity' => 'required|integer',
+            'type' => 'required_if:category,instrument|string',
+            'quantity' => 'nullable|integer',
             'price' => 'required|numeric', 
-            'condition' => 'required|string',
+            'duration' => 'required_if:category,service|integer',
+            'condition' => 'nullable|string',
             'description' => 'nullable|string',
             'picture' => 'nullable|image|mimes:png,jpg,jpeg|max:2048',
         ]);
