@@ -179,3 +179,5 @@ Route::delete('/delete-account', function (Request $request) {
 });
 
 Route::get('/get_album_items', [ItemController::class, 'getAlbumItems']);
+
+Route::get('/filter_album_items', [ItemController::class, 'filterAlbumItems']);

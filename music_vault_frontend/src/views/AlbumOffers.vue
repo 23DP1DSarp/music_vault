@@ -34,6 +34,9 @@ const isLoggedIn = ref(false);
 interface AlbumItem {
   id: number;
   title: string;
+  release_date: Date;
+  genre: string;
+  country: string;
   condition: string;
   quantity: number;
   price: number;
@@ -43,6 +46,8 @@ interface AlbumItem {
 }
 
 const albumItems = ref<AlbumItem[]>([]);
+
+
 
 const getUser = async () => {
     try {
@@ -93,9 +98,9 @@ const getAlbumItems = async () => {
   } catch (err) {
     console.error(err)
   } finally {
-   /* getGenres();
+    getGenres();
     getCountries();
-    getDecades();*/
+    getDecades();
     loading.value = false;
   }
 }
@@ -105,25 +110,25 @@ const filterAlbums = async () => {
   loading.value = true
 
   try {
-    const { data } = await axiosInstance.get('/filter_albums', {
+    const { data } = await axiosInstance.get('/filter_album_items', {
       params: {
         genres: selectedGenres.value,
         countries: selectedCountries.value,
-        decades: selectedDecades.value,
+        decades: selectedDecades.value.sort((b, a) => Number(b) - Number(a)),
       }
     })
     albumItems.value = data;
   } catch (err) {
     console.error(err)
   } finally {
-   /* getGenres();
+    getGenres();
     getCountries();
-    getDecades();*/
+    getDecades();
     loading.value = false;
   }
 }
 
-/*
+
 const getGenres = async () => {
   console.log('Function called...')
   albumItems.value.forEach(albumItem => {
@@ -144,8 +149,8 @@ const getCountries = async () => {
 
 const getDecades = async () => {
   console.log('Function called...')
-  albums.value.forEach(album => {
-  const year = new Date(album.release_date).getFullYear();
+  albumItems.value.forEach(albumItem => {
+  const year = new Date(albumItem.release_date).getFullYear();
   const decade = Math.floor(year / 10) * 10;
   if (!decades.includes(decade.toString())) {
     decades.push(decade.toString())
@@ -154,7 +159,7 @@ const getDecades = async () => {
   })
 }
 
-const sortAlbums = async (sortBy: string) => {
+const sortAlbumItems = async (sortBy: string) => {
   loading.value = true;
 
   if (sortOrder.value === 'desc') {
@@ -173,14 +178,14 @@ const sortAlbums = async (sortBy: string) => {
         decades: selectedDecades.value,
       }
     });
-    albums.value = data;
+    albumItems.value = data;
   } catch (err) {
     console.error(err);
   } finally {
     loading.value = false;
   }
 }
-*/
+
 
 getUser();
 getAlbumItems();

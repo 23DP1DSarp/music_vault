@@ -85,7 +85,7 @@ class AlbumController extends Controller
 
         return response()->json($albums);
     }
-
+/*
     public function getCountries(Request $request)
     {
         $countries = $request->input('countries', []);
@@ -121,6 +121,6 @@ class AlbumController extends Controller
         }
         return response()->json($albums);
     }
-
+*/
      
 }

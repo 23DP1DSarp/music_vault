@@ -56,9 +56,58 @@ class ItemController extends Controller
         $items = DB::table('items')
         ->join('sellers', 'items.seller_id', '=', 'sellers.id')
         ->join('users', 'sellers.user_id', '=', 'users.id')
+        ->join('album_items', 'album_items.item_id', '=', 'items.id')
+        ->join('albums', 'album_items.album_id', '=', 'albums.id')
+        ->join('genres', 'albums.genre_id', '=', 'genres.id')
+        ->join('countries', 'countries.id', '=', 'albums.country_id')
         ->where('items.category', 'album')
-        ->select('items.*', 'users.name as seller_name')
+        ->select('items.*', 'albums.release_date as release_date', 'genres.genre_title as genre', 'countries.country_name as country', 'users.name as seller_name')
         ->get();
         return $items;
-   }
+    }
+
+    public function filterAlbumItems(Request $request)
+        {
+            $genres = $request->input('genres', []);
+            $countries = $request->input('countries', []);
+            $decades = $request->input('decades', []);
+
+            if (!empty($genres) || !empty($countries) || !empty($decades)) {
+                $items = DB::table('items')
+                    ->when(!empty($genres), function ($query) use ($genres) {
+                        $query->whereIn('genres.genre_title', $genres);
+                    })
+                    ->when(!empty($countries), function ($query) use ($countries) {
+                        $query->whereIn('countries.country_name', $countries);
+                    })
+                    ->when(!empty($decades), function ($query) use ($decades) {
+                        $query->whereBetween(DB::raw('YEAR(albums.release_date)'), [$decades[0], $decades[count($decades) - 1] + 9]);
+                    })
+                    ->join('sellers', 'items.seller_id', '=', 'sellers.id')
+                    ->join('users', 'sellers.user_id', '=', 'users.id')
+                    ->join('album_items', 'album_items.item_id', '=', 'items.id')
+                    ->join('albums', 'album_items.album_id', '=', 'albums.id')
+                    ->join('genres', 'albums.genre_id', '=', 'genres.id')
+                    ->join('countries', 'countries.id', '=', 'albums.country_id')
+                    ->where('items.category', 'album')
+                    ->select('items.*', 'albums.release_date as release_date', 'genres.genre_title as genre', 
+                    'countries.country_name as country', 'users.name as seller_name')
+                    ->get();
+            } else {
+                $items = DB::table('items')
+                ->join('sellers', 'items.seller_id', '=', 'sellers.id')
+                ->join('users', 'sellers.user_id', '=', 'users.id')
+                ->join('album_items', 'album_items.item_id', '=', 'items.id')
+                ->join('albums', 'album_items.album_id', '=', 'albums.id')
+                ->join('genres', 'albums.genre_id', '=', 'genres.id')
+                ->join('countries', 'countries.id', '=', 'albums.country_id')
+                ->where('items.category', 'album')
+                ->select('items.*', 'albums.release_date as release_date', 'genres.genre_title as genre', 'countries.country_name as country', 'users.name as seller_name')
+                ->get();
+                return $items;
+            }
+
+            return response()->json($items);
+        }
+
 }

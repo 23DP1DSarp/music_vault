@@ -78,7 +78,7 @@ const filterAlbums = async () => {
       params: {
         genres: selectedGenres.value,
         countries: selectedCountries.value,
-        decades: selectedDecades.value,
+        decades: selectedDecades.value.sort((b, a) => Number(b) - Number(a)),
       }
     })
     albums.value = data;
