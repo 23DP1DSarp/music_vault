@@ -13,6 +13,10 @@ const countries: string[] = [];
 
 const decades: string[] = [];
 
+const minPrice = ref(0);
+
+const maxPrice = ref(0);
+
 const selectedGenres = ref<string[]>([]);
 
 const selectedCountries = ref<string[]>([]);
@@ -115,6 +119,8 @@ const filterAlbums = async () => {
         genres: selectedGenres.value,
         countries: selectedCountries.value,
         decades: selectedDecades.value.sort((b, a) => Number(b) - Number(a)),
+        minPrice: Number(minPrice.value),
+        maxPrice: Number(maxPrice.value),
       }
     })
     albumItems.value = data;
@@ -250,9 +256,9 @@ getAlbumItems();
                 <div id="price_range_filters">
                     <h2>Price Range</h2>
                     <div id="price_range_filters_inputs">
-                        <input type="text" name="min">
+                        <input type="number" name="min" v-model="minPrice" @change="filterAlbums">
                         <p> - </p>
-                        <input type="text" name="max"> 
+                        <input type="number" name="max" v-model="maxPrice" @change="filterAlbums"> 
                     </div>
                 </div>
 

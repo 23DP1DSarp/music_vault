@@ -71,8 +71,10 @@ class ItemController extends Controller
             $genres = $request->input('genres', []);
             $countries = $request->input('countries', []);
             $decades = $request->input('decades', []);
+            $minPrice = $request['minPrice'];
+            $maxPrice = $request['maxPrice'];
 
-            if (!empty($genres) || !empty($countries) || !empty($decades)) {
+            if (!empty($genres) || !empty($countries) || !empty($decades) || ($minPrice != null && $maxPrice != null)){
                 $items = DB::table('items')
                     ->when(!empty($genres), function ($query) use ($genres) {
                         $query->whereIn('genres.genre_title', $genres);
@@ -81,7 +83,16 @@ class ItemController extends Controller
                         $query->whereIn('countries.country_name', $countries);
                     })
                     ->when(!empty($decades), function ($query) use ($decades) {
-                        $query->whereBetween(DB::raw('YEAR(albums.release_date)'), [$decades[0], $decades[count($decades) - 1] + 9]);
+                        $query->whereBetween(DB::raw('YEAR(albums.release_date)'), [$decades[0], $decades[0] + 9]);
+
+                        if (count($decades) > 1) {
+                            for ($i=1; $i < count($decades); $i++) { 
+                                $query->orWhereBetween(DB::raw('YEAR(albums.release_date)'), [$decades[$i], $decades[$i] + 9]);
+                            }
+                        }
+                    })
+                    ->when($minPrice != null && $maxPrice != null, function ($query) use ($minPrice, $maxPrice) {
+                        $query->whereBetween('items.price', [$minPrice, $maxPrice]);
                     })
                     ->join('sellers', 'items.seller_id', '=', 'sellers.id')
                     ->join('users', 'sellers.user_id', '=', 'users.id')

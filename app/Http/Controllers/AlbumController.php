@@ -61,7 +61,13 @@ class AlbumController extends Controller
                     $query->whereIn('countries.country_name', $countries);
                 })
                 ->when(!empty($decades), function ($query) use ($decades) {
-                    $query->whereBetween(DB::raw('YEAR(albums.release_date)'), [$decades[0], $decades[count($decades) - 1] + 9]);
+                    $query->whereBetween(DB::raw('YEAR(albums.release_date)'), [$decades[0], $decades[0] + 9]);
+
+                    if (count($decades) > 1) {
+                        for ($i=1; $i < count($decades); $i++) { 
+                            $query->orWhereBetween(DB::raw('YEAR(albums.release_date)'), [$decades[$i], $decades[$i] + 9]);
+                        }
+                    }
                 })
                 ->join('genres', 'genres.id', '=', 'albums.genre_id')
                 ->join('countries', 'countries.id', '=', 'albums.country_id')
