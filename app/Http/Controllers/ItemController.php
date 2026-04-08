@@ -52,7 +52,7 @@ class ItemController extends Controller
         }
    }
 
-   public function getAlbumItems() {
+   public function getAllAlbumItems() {
         $items = DB::table('items')
         ->join('sellers', 'items.seller_id', '=', 'sellers.id')
         ->join('users', 'sellers.user_id', '=', 'users.id')
@@ -64,6 +64,20 @@ class ItemController extends Controller
         ->select('items.*', 'albums.release_date as release_date', 'genres.genre_title as genre', 'countries.country_name as country', 'users.name as seller_name')
         ->get();
         return $items;
+    }
+
+    public function getAlbumItem (Item $item) {
+        $item = DB::table('items')
+        ->join('sellers', 'items.seller_id', '=', 'sellers.id')
+        ->join('users', 'sellers.user_id', '=', 'users.id')
+        ->join('countries', 'countries.id', '=', 'users.country_id')
+        ->join('album_items', 'album_items.item_id', '=', 'items.id')
+        ->join('albums', 'album_items.album_id', '=', 'albums.id')
+        ->where('items.id', '=', $item->id)
+        ->where('items.category', 'album')
+        ->select('items.*', 'users.name as seller_name', 'albums.id as album_id', 'countries.country_name as shipping_country', DB::raw('DATE(items.created_at) as created_at'))
+        ->get();
+        return $item;
     }
 
     public function filterAlbumItems(Request $request)

@@ -1,57 +1,55 @@
 <script setup lang="ts">
 import axiosInstance from '@/axios';
 import {ref} from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const itemId = route.params.id;
 
 const loading = ref(true);
-
-const router = useRouter();
-
-const genres: string[] = [];
-
-const countries: string[] = [];
-
-const decades: string[] = [];
-
-const minPrice = ref(0);
-
-const maxPrice = ref(0);
-
-const selectedGenres = ref<string[]>([]);
-
-const selectedCountries = ref<string[]>([]);
-
-const selectedDecades = ref<string[]>([]);
-
-const sortOrder = ref('asc');
-
-const sortBy = ref('title');
 
 const user = ref({
     name: '',
     email: '',
+});
+
+const albumItem = ref({
+    id: '',
+    title: '',
+    condition: '',
+    quantity: 0,
+    price: 0,
+    description: '',
+    picture: '',
+    seller_name: '',
+    shipping_country: '',
+    album_id: '',
     created_at: '',
 });
 
-const isLoggedIn = ref(false);
+const album = ref({
+    id: '',
+    title: '',
+    author: '',
+    release_date: '',
+    genre: '',
+    country: '',
+    label: '',
+    format: '',
+    cover: '',
+    notes: ''
+});
 
-interface AlbumItem {
-  id: number;
-  title: string;
-  release_date: Date;
-  genre: string;
-  country: string;
-  condition: string;
-  quantity: number;
-  price: number;
-  notes: string;
-  picture: string;
-  seller_name: string;
+interface Track {
+  position: string;
+  song_title: string;
+  artist: string;
+  duration: string;
 }
 
-const albumItems = ref<AlbumItem[]>([]);
+const tracks = ref<Track[]>([]);
 
-
+const isLoggedIn = ref(false);
 
 const getUser = async () => {
     try {
@@ -76,7 +74,32 @@ const logout = async () => {
     } finally {
         window.location.href='/';
     }
-}
+};
+
+
+const getItem = async () => {
+  try {
+    const response = await axiosInstance.get(`/get_album_item/${itemId}`);
+    albumItem.value = response.data[0];
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    getAlbumWithTracks(albumItem.value.album_id);
+  }
+};
+
+
+const getAlbumWithTracks = async (itemId: string) => {
+  try {
+    const response = await axiosInstance.get(`/album_info/${itemId}`);
+    album.value = response.data[0];
+    tracks.value = response.data[1];
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const getImageUrl = (path: string): string => {
   if (path.startsWith('http')) {
@@ -87,126 +110,24 @@ const getImageUrl = (path: string): string => {
 };
 
 
-const getAlbumItems = async () => {
-  loading.value = true
-
-  try {
-    const { data } = await axiosInstance.get('/get_album_items', {
-      params: {
-        genres: selectedGenres.value,
-        countries: selectedCountries.value,
-        decades: selectedDecades.value,
-      }
-    })
-    albumItems.value = data;
-  } catch (err) {
-    console.error(err)
-  } finally {
-    getGenres();
-    getCountries();
-    getDecades();
-    loading.value = false;
-  }
-}
-
-
-const filterAlbums = async () => {
-  loading.value = true
-
-  try {
-    const { data } = await axiosInstance.get('/filter_album_items', {
-      params: {
-        genres: selectedGenres.value,
-        countries: selectedCountries.value,
-        decades: selectedDecades.value.sort((b, a) => Number(b) - Number(a)),
-        minPrice: Number(minPrice.value),
-        maxPrice: Number(maxPrice.value),
-      }
-    })
-    albumItems.value = data;
-  } catch (err) {
-    console.error(err)
-  } finally {
-    getGenres();
-    getCountries();
-    getDecades();
-    loading.value = false;
-  }
-}
-
-
-const getGenres = async () => {
-  console.log('Function called...')
-  albumItems.value.forEach(albumItem => {
-  if (!genres.includes(albumItem.genre)) {
-    genres.push(albumItem.genre)
-  }
-  })
-}
-
-const getCountries = async () => {
-  console.log('Function called...')
-  albumItems.value.forEach(albumItem => {
-  if (!countries.includes(albumItem.country)) {
-    countries.push(albumItem.country)
-  }
-  })
-}
-
-const getDecades = async () => {
-  console.log('Function called...')
-  albumItems.value.forEach(albumItem => {
-  const year = new Date(albumItem.release_date).getFullYear();
-  const decade = Math.floor(year / 10) * 10;
-  if (!decades.includes(decade.toString())) {
-    decades.push(decade.toString())
-    decades.sort((a, b) => parseInt(b) - parseInt(a));
-  }
-  })
-}
-
-const sortAlbumItems = async (sortBy: string) => {
-  loading.value = true;
-
-  if (sortOrder.value === 'desc') {
-    sortOrder.value = 'asc';
-  } else {
-    sortOrder.value = 'desc';
-  }
-
-  try {
-    const { data } = await axiosInstance.get('/order_albums', {
-      params: {
-        sortBy: sortBy,
-        sortOrder: sortOrder.value,
-        genres: selectedGenres.value,
-        countries: selectedCountries.value,
-        decades: selectedDecades.value,
-      }
-    });
-    albumItems.value = data;
-  } catch (err) {
-    console.error(err);
-  } finally {
-    loading.value = false;
-  }
-}
 
 
 getUser();
-getAlbumItems();
-</script>
+getItem();
+</script> 
+
+
+
 
 <template>
-    <body>
-        <nav>
+    <body v-if="loading !== true">
+     <nav>
         <div id="navwrapper">
         <RouterLink to="/">
             <div id="logo">
-                <img src="../images/nav_images/vinyl_icon.svg">
-                <p>MusicVault</p>
-            </div>
-        </RouterLink>
+            <img src="../images/nav_images/vinyl_icon.svg">
+            <p>MusicVault</p>
+        </div></RouterLink>
 
         <div id="navbuttons">
             <ul>
@@ -232,90 +153,70 @@ getAlbumItems();
     </div>
     </nav>
 
-     <main>
-        <div id="album_info">
+    <main>
+        <div id="album_section">
+            <div id="album_info">
+                <img id="album_cover" v-if="album.cover" :src="getImageUrl(album.cover)" :alt="albumItem.title">
                 <div id="album_text_info">
-                    <h1> - </h1>
-                    <p></p>
-                </div>
-        </div>
-
-
-        <div id="offers_section">
-
-            <form id="filters">
-            <h1>Filters</h1>
-                <div id="genre_filters">
-                    <h2>Genre</h2>
-                    <div class="genre_filter" v-for="genre in genres" :key="genre">
-                        <input type="checkbox" :value="genre" v-model="selectedGenres" @change="filterAlbums">
-                        <label>{{ genre }}</label>
-                    </div>
-                </div>
-
-                <div id="price_range_filters">
-                    <h2>Price Range</h2>
-                    <div id="price_range_filters_inputs">
-                        <input type="number" name="min" v-model="minPrice" @change="filterAlbums">
-                        <p> - </p>
-                        <input type="number" name="max" v-model="maxPrice" @change="filterAlbums"> 
-                    </div>
-                </div>
-
-                <div id="decade_filters">
-                    <h2>Decade</h2>
-                    <div class="decade_filter" v-for="decade in decades" :key="decade">
-                        <input type="checkbox" :value="decade" v-model="selectedDecades" @change="filterAlbums">
-                        <label>{{ decade }}</label>
-                    </div>
-                </div>
-
-                <div id="country_filters">
-                    <h2>Country</h2>
-                    <div class="country_filter" v-for="country in countries" :key="country">
-                        <input type="checkbox" :value="country" v-model="selectedCountries" @change="filterAlbums">
-                        <label>{{ country }}</label>
-                    </div>
-                </div>
-        </form>
-
-
-            <div id="offers_list">
-                <h2>Offers</h2>
-                <div id="list_filters">
-                  <button class="filter_btn" >Title</button>
-                  <button class="filter_btn" >Artist</button>
-                  <button class="filter_btn">Genre</button>
-                  <button class="filter_btn">Year</button>
-                  <button class="filter_btn">Seller</button>
-                  <button class="filter_btn" >Price</button> 
-                </div>
-                <div class="album_card" v-for="albumItem in albumItems" :key="albumItem.id">
-                  
-                
-                <div id="item_info_col">
-                    <p>Title: <a :href="`/offer/${albumItem.id}`">{{ albumItem.title }}</a></p>
-                    <p>Condition: {{ albumItem.condition }}</p>
-                    <p>Quantity: {{ albumItem.quantity }}</p>
-                </div>
-
-                <div id="item_seller_col">  
-                    <p>{{ albumItem.seller_name }}</p>
-                </div>
-
-                <div id="item_price_col">
-                    <p>{{ albumItem.price }}</p>
-                </div>
-
+                    <h1>{{album.title}} - {{album.author}}</h1>
+                    <p>{{albumItem.description}}</p>
                 </div>
             </div>
-               
-            </div> 
+
+            <h1>Tracklist</h1>
+            <div id="tracklist">
+                <div id="track_position_col">
+                    <h4 id="track_position_title">№</h4>
+                    
+                    <p class="track_nr" v-for="track in tracks" :key="track.position">{{ track.position }}</p>
+                    
+                </div>
+
+                <div id="track_title_col">
+                    <h4 id="track_title">Title</h4>
+                    
+                    <p class="title" v-for="track in tracks" :key="track.position">{{ track.song_title }}</p>
+                   
+                </div>
+
+                <div id="track_artist_col">
+                    <h4 id="artist_title">Artist</h4>
+                    <p class="artist" v-for="track in tracks" :key="track.position">{{ track.artist }}</p>
+                </div>
+
+                <div id="track_duration_col">
+                    <h4 id="duration_title">Duration</h4>
+                    <p class="duration" v-for="track in tracks" :key="track.position">{{ track.duration }}</p>
+                </div>
+                
+            </div>
+            
+
+        </div>
+
+            <div id="album_data">
+                <h1>Offer data</h1>
+                <p id="author">Seller: {{ albumItem.seller_name }}</p>
+                <p id="release_date">Added: {{ albumItem.created_at }}</p>
+                <p id="country">Shipping Country: {{ albumItem.shipping_country }}</p>
+                <p id="genre">Condition: {{ albumItem.condition }}</p>
+                <p id="label">Quantity: {{ albumItem.quantity }}</p>
+                <p id="format">Price: {{ albumItem.price }}</p>
+
+                <hr>
+
+                <div id="button_sec">
+                    <button id="add_to_cart_btn">Add to cart</button>
+                    <a :href="`/albuminfo/${album.id}`"><button id="release_page_btn">View Release Page</button></a>
+                </div>
+            </div>
+
             
 
     </main>
 
-    <footer>
+
+        <footer>
         <div id="footer_wrapper">
         <div id="footer_top">
             <div id="footer_info">
@@ -390,8 +291,9 @@ getAlbumItems();
         </div>
     </footer>
 
+
     </body>
-</template>
+    </template>
 
 <style scoped>
 @font-face {
@@ -513,137 +415,118 @@ main {
   width: 80vw;
   margin: 0 auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  gap: 150px;
+  padding-bottom: 50px;
 }
 
-#offers_section {
+#album_section {
+    width: 70%;
     display: flex;
-    gap: 25px;
+    flex-direction: column;
+    margin-top: 50px;
 }
 
-#filters {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-#filters h1 {
-  font-size: 24px;
-}
-
-#filters h2 {
-  font-size: 18px;
-  margin-top: 0;
-}
-
-#filters input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-}
-
-.genre_filter, .decade_filter, .country_filter {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-}
-
-#genre_filters {
-  padding: 0;
-}
-
-#price_range_filters_inputs {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  height: 25px;
-}
-
-#price_range_filters_inputs input{
-  width: 100px;
-  height: 20px;
-}
-
-#genre_filters, #price_range_filters, #decade_filters, #country_filters {
-    padding-bottom: 20px;
-}
-
-#list_filters {
-    width: 100%;
-    height: fit-content;
-    padding: 0px 0px 0px 0px;
+#album_info {
     display: flex;
     flex-direction: row;
-    border: #ECECF0 solid 1px;
-    border-radius: 8px;
-    font-size: 16px;
-    line-height: 20px;
-    letter-spacing: 0px;
-    color: #0A0A0A;
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+#album_cover {
+  width: 250px;
+  height: 250px;
+  border-radius: 16px;
+}
+
+#tracklist  {
+  background-color: #ECECF0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 35px;
+  padding-right: 35px;
+}
+
+#tracklist h4 {
+  padding-bottom: 20px;
+}
+
+#tracklist p {
+  padding-bottom: 15px;
+}
+
+
+.track_data {
+  display: flex;
+  flex-direction: row;
+  margin-left: 35px;
+  margin-right: 35px;
+  justify-content: space-between;
+}
+
+.duration {
+  text-align: right;
+}
+
+#album_data {
+    height: fit-content;
+    width: 300px;
+    margin-top: 50px;
     background-color: #ECECF0;
+    border-radius: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 21.440px;
 }
 
-.filter_btn {
-    font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: transparent;
-    border-style: solid;
-    border: #030213 1px;
-    border-radius: 8px;
-    padding: 6px 12px 6px 12px;
-    font-size: 16px;
-    line-height: 20px;
-    letter-spacing: 0px;
-    cursor: pointer;
+#album_data h1 {
+  padding-bottom: 20px;
 }
 
-
-#offers_list {
-    width: 100%;
-    height: fit-content;
-    font-size: 16px;
-    line-height: 20px;
-    letter-spacing: 0px;
-    color: #0A0A0A;
+#album_data p {
+  padding-bottom: 10px;
 }
 
-.album_card {
-    width: 100%;
-    height: 200px;
-    padding: 20px 0px 20px 0px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: row;
-    gap: 33px;
-}
-
-.item_info_col {
+#button_sec {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.album_card img {
-    width: 150px;
-    height: 150px;
-    border-radius: 8px;
+#add_to_cart_btn {
+  width: 100%;
+  height: 40px;
+  background-color: #030213;
+  color: #FFFFFF;
+  border-style: none;
+  border-radius: 8px;
+  text-align: center;
+  vertical-align: middle;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:18px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  cursor: pointer;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#release_page_btn {
+  width: 100%;
+  height: 40px;
+  background-color: #FFFFFF;
+  color: #0A0A0A;
+  border: solid rgba(0, 0, 0, .1) 1px;
+  border-radius: 8px;
+  text-align: center;
+  vertical-align: middle;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:18px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  cursor: pointer;
+}
 
 
 

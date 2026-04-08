@@ -2,10 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\AlbumItems;
+use App\Models\Instruments;
+use App\Models\Item;
+use App\Models\Seller;
+use App\Models\Services;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Item extends Model
 {
+
+    use HasFactory;
+
     protected $fillable = [
         'title',
         'category',
@@ -16,6 +25,10 @@ class Item extends Model
         'picture',
         'seller_id',
     ];
+
+    public function showItems() {
+        return $this->hasMany(Item::class);
+    }
 
     public function seller()
     {
