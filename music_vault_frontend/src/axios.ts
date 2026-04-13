@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://music-vault-main-sjukhk.laravel.cloud/api',
+    baseURL: 'http://localhost:8000/api',
     headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
