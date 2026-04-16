@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import axiosInstance from '@/axios';
-import {ref, type Ref} from 'vue';
-import { useRoute } from 'vue-router';
-
-const route = useRoute();
-const itemId = route.params.id;
+import {ref} from 'vue';
+import { useRouter } from 'vue-router';
 
 const loading = ref(true);
 
-
+const router = useRouter();
 
 const user = ref({
     name: '',
     email: '',
 });
+
+const isLoggedIn = ref(false);
 
 interface Item {
   id: string;
@@ -25,57 +24,43 @@ interface Item {
   sellers_full_name: string;
 }
 
-const item: Item = {
-  id: '',
-  title: '',
-  quantity: 0,
-  price: 0,
-  origin_address: '',
-  country_id: 0,
-  sellers_full_name: '',
-} 
-
-const albumItem = ref({
-    id: '',
-    title: '',
-    condition: '',
-    quantity: 0,
-    price: 0,
-    description: '',
-    picture: '',
-    seller_name: '',
-    sellers_full_name: '',
-    shipping_country: 0,
-    origin_address: '',
-    album_id: '',
-    created_at: '',
-});
-
-const album = ref({
-    id: '',
-    title: '',
-    author: '',
-    release_date: '',
-    genre: '',
-    country: '',
-    label: '',
-    format: '',
-    cover: '',
-    notes: ''
-});
-
-interface Track {
-  position: string;
-  song_title: string;
-  artist: string;
-  duration: string;
+interface CheckoutForm {
+  buyers_first_name: string;
+  buyers_last_name: string;
+  country_id: number;
+  city: string;
+  shipping_address: string;
+  postal_code: string;
+  phone_number: number;
+  credit_card_number: number;
+  expiry_month: number;
+  expiry_year: number;
+  cvv: number;
 }
 
-const tracks = ref<Track[]>([]);
+interface Country {
+  id: number;
+  country_name: string;
+}
+
+const countries = ref<Country[]>([]);
 
 const shoppingList = ref<Item[]>([]);
 
-const isLoggedIn = ref(false);
+const checkoutForm = ref<CheckoutForm>({
+    buyers_first_name: '',
+    buyers_last_name: '',
+    country_id: 0,
+    city: '',
+    shipping_address: '',
+    postal_code: '',
+    phone_number: 0,
+    credit_card_number: 0,
+    expiry_month: 0,
+    expiry_year: 0,
+    cvv: 0,
+});
+
 
 const getUser = async () => {
     try {
@@ -100,52 +85,22 @@ const logout = async () => {
     } finally {
         window.location.href='/';
     }
-};
+}
 
-
-const getItem = async () => {
-  try {
-    const response = await axiosInstance.get(`/get_album_item/${itemId}`);
-    albumItem.value = response.data[0];
-    item.id = albumItem.value.id;
-    item.title = albumItem.value.title;
-    item.quantity = albumItem.value.quantity;
-    item.price = albumItem.value.price;
-    item.origin_address = albumItem.value.origin_address;
-    item.country_id = albumItem.value.shipping_country;
-    item.sellers_full_name = albumItem.value.sellers_full_name;
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    getAlbumWithTracks(albumItem.value.album_id);
-  }
-};
-
-
-const getAlbumWithTracks = async (itemId: string) => {
-  try {
-    const response = await axiosInstance.get(`/album_info/${itemId}`);
-    album.value = response.data[0];
-    tracks.value = response.data[1];
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const getImageUrl = (path: string): string => {
-  if (path.startsWith('http')) {
-    return path;
-  }
-
-  return `${'http://music-vault-main-sjukhk.laravel.cloud'}/storage/${path}`;
-};
+const getCountries = async () => {
+    try {
+      const response = await axiosInstance.get('/getcountries');
+      countries.value = response.data;
+      console.log(countries.value);
+    } catch (error) {
+      console.error(error);
+    }
+}
 
 const shoppingMenu = async () => {
 
   let shoppingSlider = document.getElementById('shopping_menu') as HTMLFormElement;
-  
+
   if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
     shoppingSlider?.style.setProperty('width','25%');
     shoppingSlider?.style.setProperty('visibility','visible');
@@ -154,11 +109,6 @@ const shoppingMenu = async () => {
     shoppingSlider?.style.setProperty('visibility','hidden');
   }
   
-}
-
-const addToShoppingList = async () => {
-  shoppingList.value.push(item);
-  localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
 }
 
 const loadFromShoppingList = async () => {
@@ -173,18 +123,66 @@ const deleteFromShoppingList = async (index: number) => {
   localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
 }
 
+const submitForm = async () => {
+  const formData = new FormData()
+
+  // Album fields
+  Object.entries(checkoutForm.value).forEach(([key, value]) => {
+    if (value !== null) {
+      formData.append(key, value as any)
+    }
+  })
+
+  // Tracks
+  shoppingList.value.forEach((item, index) => {
+        formData.append(`shoppingList[${index}][id]`, item.id)
+        formData.append(`shoppingList[${index}][title]`, item.title)
+        formData.append(`shoppingList[${index}][quantity]`, String(item.quantity))
+        formData.append(`shoppingList[${index}][price]`, String(item.price))
+        formData.append(`shoppingList[${index}][origin_address]`, item.origin_address)
+        formData.append(`shoppingList[${index}][country_id]`, String(item.country_id))
+        formData.append(`shoppingList[${index}][sellers_full_name]`, item.sellers_full_name)
+  })
+
+  try {
+    const response = await axiosInstance.post('/create_order', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    console.log(response.data);
+    if (response.status === 200) {
+        router.push('/');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const createOrder = async (payload: CheckoutForm) => {
+  try {
+    const response = await axiosInstance.post('/create_order', payload);
+    console.log(response.data);
+    if (response.status === 200) {
+        router.push('/');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+
+
+
 getUser();
-getItem();
+getCountries();
 loadFromShoppingList();
-</script> 
-
-
-
+</script>
 
 
 <template>
-    <body v-if="loading !== true">
-     <nav>
+
+<body v-if="loading !== true">
+    <nav>
         <div id="navwrapper">
         <RouterLink to="/">
             <div id="logo">
@@ -206,7 +204,7 @@ loadFromShoppingList();
             
             <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
             <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <p>{{user?.name}}</p>
+            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.name}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>
@@ -235,70 +233,71 @@ loadFromShoppingList();
           </div>
         </div>
 
+        <h1>Checkout</h1>
 
-        <div id="album_section">
-            <div id="album_info">
-                <img id="album_cover" v-if="album.cover" :src="getImageUrl(album.cover)" :alt="albumItem.title">
-                <div id="album_text_info">
-                    <h1>{{album.title}} - {{album.author}}</h1>
-                    <p>{{albumItem.description}}</p>
+        
+
+        <div id="form_wrapper">
+            <div id="selected_items">
+                <h4>Items you have selected:</h4>
+                <div class="selected_item" v-for="(item, index) in shoppingList">
+                  <div id="info_div">
+                    <h2>{{ item.title }}</h2>
+                    <p @click="deleteFromShoppingList(index)">Delete</p>
+                  </div>
+                  <div id="price_div">
+                    <b><p id="price">{{ item.price }}$</p></b>
+                    <p>Quantity: {{ item.quantity }}</p>
+                  </div>
                 </div>
             </div>
 
-            <h1>Tracklist</h1>
-            <div id="tracklist">
-                <div id="track_position_col">
-                    <h4 id="track_position_title">№</h4>
-                    
-                    <p class="track_nr" v-for="track in tracks" :key="track.position">{{ track.position }}</p>
-                    
+            <form id="checkout_form"  @submit.prevent="submitForm()" method="POST" enctype="multipart/form-data">
+                <div id="checkout_wrapper">
+                    <div id="contact_info_side">
+                        <label>First Name</label>
+                        <input class="checkout_input" name="first_name" type="text" v-model="checkoutForm.buyers_first_name">
+                        <label>Last Name</label>
+                        <input class="checkout_input" name="last_name" type="text" v-model="checkoutForm.buyers_last_name">
+                        <label>Country</label>
+                        <select class="checkout_input" name="country" v-model="checkoutForm.country_id">
+                          <option value="" disabled>Select country</option>
+                          <option v-for="country in countries" :key="country.id" :value="country.id">{{ country.country_name }}</option>
+                        </select>
+                        <label>City</label>
+                        <input class="checkout_input" name="city" type="text" v-model="checkoutForm.city">
+                        <label>Address</label>
+                        <input class="checkout_input" name="address" type="text" v-model="checkoutForm.shipping_address">
+                        <label>Postal Code</label>
+                        <input class="checkout_input" name="postal_code" type="text" v-model="checkoutForm.postal_code">
+                        <label>Phone Number</label>
+                        <input class="checkout_input" name="phone_number" type="tel" v-model="checkoutForm.phone_number">
+                    </div>
+                        
+                    <div class="payment_info_side">
+                        <label>Credit Card Number</label>
+                        <input class="checkout_input" name="card_number" type="number" v-model="checkoutForm.credit_card_number">
+                        <div id="subpayment_info_side">
+                            <div class="payment_info_side">
+                                <label>Date of Expiration</label>
+                                <div id="expiry_date_input">
+                                    <input class="checkout_input" name="month_of_expiration" type="text" autocomplete="cc-exp" placeholder="MM" v-model="checkoutForm.expiry_month">
+                                    <input class="checkout_input" name="year_of_expiration" type="text" autocomplete="cc-exp" placeholder="YY" v-model="checkoutForm.expiry_year">
+                                </div>
+                            </div>
+                            <div class="payment_info_side">
+                                <label>CVV</label>
+                                <input class="checkout_input" name="cvv" type="number" v-model="checkoutForm.cvv">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <div id="track_title_col">
-                    <h4 id="track_title">Title</h4>
-                    
-                    <p class="title" v-for="track in tracks" :key="track.position">{{ track.song_title }}</p>
-                   
-                </div>
-
-                <div id="track_artist_col">
-                    <h4 id="artist_title">Artist</h4>
-                    <p class="artist" v-for="track in tracks" :key="track.position">{{ track.artist }}</p>
-                </div>
-
-                <div id="track_duration_col">
-                    <h4 id="duration_title">Duration</h4>
-                    <p class="duration" v-for="track in tracks" :key="track.position">{{ track.duration }}</p>
-                </div>
-                
-            </div>
-            
-
+                <input id="submit_btn" type="submit" value="Pay and order">
+            </form>
         </div>
-
-            <div id="album_data">
-                <h1>Offer data</h1>
-                <p id="author">Seller: {{ albumItem.seller_name }}</p>
-                <p id="release_date">Added: {{ albumItem.created_at }}</p>
-                <p id="country">Shipping Country: {{ albumItem.shipping_country }}</p>
-                <p id="genre">Condition: {{ albumItem.condition }}</p>
-                <p id="label">Quantity: {{ albumItem.quantity }}</p>
-                <p id="format">Price: {{ albumItem.price }}</p>
-
-                <hr>
-
-                <div id="button_sec">
-                    <button id="add_to_cart_btn" @click="addToShoppingList()">Add to cart</button>
-                    <a :href="`/albuminfo/${album.id}`"><button id="release_page_btn">View Release Page</button></a>
-                </div>
-            </div>
-
-            
-
     </main>
 
-
-        <footer>
+     <footer>
         <div id="footer_wrapper">
         <div id="footer_top">
             <div id="footer_info">
@@ -372,10 +371,8 @@ loadFromShoppingList();
         </div>
         </div>
     </footer>
-
-
-    </body>
-    </template>
+</body>
+</template>
 
 <style scoped>
 @font-face {
@@ -494,12 +491,14 @@ nav {
 }
 
 main {
-  width: 80vw;
+  padding-top: 65px;
+  padding-bottom: 65px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: row;
-  gap: 150px;
-  padding-bottom: 50px;
+}
+
+main h1 {
+  text-align: center;
+  margin-bottom: 25px;
 }
 
 #shopping_menu {
@@ -548,115 +547,115 @@ main {
   font-size: 24px;
 }
 
-#album_section {
-    width: 70%;
-    display: flex;
-    flex-direction: column;
-    margin-top: 50px;
+#form_wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: fit-content;
+  align-items: start;
+  margin: 0 auto;
+  gap: 85px;
 }
 
-#album_info {
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
-    margin-bottom: 60px;
-}
-
-#album_cover {
-  width: 250px;
-  height: 250px;
-  border-radius: 16px;
-}
-
-#tracklist  {
-  background-color: #ECECF0;
+#selected_items {
+  background-color: #E4E4E4;
   border-radius: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding-left: 35px;
-  padding-right: 35px;
-}
-
-#tracklist h4 {
-  padding-bottom: 20px;
-}
-
-#tracklist p {
-  padding-bottom: 15px;
-}
-
-
-.track_data {
-  display: flex;
-  flex-direction: row;
-  margin-left: 35px;
-  margin-right: 35px;
-  justify-content: space-between;
-}
-
-.duration {
-  text-align: right;
-}
-
-#album_data {
-    height: fit-content;
-    width: 300px;
-    margin-top: 50px;
-    background-color: #ECECF0;
-    border-radius: 10px;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-bottom: 21.440px;
-}
-
-#album_data h1 {
-  padding-bottom: 20px;
-}
-
-#album_data p {
-  padding-bottom: 10px;
-}
-
-#button_sec {
+  padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-#add_to_cart_btn {
-  width: 100%;
-  height: 40px;
-  background-color: #030213;
-  color: #FFFFFF;
-  border-style: none;
-  border-radius: 8px;
-  text-align: center;
-  vertical-align: middle;
-  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size:18px;
-  line-height: 20px;
-  letter-spacing: 0px;
-  cursor: pointer;
-}
-
-#release_page_btn {
-  width: 100%;
-  height: 40px;
+.selected_item {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
   background-color: #FFFFFF;
-  color: #0A0A0A;
-  border: solid rgba(0, 0, 0, .1) 1px;
-  border-radius: 8px;
-  text-align: center;
-  vertical-align: middle;
-  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size:18px;
-  line-height: 20px;
-  letter-spacing: 0px;
-  cursor: pointer;
+  border-radius: 20px;
+  padding: 20px;
+  max-width: inherit;
 }
 
 
+#checkout_form {
+  display: flex;
+  flex-direction: column;
+}
+
+#checkout_wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 150px;
+}
+
+#contact_info_side {
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+}
+
+.payment_info_side {
+  display: flex;
+  flex-direction: column;
+}
+
+#subpayment_info_side {
+  display: flex;
+  flex-direction: row;
+max-width: 386px;
+}
+
+#subpayment_info_side input{
+  width: fit-content;
+}
+
+#expiry_date_input {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+#expiry_date_input input{
+  width: 30%;
+}
+
+label {
+  line-height: 28px;
+  letter-spacing: -0.5px;
+  margin-left: 10px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  color: #C3C3C3;
+}
+
+#submit_btn {
+  min-width: 386px;
+  min-height: 54px;
+  margin-top: 50px !important;
+  background-color: #000000;
+  color: #E4E4E4;
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 28px;
+  letter-spacing: -0.5px;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 8px;
+  border: none;
+  margin: 0 auto;
+}
+
+.checkout_input {
+  width: 380px;
+  height: 50px;
+  border-style: solid;
+  border-color: #000000;
+  border-radius: 8px;
+  border-width: 1px;
+  padding: 1px 2px;
+}
 
 footer {
   border-top: solid #ECECF0 1px;

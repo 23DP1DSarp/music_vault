@@ -5,6 +5,7 @@ use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\UserController;
 use App\Models\Album;
@@ -183,3 +184,5 @@ Route::get('/get_album_items', [ItemController::class, 'getAllAlbumItems']);
 Route::get('/get_album_item/{item}', [ItemController::class, 'getAlbumItem']);
 
 Route::get('/filter_album_items', [ItemController::class, 'filterAlbumItems']);
+
+Route::post('/create_order', [OrderController::class, 'createOrder']);

@@ -75,7 +75,7 @@ class ItemController extends Controller
         ->join('albums', 'album_items.album_id', '=', 'albums.id')
         ->where('items.id', '=', $item->id)
         ->where('items.category', 'album')
-        ->select('items.*', 'users.name as seller_name', 'albums.id as album_id', 'countries.country_name as shipping_country', DB::raw('DATE(items.created_at) as created_at'))
+        ->select('items.*', 'users.name as seller_name', 'sellers.full_name as sellers_full_name', 'albums.id as album_id', 'countries.id as shipping_country', 'sellers.shipping_address as origin_address', DB::raw('DATE(items.created_at) as created_at'))
         ->get();
         return $item;
     }

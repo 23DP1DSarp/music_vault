@@ -556,6 +556,11 @@ main {
   margin: 0 auto;
 }
 
+main h1 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
 #shopping_menu {
   height: 100%;
   width: 0px;
@@ -600,11 +605,6 @@ main {
 
 #price {
   font-size: 24px;
-}
-
-main h1 {
-  text-align: center;
-  margin-bottom: 25px;
 }
 
 #form_wrapper {
