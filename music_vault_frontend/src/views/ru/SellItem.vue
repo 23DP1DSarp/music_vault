@@ -188,7 +188,7 @@ loadFromShoppingList();
         <div id="rightbuttons">
             
             <input type="text" id="searchbar" name="recordsearch" placeholder="Поиск записей...">
-            <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
+            <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
             <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.name}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Выйти</button>
