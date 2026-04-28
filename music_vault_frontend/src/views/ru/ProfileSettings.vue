@@ -1,83 +1,49 @@
 <script setup lang="ts">
 import axiosInstance from '@/axios';
-import {ref, type Ref} from 'vue';
-import { useRoute } from 'vue-router';
-
-const route = useRoute();
-const itemId = route.params.id;
+import {ref} from 'vue';
+import { useRouter } from 'vue-router';
 
 const loading = ref(true);
 
-
+const router = useRouter();
 
 const user = ref({
     name: '',
     email: '',
+    country: '',
 });
+
+const isLoggedIn = ref(false);
+const shoppingList = ref<Item[]>([]);
+
+interface AccountInfo {
+  name: string;
+  email: string;
+}
+
+interface ResetPassword {
+  current_password: string;
+  new_password: string;
+  confirm_new_password: string;
+}
 
 interface Item {
   id: string;
   title: string;
   quantity: number;
   price: number;
-  origin_address: string;
-  country_id: number;
-  sellers_full_name: string;
-  available_quantity: number;
 }
 
-const item: Item = {
-  id: '',
-  title: '',
-  quantity: 0,
-  price: 0,
-  origin_address: '',
-  country_id: 0,
-  sellers_full_name: '',
-  available_quantity: 0,
-} 
-
-const albumItem = ref({
-    id: '',
-    title: '',
-    condition: '',
-    quantity: 0,
-    price: 0,
-    description: '',
-    picture: '',
-    seller_name: '',
-    sellers_full_name: '',
-    shipping_country: 0,
-    origin_address: '',
-    album_id: '',
-    created_at: '',
+const accountInfo = ref<AccountInfo>({
+  name: '',
+  email: '',
 });
 
-const album = ref({
-    id: '',
-    title: '',
-    author: '',
-    release_date: '',
-    genre: '',
-    country: '',
-    label: '',
-    format: '',
-    cover: '',
-    notes: ''
+const resetPassword = ref<ResetPassword>({
+  current_password: '',
+  new_password: '',
+  confirm_new_password: '',
 });
-
-interface Track {
-  position: string;
-  song_title: string;
-  artist: string;
-  duration: string;
-}
-
-const tracks = ref<Track[]>([]);
-
-const shoppingList = ref<Item[]>([]);
-
-const isLoggedIn = ref(false);
 
 const getUser = async () => {
     try {
@@ -100,55 +66,59 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/';
+        window.location.href='/ru';
     }
-};
+}
 
-
-const getItem = async () => {
+const changeAccountInfo = async (accountInfo: AccountInfo) => {
   try {
-    const response = await axiosInstance.get(`/get_album_item/${itemId}`);
-    albumItem.value = response.data[0];
-    item.id = albumItem.value.id;
-    item.title = albumItem.value.title;
-    item.available_quantity = albumItem.value.quantity;
-    item.quantity = 1;
-    item.price = albumItem.value.price;
-    item.origin_address = albumItem.value.origin_address;
-    item.country_id = albumItem.value.shipping_country;
-    item.sellers_full_name = albumItem.value.sellers_full_name;
+    const response = await axiosInstance.put('/change-user-info', {
+      name: accountInfo.name,
+      email: accountInfo.email,
+    });
     console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    getAlbumWithTracks(albumItem.value.album_id);
-  }
-};
-
-
-const getAlbumWithTracks = async (itemId: string) => {
-  try {
-    const response = await axiosInstance.get(`/album_info/${itemId}`);
-    album.value = response.data[0];
-    tracks.value = response.data[1];
-    console.log(response.data);
+    alert('Account information updated successfully!');
   } catch (error) {
     console.error(error);
   }
+  
 };
 
-const getImageUrl = (path: string): string => {
-  if (path.startsWith('http')) {
-    return path;
+const changePassword = async (resetPassword: ResetPassword) => {
+  if (resetPassword.new_password !== resetPassword.confirm_new_password) {
+    alert('New password and confirm new password do not match!');
+    return;
   }
 
-  return `${'http://music-vault-main-sjukhk.laravel.cloud'}/storage/${path}`;
+  try {
+    const response = await axiosInstance.put('/reset-password', {
+      current_password: resetPassword.current_password,
+      password: resetPassword.confirm_new_password,
+      password_confirmation: resetPassword.confirm_new_password,
+    });
+    console.log(response.data);
+    alert('Password changed successfully!');
+  } catch (error) {
+    console.error(error);
+  }
 };
+
+const deleteAccount = async () => {
+  try {
+    const response = await axiosInstance.delete('/delete-account');
+    console.log(response.data);
+    alert('Account deleted successfully!');
+    window.location.href='/';
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
 const shoppingMenu = async () => {
 
   let shoppingSlider = document.getElementById('shopping_menu') as HTMLFormElement;
-  
+
   if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
     shoppingSlider?.style.setProperty('width','25%');
     shoppingSlider?.style.setProperty('visibility','visible');
@@ -157,11 +127,6 @@ const shoppingMenu = async () => {
     shoppingSlider?.style.setProperty('visibility','hidden');
   }
   
-}
-
-const addToShoppingList = async () => {
-  shoppingList.value.push(item);
-  localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
 }
 
 const loadFromShoppingList = async () => {
@@ -177,185 +142,182 @@ const deleteFromShoppingList = async (index: number) => {
 }
 
 getUser();
-getItem();
 loadFromShoppingList();
-</script> 
-
-
-
-
+</script>
 
 <template>
-    <body v-if="loading !== true">
-     <nav>
+
+<body v-if="loading !== true">
+    <nav>
         <div id="navwrapper">
-        <RouterLink to="/">
+        <RouterLink to="/ru">
             <div id="logo">
-            <img src="../images/nav_images/vinyl_icon.svg">
+            <img src="../../images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
         </div></RouterLink>
 
         <div id="navbuttons">
             <ul>
-                <li>New Releases</li>
-                <li>Genres</li>
-                <li>Artists</li>
-                <li>Forums</li>
-                <RouterLink to="/add-album" v-if="isLoggedIn">Add Album</RouterLink>
+                <li>Новинки</li>
+                <li>Жанры</li>
+                <li>Исполнители</li>
+                <li>Форумы</li>
+                <RouterLink to="/add-album" v-if="isLoggedIn">Добавить альбом</RouterLink>
             </ul>
         </div>
 
         <div id="rightbuttons">
             
-            <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
-            <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <p>{{user?.name}}</p>
+            <input type="text" id="searchbar" name="recordsearch" placeholder="Поиск записей...">
+            <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
+            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.name}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
-                <button id="logoutbtn">Log out</button>
+                <button id="logoutbtn">Выйти</button>
             </form>
-            <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
-            <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+            <RouterLink to="/login" v-if="!isLoggedIn">Войти</RouterLink>
+            <RouterLink to="/register" v-if="!isLoggedIn">Регистрация</RouterLink>
         </div>
     </div>
     </nav>
+
 
     <main>
 
         <div id="shopping_menu">
           <div id="close_btn" @click="shoppingMenu()">
-            <img src="../images/shopping_cart images/close-x-svgrepo-com.svg">
+            <img src="../../images/shopping_cart images/close-x-svgrepo-com.svg">
           </div>
           <div class="shopping_item" v-for="(item, index) in shoppingList">
             <div id="info_div">
               <h2>{{ item.title }}</h2>
-              <p @click="deleteFromShoppingList(index)">Delete</p>
+              <p @click="deleteFromShoppingList(index)">Удалить</p>
             </div>
             <div id="price_div">
               <b><p id="price">{{ item.price }}$</p></b>
-              <p>Quantity: {{ item.quantity }}</p>
+              <p>Количество: {{ item.quantity }}</p>
             </div>
             
           </div>
         </div>
 
-
-        <div id="album_section">
-            <div id="album_info">
-                <img id="album_cover" v-if="album.cover" :src="getImageUrl(album.cover)" :alt="albumItem.title">
-                <div id="album_text_info">
-                    <h1>{{album.title}} - {{album.author}}</h1>
-                    <p>{{albumItem.description}}</p>
+        <h1>Настройки профиля</h1>
+        <div id="account_info">
+            <h2>Информация об аккаунте</h2>
+            <form @submit.prevent="changeAccountInfo(accountInfo)">
+                <div class="form_parts">
+                    <label>Имя пользователя</label>
+                    <input type="text" v-model="accountInfo.name">
                 </div>
+
+                <div class="form_parts">
+                    <label>Email</label>
+                    <input type="text" v-model="accountInfo.email">
+                </div>
+
+                <div class="form_parts">
+                    <label>Страна</label>
+                    <select name="country">
+                      <option value="" disabled>Выберите страну</option>
+                      <option></option>
+                    </select>
+                </div>
+
+                <div class="form_parts">
+                    <input id="submit_btn" type="submit" value="Сохранить">
+                </div>
+            </form>
             </div>
 
-            <h1>Tracklist</h1>
-            <div id="tracklist">
-                <div id="track_position_col">
-                    <h4 id="track_position_title">№</h4>
-                    
-                    <p class="track_nr" v-for="track in tracks" :key="track.position">{{ track.position }}</p>
-                    
+            <div id="change_password">
+            <h2>Изменить пароль</h2>
+            <form @submit.prevent="changePassword(resetPassword)">
+                <div class="form_parts">
+                    <label>Текущий пароль</label>
+                    <input type="password" v-model="resetPassword.current_password">
                 </div>
 
-                <div id="track_title_col">
-                    <h4 id="track_title">Title</h4>
-                    
-                    <p class="title" v-for="track in tracks" :key="track.position">{{ track.song_title }}</p>
-                   
+                <div class="form_parts">
+                    <label>Новый пароль</label>
+                    <input type="password" v-model="resetPassword.new_password">
                 </div>
 
-                <div id="track_artist_col">
-                    <h4 id="artist_title">Artist</h4>
-                    <p class="artist" v-for="track in tracks" :key="track.position">{{ track.artist }}</p>
+                <div class="form_parts">
+                    <label>Confirm Новый пароль</label>
+                    <input type="password" v-model="resetPassword.confirm_new_password">
                 </div>
 
-                <div id="track_duration_col">
-                    <h4 id="duration_title">Duration</h4>
-                    <p class="duration" v-for="track in tracks" :key="track.position">{{ track.duration }}</p>
+                <div class="form_parts">
+                    <input id="submit_btn" type="submit" value="Сохранить">
                 </div>
-                
+            </form>
             </div>
-            
 
+            <div id="change_password">
+            <h2>Опасная зона</h2>
+            <p>Удаление аккаунта необратимо. Действуйте осторожно.</p>
+            <form @submit.prevent="deleteAccount">
+                <div class="form_parts">
+                    <input id="delete_btn" type="submit" value="Удалить Account">
+                </div>
+            </form>
         </div>
-
-            <div id="album_data">
-                <h1>Offer data</h1>
-                <p id="author">Seller: {{ albumItem.seller_name }}</p>
-                <p id="release_date">Added: {{ albumItem.created_at }}</p>
-                <p id="country">Shipping Country: {{ albumItem.shipping_country }}</p>
-                <p id="genre">Condition: {{ albumItem.condition }}</p>
-                <p id="label">Quantity: {{ albumItem.quantity }}</p>
-                <p id="format">Price: {{ albumItem.price }}</p>
-
-                <hr>
-
-                <div id="button_sec">
-                    <button id="add_to_cart_btn" @click="addToShoppingList()">Add to cart</button>
-                    <a :href="`/albuminfo/${album.id}`"><button id="release_page_btn">View Release Page</button></a>
-                </div>
-            </div>
-
-            
-
     </main>
 
-
-        <footer>
+    <footer>
         <div id="footer_wrapper">
         <div id="footer_top">
             <div id="footer_info">
                 <div id="footer_logo">
-                    <img src="../images/footer_images/vinyl_icon.svg">
+                    <img src="../../images/footer_images/vinyl_icon.svg">
                     <p>MusicVault</p>
                 </div>
                 <p id="footer_info_text">
-                    Your premier destination for music records. Discover,
-                    collect, and enjoy music the way it was meant to be
-                    heard.
+                    Ваше главное место для музыкальных записей. Открывайте,
+                    коллекционируйте и наслаждайтесь музыкой так,
+                    как она была создана звучать.
                 </p>
 
                 <div id="icons">
-                    <img class="icon" src="../images/footer_images/facebook_icon.svg">
-                    <img class="icon" src="../images/footer_images/instagram_icon.svg">
-                    <img class="icon" src="../images/footer_images/twitter_icon.svg">
-                    <img class="icon" src="../images/footer_images/youtube_icon.svg">
+                    <img class="icon" src="../../images/footer_images/facebook_icon.svg">
+                    <img class="icon" src="../../images/footer_images/instagram_icon.svg">
+                    <img class="icon" src="../../images/footer_images/twitter_icon.svg">
+                    <img class="icon" src="../../images/footer_images/youtube_icon.svg">
                 </div>
                 
             </div>
 
             <div>
-                <h6>Quick Links</h6>
+                <h6>Быстрые ссылки</h6>
 
                 <ul>
-                    <li>New Releases</li>
-                    <li>Pre-Orders</li>
-                    <li>Sale Items</li>
-                    <li>Rare Finds</li>
-                    <li>Gift Cards</li>
+                    <li>Новинки</li>
+                    <li>Предзаказы</li>
+                    <li>Распродажа</li>
+                    <li>Редкие находки</li>
+                    <li>Подарочные карты</li>
                 </ul>
             </div>
 
             <div>
                 
-                <h6>Genres</h6>
+                <h6>Жанры</h6>
 
                 <ul>
-                    <li>Rock</li>
-                    <li>Jazz</li>
-                    <li>Electronic</li>
-                    <li>Hip-Hop</li>
-                    <li>Classical</li>
+                    <li>Рок</li>
+                    <li>Джаз</li>
+                    <li>Электроника</li>
+                    <li>Хип-хопs</li>
+                    <li>Классика</li>
                 </ul>
             </div>
 
             <div id="subscribe_form">
-                <h6>Stay Updated</h6>
-                <p>Get notified about new releases and exclusive deals.</p>
+                <h6>Будьте в курсе</h6>
+                <p>Получайте уведомления о новинках и эксклюзивных предложениях.</p>
 
                 <form action="" method="post">
-                    <input id="email_input" placeholder="Enter your email" name="subscription-email" type="email" required>
-                    <input id="subscribe_form_submit" type="submit" value="Subscribe">
+                    <input id="email_input" placeholder="Введите email" name="subscription-email" type="email" required>
+                    <input id="subscribe_form_submit" type="submit" value="Подписаться">
                 </form>
             </div>
         </div>
@@ -364,26 +326,24 @@ loadFromShoppingList();
         <div id="footer_bottom">
 
             <ul>
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
-                <li>Shipping Info</li>
-                <li>Returns</li>
+                <li>Политика конфиденциальности</li>
+                <li>Условия использования</li>
+                <li>Информация о доставке</li>
+                <li>Возврат</li>
             </ul>
 
-            <p>&copy; 2025 MusicVault. All rights reserved.</p>
+            <p>&copy; 2025 MusicVault. Все права защищены.</p>
 
         </div>
         </div>
     </footer>
-
-
-    </body>
-    </template>
+</body>
+</template>
 
 <style scoped>
 @font-face {
   font-family: Segoe UI Symbol;
-  src: url('../assets/fonts/Segoe-UI-Symbol.ttf');
+  src: url('../../assets/fonts/Segoe-UI-Symbol.ttf');
 }
 
 html {
@@ -497,11 +457,12 @@ nav {
 }
 
 main {
-  width: 80vw;
+  width: 300px;
   margin: 0 auto;
   display: flex;
-  flex-direction: row;
-  gap: 150px;
+  flex-direction: column;
+  align-items: center;
+  gap: 80px;
   padding-bottom: 50px;
 }
 
@@ -551,115 +512,60 @@ main {
   font-size: 24px;
 }
 
-#album_section {
-    width: 70%;
-    display: flex;
-    flex-direction: column;
-    margin-top: 50px;
-}
-
-#album_info {
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
-    margin-bottom: 60px;
-}
-
-#album_cover {
-  width: 250px;
-  height: 250px;
-  border-radius: 16px;
-}
-
-#tracklist  {
-  background-color: #ECECF0;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding-left: 35px;
-  padding-right: 35px;
-}
-
-#tracklist h4 {
-  padding-bottom: 20px;
-}
-
-#tracklist p {
-  padding-bottom: 15px;
-}
-
-
-.track_data {
-  display: flex;
-  flex-direction: row;
-  margin-left: 35px;
-  margin-right: 35px;
-  justify-content: space-between;
-}
-
-.duration {
-  text-align: right;
-}
-
-#album_data {
-    height: fit-content;
-    width: 300px;
-    margin-top: 50px;
-    background-color: #ECECF0;
-    border-radius: 10px;
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-bottom: 21.440px;
-}
-
-#album_data h1 {
-  padding-bottom: 20px;
-}
-
-#album_data p {
-  padding-bottom: 10px;
-}
-
-#button_sec {
+.form_parts {
+  width: 380px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
-#add_to_cart_btn {
-  width: 100%;
-  height: 40px;
-  background-color: #030213;
-  color: #FFFFFF;
-  border-style: none;
+label {
+  line-height: 28px;
+  letter-spacing: -0.5px;
+  margin-left: 10px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  color: #C3C3C3;
+}
+
+input, select {
+  width: 380px;
+  height: 50px;
+  border-style: solid;
+  border-color: #000000;
   border-radius: 8px;
-  text-align: center;
-  vertical-align: middle;
-  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size:18px;
-  line-height: 20px;
-  letter-spacing: 0px;
-  cursor: pointer;
+  border-width: 1px;
+  padding: 1px 2px;
 }
 
-#release_page_btn {
-  width: 100%;
-  height: 40px;
-  background-color: #FFFFFF;
-  color: #0A0A0A;
-  border: solid rgba(0, 0, 0, .1) 1px;
+#submit_btn {
+  min-width: 386px;
+  min-height: 54px;
+  margin-top: 30px;
+  background-color: #000000;
+  color: #E4E4E4;
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 28px;
+  letter-spacing: -0.5px;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   border-radius: 8px;
-  text-align: center;
-  vertical-align: middle;
-  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size:18px;
-  line-height: 20px;
-  letter-spacing: 0px;
-  cursor: pointer;
+  border: none;
 }
 
-
+#delete_btn {
+  min-width: 386px;
+  min-height: 54px;
+  margin-top: 30px;
+  background-color: #E7000B;
+  color: #E4E4E4;
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 28px;
+  letter-spacing: -0.5px;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 8px;
+  border: none;
+}
 
 footer {
   border-top: solid #ECECF0 1px;
@@ -806,4 +712,5 @@ footer h6 {
   list-style: none;
   padding: 0;
 }
+
 </style>

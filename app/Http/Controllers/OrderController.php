@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -39,7 +38,7 @@ class OrderController extends Controller
 
         foreach ($incomingFields['shoppingList'] as $data) {
             $order->order_items()->create([
-                
+
                 'title' => $data['title'],
                 'quantity' => $data['quantity'],
                 'price' => $data['price'],

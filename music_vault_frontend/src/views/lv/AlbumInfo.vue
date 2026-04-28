@@ -1,56 +1,16 @@
 <script setup lang="ts">
 import axiosInstance from '@/axios';
-import {ref, type Ref} from 'vue';
+import {ref} from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const itemId = route.params.id;
+const albumId = route.params.id;
 
 const loading = ref(true);
-
-
 
 const user = ref({
     name: '',
     email: '',
-});
-
-interface Item {
-  id: string;
-  title: string;
-  quantity: number;
-  price: number;
-  origin_address: string;
-  country_id: number;
-  sellers_full_name: string;
-  available_quantity: number;
-}
-
-const item: Item = {
-  id: '',
-  title: '',
-  quantity: 0,
-  price: 0,
-  origin_address: '',
-  country_id: 0,
-  sellers_full_name: '',
-  available_quantity: 0,
-} 
-
-const albumItem = ref({
-    id: '',
-    title: '',
-    condition: '',
-    quantity: 0,
-    price: 0,
-    description: '',
-    picture: '',
-    seller_name: '',
-    sellers_full_name: '',
-    shipping_country: 0,
-    origin_address: '',
-    album_id: '',
-    created_at: '',
 });
 
 const album = ref({
@@ -73,11 +33,18 @@ interface Track {
   duration: string;
 }
 
+interface Item {
+  id: string;
+  title: string;
+  quantity: number;
+  price: number;
+}
+
 const tracks = ref<Track[]>([]);
 
-const shoppingList = ref<Item[]>([]);
-
 const isLoggedIn = ref(false);
+
+const shoppingList = ref<Item[]>([]);
 
 const getUser = async () => {
     try {
@@ -105,30 +72,9 @@ const logout = async () => {
 };
 
 
-const getItem = async () => {
+const getAlbumwithTracks = async () => {
   try {
-    const response = await axiosInstance.get(`/get_album_item/${itemId}`);
-    albumItem.value = response.data[0];
-    item.id = albumItem.value.id;
-    item.title = albumItem.value.title;
-    item.available_quantity = albumItem.value.quantity;
-    item.quantity = 1;
-    item.price = albumItem.value.price;
-    item.origin_address = albumItem.value.origin_address;
-    item.country_id = albumItem.value.shipping_country;
-    item.sellers_full_name = albumItem.value.sellers_full_name;
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    getAlbumWithTracks(albumItem.value.album_id);
-  }
-};
-
-
-const getAlbumWithTracks = async (itemId: string) => {
-  try {
-    const response = await axiosInstance.get(`/album_info/${itemId}`);
+    const response = await axiosInstance.get(`/album_info/${albumId}`);
     album.value = response.data[0];
     tracks.value = response.data[1];
     console.log(response.data);
@@ -145,6 +91,15 @@ const getImageUrl = (path: string): string => {
   return `${'http://music-vault-main-sjukhk.laravel.cloud'}/storage/${path}`;
 };
 
+const addToCollection = async () => {
+  try {
+    const response = await axiosInstance.post(`/add_to_collection/${album.value.id}`);
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 const shoppingMenu = async () => {
 
   let shoppingSlider = document.getElementById('shopping_menu') as HTMLFormElement;
@@ -157,11 +112,6 @@ const shoppingMenu = async () => {
     shoppingSlider?.style.setProperty('visibility','hidden');
   }
   
-}
-
-const addToShoppingList = async () => {
-  shoppingList.value.push(item);
-  localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
 }
 
 const loadFromShoppingList = async () => {
@@ -177,78 +127,75 @@ const deleteFromShoppingList = async (index: number) => {
 }
 
 getUser();
-getItem();
+getAlbumwithTracks();
 loadFromShoppingList();
 </script> 
-
-
-
 
 
 <template>
     <body v-if="loading !== true">
      <nav>
         <div id="navwrapper">
-        <RouterLink to="/">
+        <RouterLink to="/lv">
             <div id="logo">
-            <img src="../images/nav_images/vinyl_icon.svg">
+            <img src="../../images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
         </div></RouterLink>
 
         <div id="navbuttons">
             <ul>
-                <li>New Releases</li>
-                <li>Genres</li>
-                <li>Artists</li>
-                <li>Forums</li>
-                <RouterLink to="/add-album" v-if="isLoggedIn">Add Album</RouterLink>
+                <li>Jaunumi</li>
+                <li>Žanri</li>
+                <li>Mākslinieki</li>
+                <li>Forumi</li>
+                <RouterLink to="/add-album" v-if="isLoggedIn">Pievienot albumu</RouterLink>
             </ul>
         </div>
 
         <div id="rightbuttons">
             
-            <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
-            <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
+            <input type="text" id="searchbar" name="recordsearch" placeholder="Meklēt ierakstus...">
+            <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
             <p>{{user?.name}}</p>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
-                <button id="logoutbtn">Log out</button>
+                <button id="logoutbtn">Iziet</button>
             </form>
-            <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
-            <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+            <RouterLink to="/login" v-if="!isLoggedIn">Ieiet</RouterLink>
+            <RouterLink to="/register" v-if="!isLoggedIn">Reģistrēties</RouterLink>
         </div>
     </div>
     </nav>
+
 
     <main>
 
         <div id="shopping_menu">
           <div id="close_btn" @click="shoppingMenu()">
-            <img src="../images/shopping_cart images/close-x-svgrepo-com.svg">
+            <img src="../../images/shopping_cart images/close-x-svgrepo-com.svg">
           </div>
           <div class="shopping_item" v-for="(item, index) in shoppingList">
             <div id="info_div">
               <h2>{{ item.title }}</h2>
-              <p @click="deleteFromShoppingList(index)">Delete</p>
+              <p @click="deleteFromShoppingList(index)">Dzēst</p>
             </div>
             <div id="price_div">
               <b><p id="price">{{ item.price }}$</p></b>
-              <p>Quantity: {{ item.quantity }}</p>
+              <p>Daudzums: {{ item.quantity }}</p>
             </div>
             
           </div>
         </div>
 
-
         <div id="album_section">
             <div id="album_info">
-                <img id="album_cover" v-if="album.cover" :src="getImageUrl(album.cover)" :alt="albumItem.title">
+                <img id="album_cover" v-if="album.cover" :src="getImageUrl(album.cover)" :alt="album.title">
                 <div id="album_text_info">
                     <h1>{{album.title}} - {{album.author}}</h1>
-                    <p>{{albumItem.description}}</p>
+                    <p>{{album.notes}}</p>
                 </div>
             </div>
 
-            <h1>Tracklist</h1>
+            <h1>Dziesmu saraksts</h1>
             <div id="tracklist">
                 <div id="track_position_col">
                     <h4 id="track_position_title">№</h4>
@@ -258,19 +205,19 @@ loadFromShoppingList();
                 </div>
 
                 <div id="track_title_col">
-                    <h4 id="track_title">Title</h4>
+                    <h4 id="track_title">Nosaukums</h4>
                     
                     <p class="title" v-for="track in tracks" :key="track.position">{{ track.song_title }}</p>
                    
                 </div>
 
                 <div id="track_artist_col">
-                    <h4 id="artist_title">Artist</h4>
+                    <h4 id="artist_title">Mākslinieks</h4>
                     <p class="artist" v-for="track in tracks" :key="track.position">{{ track.artist }}</p>
                 </div>
 
                 <div id="track_duration_col">
-                    <h4 id="duration_title">Duration</h4>
+                    <h4 id="duration_title">Ilgums</h4>
                     <p class="duration" v-for="track in tracks" :key="track.position">{{ track.duration }}</p>
                 </div>
                 
@@ -280,19 +227,19 @@ loadFromShoppingList();
         </div>
 
             <div id="album_data">
-                <h1>Offer data</h1>
-                <p id="author">Seller: {{ albumItem.seller_name }}</p>
-                <p id="release_date">Added: {{ albumItem.created_at }}</p>
-                <p id="country">Shipping Country: {{ albumItem.shipping_country }}</p>
-                <p id="genre">Condition: {{ albumItem.condition }}</p>
-                <p id="label">Quantity: {{ albumItem.quantity }}</p>
-                <p id="format">Price: {{ albumItem.price }}</p>
+                <h1>Albuma dati</h1>
+                <p id="author">Autors: {{album.author}}</p>
+                <p id="release_date">Izdošanas datums: {{album.release_date}}</p>
+                <p id="country">Valsts: {{album.country}}</p>
+                <p id="genre">Žanrs: {{album.genre}}</p>
+                <p id="label">Izdevniecība: {{album.label}}</p>
+                <p id="format">Formāts: {{album.format}}</p>
 
                 <hr>
 
                 <div id="button_sec">
-                    <button id="add_to_cart_btn" @click="addToShoppingList()">Add to cart</button>
-                    <a :href="`/albuminfo/${album.id}`"><button id="release_page_btn">View Release Page</button></a>
+                    <button id="add_to_cart_btn">Pievienot grozam</button>
+                    <button id="add_to_collection_btn" @click="addToCollection">Pievienot kolekcijai</button>
                 </div>
             </div>
 
@@ -301,61 +248,61 @@ loadFromShoppingList();
     </main>
 
 
-        <footer>
+    <footer>
         <div id="footer_wrapper">
         <div id="footer_top">
             <div id="footer_info">
                 <div id="footer_logo">
-                    <img src="../images/footer_images/vinyl_icon.svg">
+                    <img src="../../images/footer_images/vinyl_icon.svg">
                     <p>MusicVault</p>
                 </div>
                 <p id="footer_info_text">
-                    Your premier destination for music records. Discover,
-                    collect, and enjoy music the way it was meant to be
-                    heard.
+                    Jūsu galvenais mūzikas ierakstu galamērķis. Atklājiet,
+                    kolekcionējiet un baudiet mūziku tā, kā tā ir radīta
+                    skanēt.
                 </p>
 
                 <div id="icons">
-                    <img class="icon" src="../images/footer_images/facebook_icon.svg">
-                    <img class="icon" src="../images/footer_images/instagram_icon.svg">
-                    <img class="icon" src="../images/footer_images/twitter_icon.svg">
-                    <img class="icon" src="../images/footer_images/youtube_icon.svg">
+                    <img class="icon" src="../../images/footer_images/facebook_icon.svg">
+                    <img class="icon" src="../../images/footer_images/instagram_icon.svg">
+                    <img class="icon" src="../../images/footer_images/twitter_icon.svg">
+                    <img class="icon" src="../../images/footer_images/youtube_icon.svg">
                 </div>
                 
             </div>
 
             <div>
-                <h6>Quick Links</h6>
+                <h6>Ātrās saites</h6>
 
                 <ul>
-                    <li>New Releases</li>
-                    <li>Pre-Orders</li>
-                    <li>Sale Items</li>
-                    <li>Rare Finds</li>
-                    <li>Gift Cards</li>
+                    <li>Jaunumi</li>
+                    <li>Priekšpasūtījumi</li>
+                    <li>Izpārdošana</li>
+                    <li>Reti atradumi</li>
+                    <li>Dāvanu kartes</li>
                 </ul>
             </div>
 
             <div>
                 
-                <h6>Genres</h6>
+                <h6>Žanri</h6>
 
                 <ul>
-                    <li>Rock</li>
-                    <li>Jazz</li>
-                    <li>Electronic</li>
-                    <li>Hip-Hop</li>
-                    <li>Classical</li>
+                    <li>Roks</li>
+                    <li>Džezs</li>
+                    <li>Elektronika</li>
+                    <li>Hip-Hopss</li>
+                    <li>Klasika</li>
                 </ul>
             </div>
 
             <div id="subscribe_form">
-                <h6>Stay Updated</h6>
-                <p>Get notified about new releases and exclusive deals.</p>
+                <h6>Sekojiet jaunumiem</h6>
+                <p>Saņemiet paziņojumus par jaunumiem un ekskluzīviem piedāvājumiem.</p>
 
                 <form action="" method="post">
-                    <input id="email_input" placeholder="Enter your email" name="subscription-email" type="email" required>
-                    <input id="subscribe_form_submit" type="submit" value="Subscribe">
+                    <input id="email_input" placeholder="Ievadiet e-pastu" name="subscription-email" type="email" required>
+                    <input id="subscribe_form_submit" type="submit" value="Abonēt">
                 </form>
             </div>
         </div>
@@ -364,21 +311,19 @@ loadFromShoppingList();
         <div id="footer_bottom">
 
             <ul>
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
-                <li>Shipping Info</li>
-                <li>Returns</li>
+                <li>Privātuma politika</li>
+                <li>Lietošanas noteikumi</li>
+                <li>Piegādes informācija</li>
+                <li>Atgriešana</li>
             </ul>
 
-            <p>&copy; 2025 MusicVault. All rights reserved.</p>
+            <p>&copy; 2025 MusicVault. Visas tiesības aizsargātas.</p>
 
         </div>
         </div>
     </footer>
-
-
-    </body>
-    </template>
+</body>
+</template>
 
 <style scoped>
 @font-face {
@@ -643,7 +588,7 @@ main {
   cursor: pointer;
 }
 
-#release_page_btn {
+#add_to_collection_btn {
   width: 100%;
   height: 40px;
   background-color: #FFFFFF;
@@ -806,4 +751,5 @@ footer h6 {
   list-style: none;
   padding: 0;
 }
+
 </style>

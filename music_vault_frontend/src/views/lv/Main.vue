@@ -124,19 +124,19 @@ loadFromShoppingList();
 <body v-if="loading !== true">
     <nav>
         <div id="navwrapper">
-        <RouterLink to="/">
+        <RouterLink to="/lv">
             <div id="logo">
-            <img src="../images/nav_images/vinyl_icon.svg">
+            <img src="../../images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
         </div></RouterLink>
 
         <div id="navbuttons">
             <ul>
-                <li>New Releases</li>
-                <li>Genres</li>
-                <li>Artists</li>
-                <li>Forums</li>
-                <RouterLink to="/add-album" v-if="isLoggedIn">Add Album</RouterLink>
+                <li>Jaunumi</li>
+                <li>Žanri</li>
+                <li>Mākslinieki</li>
+                <li>Forumi</li>
+                <RouterLink to="/add-album" v-if="isLoggedIn">Pievienot albumu</RouterLink>
             </ul>
         </div>
 
@@ -155,14 +155,14 @@ loadFromShoppingList();
                 </RouterLink>
               </div>
             </div>
-            <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
-            <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
+            <input type="text" id="searchbar" name="recordsearch" placeholder="Meklēt ierakstus...">
+            <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
             <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.name}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
-                <button id="logoutbtn">Log out</button>
+                <button id="logoutbtn">Iziet</button>
             </form>
-            <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
-            <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+            <RouterLink to="/login" v-if="!isLoggedIn">Ieiet</RouterLink>
+            <RouterLink to="/register" v-if="!isLoggedIn">Reģistrēties</RouterLink>
         </div>
     </div>
     </nav>
@@ -172,12 +172,12 @@ loadFromShoppingList();
 
         <div id="shopping_menu">
           <div id="close_btn" @click="shoppingMenu()">
-            <img src="../images/shopping_cart images/close-x-svgrepo-com.svg">
+            <img src="../../images/shopping_cart images/close-x-svgrepo-com.svg">
           </div>
           <div class="shopping_item" v-for="(item, index) in shoppingList">
             <div id="info_div">
               <h2>{{ item.title }}</h2>
-              <p @click="deleteFromShoppingList(index)">Delete</p>
+              <p @click="deleteFromShoppingList(index)">Dzēst</p>
             </div>
             <div id="price_div">
               <b><p id="price">{{ item.price }}$</p></b>
@@ -196,34 +196,34 @@ loadFromShoppingList();
             
 
             <div id="left_side">
-                <h1>Discover Your Next Favorite Record</h1>
-                <p id="subtext">From rare pressings to the latest releases. Curated vinyl records for every music lover.</p>
+                <h1>Atklājiet savu nākamo mīļāko ierakstu</h1>
+                <p id="subtext">No retiem nospiedumiem līdz jaunākajiem izdevumiem. Atlasīti vinila ieraksti katram mūzikas cienītājam.</p>
 
                 <div id="hero_buttons">
-                    <RouterLink to="/catalog" id="shop_button">Shop New Releases</RouterLink>
-                    <button id="browse_button">Browse Collection</button>
+                    <RouterLink to="/catalog" id="shop_button">Shop Jaunumi</RouterLink>
+                    <button id="browse_button">Pārlūkot kolekciju</button>
                 </div>
 
                 <div id="stats">
                     <div class="stat">
                         <h2>10K+</h2>
-                        <p>Records in Stock</p>
+                        <p>Ieraksti noliktavā</p>
                     </div>
 
                     <div class="stat">
                         <h2>500+</h2>
-                        <p>Artists</p>
+                        <p>Mākslinieki</p>
                     </div>
 
                     <div class="stat">
                         <h2>50+</h2>
-                        <p>Genres</p>
+                        <p>Žanri</p>
                     </div>
                 </div>
             </div>
 
             <div id="right_side">
-                <img src="../images/main_page_images/Vinyl_records_collection.png">
+                <img src="../../images/main_page_images/Vinyl_records_collection.png">
             </div>
             
             <div id="order_items">
@@ -235,33 +235,33 @@ loadFromShoppingList();
 
 
         <div id="record_browse">
-            <h4>Browse Records</h4>
-            <p id="results_count">6 records found</p>
+            <h4>Pārlūkot ierakstus</h4>
+            <p id="results_count">Atrasti 6 ieraksti</p>
 
             <div id="filters">
                 <form action="/show_albums" method="GET">
-                    <label>Genre:</label>
-                    <button class="form_button">All</button>
-                    <button class="form_button" type="submit" name="genre" value="Rock">Rock</button>
-                    <button class="form_button" name="genre" value="Jazz">Jazz</button>
-                    <button class="form_button" name="genre" value="Electronic">Electronic</button>
-                    <button class="form_button" name="genre" value="Pop">Pop</button>
-                    <button class="form_button" name="genre" value="Hip-Hop">Hip-Hop</button>
-                    <button class="form_button" name="genre" value="Classical">Classical</button>
+                    <label>Žanrs:</label>
+                    <button class="form_button">Visi</button>
+                    <button class="form_button" type="submit" name="genre" value="Roks">Roks</button>
+                    <button class="form_button" name="genre" value="Džezs">Džezs</button>
+                    <button class="form_button" name="genre" value="Elektronika">Elektronika</button>
+                    <button class="form_button" name="genre" value="Pop">Pops</button>
+                    <button class="form_button" name="genre" value="Hip-Hops">Hip-Hopss</button>
+                    <button class="form_button" name="genre" value="Klasika">Klasika</button>
 
-                    <label>Condition:</label>
+                    <label>Stāvoklis:</label>
                     <select name="condition" id="condtion_select">
-                        <option value="brand_new">Brand New</option>
-                        <option value="new">New</option>
-                        <option value="used">Used</option>
+                        <option value="brand_new">Jauns</option>
+                        <option value="new">Jauns</option>
+                        <option value="used">Lietots</option>
                     </select>
 
-                    <label>Sort By:</label>
+                    <label>Kārtot pēc:</label>
                     <select name="sort" id="sort_select">
-                        <option>Name: A-Z</option>
-                        <option>Name: Z-A</option>
-                        <option>Price: Highest</option>
-                        <option>Price: Lowest</option>
+                        <option>Nosaukums: A-Z</option>
+                        <option>Nosaukums: Z-A</option>
+                        <option>Cena: augstākā</option>
+                        <option>Cena: zemākā</option>
                     </select>
                 </form>
 
@@ -272,7 +272,7 @@ loadFromShoppingList();
         </div>
 
         <div id="albums">
-            <h2>All Albums</h2>
+            <h2>Visi albumi</h2>
             <div id="album_cards">
             <div id="album_data" v-for="album in albums">
                     
@@ -297,56 +297,56 @@ loadFromShoppingList();
         <div id="footer_top">
             <div id="footer_info">
                 <div id="footer_logo">
-                    <img src="../images/footer_images/vinyl_icon.svg">
+                    <img src="../../images/footer_images/vinyl_icon.svg">
                     <p>MusicVault</p>
                 </div>
                 <p id="footer_info_text">
-                    Your premier destination for music records. Discover,
-                    collect, and enjoy music the way it was meant to be
-                    heard.
+                    Jūsu galvenais mūzikas ierakstu galamērķis. Atklājiet,
+                    kolekcionējiet un baudiet mūziku tā, kā tā ir radīta
+                    skanēt.
                 </p>
 
                 <div id="icons">
-                    <img class="icon" src="../images/footer_images/facebook_icon.svg">
-                    <img class="icon" src="../images/footer_images/instagram_icon.svg">
-                    <img class="icon" src="../images/footer_images/twitter_icon.svg">
-                    <img class="icon" src="../images/footer_images/youtube_icon.svg">
+                    <img class="icon" src="../../images/footer_images/facebook_icon.svg">
+                    <img class="icon" src="../../images/footer_images/instagram_icon.svg">
+                    <img class="icon" src="../../images/footer_images/twitter_icon.svg">
+                    <img class="icon" src="../../images/footer_images/youtube_icon.svg">
                 </div>
                 
             </div>
 
             <div>
-                <h6>Quick Links</h6>
+                <h6>Ātrās saites</h6>
 
                 <ul>
-                    <li>New Releases</li>
-                    <li>Pre-Orders</li>
-                    <li>Sale Items</li>
-                    <li>Rare Finds</li>
-                    <li>Gift Cards</li>
+                    <li>Jaunumi</li>
+                    <li>Priekšpasūtījumi</li>
+                    <li>Izpārdošana</li>
+                    <li>Reti atradumi</li>
+                    <li>Dāvanu kartes</li>
                 </ul>
             </div>
 
             <div>
                 
-                <h6>Genres</h6>
+                <h6>Žanri</h6>
 
                 <ul>
-                    <li>Rock</li>
-                    <li>Jazz</li>
-                    <li>Electronic</li>
-                    <li>Hip-Hop</li>
-                    <li>Classical</li>
+                    <li>Roks</li>
+                    <li>Džezs</li>
+                    <li>Elektronika</li>
+                    <li>Hip-Hopss</li>
+                    <li>Klasika</li>
                 </ul>
             </div>
 
             <div id="subscribe_form">
-                <h6>Stay Updated</h6>
-                <p>Get notified about new releases and exclusive deals.</p>
+                <h6>Sekojiet jaunumiem</h6>
+                <p>Saņemiet paziņojumus par jaunumiem un ekskluzīviem piedāvājumiem.</p>
 
                 <form action="" method="post">
-                    <input id="email_input" placeholder="Enter your email" name="subscription-email" type="email" required>
-                    <input id="subscribe_form_submit" type="submit" value="Subscribe">
+                    <input id="email_input" placeholder="Ievadiet e-pastu" name="subscription-email" type="email" required>
+                    <input id="subscribe_form_submit" type="submit" value="Abonēt">
                 </form>
             </div>
         </div>
@@ -355,13 +355,13 @@ loadFromShoppingList();
         <div id="footer_bottom">
 
             <ul>
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
-                <li>Shipping Info</li>
-                <li>Returns</li>
+                <li>Privātuma politika</li>
+                <li>Lietošanas noteikumi</li>
+                <li>Piegādes informācija</li>
+                <li>Atgriešana</li>
             </ul>
 
-            <p>&copy; 2025 MusicVault. All rights reserved.</p>
+            <p>&copy; 2025 MusicVault. Visas tiesības aizsargātas.</p>
 
         </div>
         </div>
@@ -372,7 +372,7 @@ loadFromShoppingList();
 <style scoped>
 @font-face {
   font-family: Segoe UI Symbol;
-  src: url('../assets/fonts/Segoe-UI-Symbol.ttf');
+  src: url('../../assets/fonts/Segoe-UI-Symbol.ttf');
 }
 
 html {

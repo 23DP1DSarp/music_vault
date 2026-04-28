@@ -189,32 +189,32 @@ loadFromShoppingList();
     <body v-if="loading !== true">
      <nav>
         <div id="navwrapper">
-        <RouterLink to="/">
+        <RouterLink to="/lv">
             <div id="logo">
-            <img src="../images/nav_images/vinyl_icon.svg">
+            <img src="../../images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
         </div></RouterLink>
 
         <div id="navbuttons">
             <ul>
-                <li>New Releases</li>
-                <li>Genres</li>
-                <li>Artists</li>
-                <li>Forums</li>
-                <RouterLink to="/add-album" v-if="isLoggedIn">Add Album</RouterLink>
+                <li>Jaunumi</li>
+                <li>Žanri</li>
+                <li>Mākslinieki</li>
+                <li>Forumi</li>
+                <RouterLink to="/add-album" v-if="isLoggedIn">Pievienot albumu</RouterLink>
             </ul>
         </div>
 
         <div id="rightbuttons">
             
-            <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
-            <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
+            <input type="text" id="searchbar" name="recordsearch" placeholder="Meklēt ierakstus...">
+            <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
             <p>{{user?.name}}</p>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
-                <button id="logoutbtn">Log out</button>
+                <button id="logoutbtn">Iziet</button>
             </form>
-            <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
-            <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+            <RouterLink to="/login" v-if="!isLoggedIn">Ieiet</RouterLink>
+            <RouterLink to="/register" v-if="!isLoggedIn">Reģistrēties</RouterLink>
         </div>
     </div>
     </nav>
@@ -223,16 +223,16 @@ loadFromShoppingList();
 
         <div id="shopping_menu">
           <div id="close_btn" @click="shoppingMenu()">
-            <img src="../images/shopping_cart images/close-x-svgrepo-com.svg">
+            <img src="../../images/shopping_cart images/close-x-svgrepo-com.svg">
           </div>
           <div class="shopping_item" v-for="(item, index) in shoppingList">
             <div id="info_div">
               <h2>{{ item.title }}</h2>
-              <p @click="deleteFromShoppingList(index)">Delete</p>
+              <p @click="deleteFromShoppingList(index)">Dzēst</p>
             </div>
             <div id="price_div">
               <b><p id="price">{{ item.price }}$</p></b>
-              <p>Quantity: {{ item.quantity }}</p>
+              <p>Daudzums: {{ item.quantity }}</p>
             </div>
             
           </div>
@@ -248,7 +248,7 @@ loadFromShoppingList();
                 </div>
             </div>
 
-            <h1>Tracklist</h1>
+            <h1>Dziesmu saraksts</h1>
             <div id="tracklist">
                 <div id="track_position_col">
                     <h4 id="track_position_title">№</h4>
@@ -258,19 +258,19 @@ loadFromShoppingList();
                 </div>
 
                 <div id="track_title_col">
-                    <h4 id="track_title">Title</h4>
+                    <h4 id="track_title">Nosaukums</h4>
                     
                     <p class="title" v-for="track in tracks" :key="track.position">{{ track.song_title }}</p>
                    
                 </div>
 
                 <div id="track_artist_col">
-                    <h4 id="artist_title">Artist</h4>
+                    <h4 id="artist_title">Mākslinieks</h4>
                     <p class="artist" v-for="track in tracks" :key="track.position">{{ track.artist }}</p>
                 </div>
 
                 <div id="track_duration_col">
-                    <h4 id="duration_title">Duration</h4>
+                    <h4 id="duration_title">Ilgums</h4>
                     <p class="duration" v-for="track in tracks" :key="track.position">{{ track.duration }}</p>
                 </div>
                 
@@ -280,19 +280,19 @@ loadFromShoppingList();
         </div>
 
             <div id="album_data">
-                <h1>Offer data</h1>
-                <p id="author">Seller: {{ albumItem.seller_name }}</p>
-                <p id="release_date">Added: {{ albumItem.created_at }}</p>
-                <p id="country">Shipping Country: {{ albumItem.shipping_country }}</p>
-                <p id="genre">Condition: {{ albumItem.condition }}</p>
-                <p id="label">Quantity: {{ albumItem.quantity }}</p>
-                <p id="format">Price: {{ albumItem.price }}</p>
+                <h1>Piedāvājuma dati</h1>
+                <p id="author">Pārdevējs: {{ albumItem.seller_name }}</p>
+                <p id="release_date">Pievienots: {{ albumItem.created_at }}</p>
+                <p id="country">Shipping Valsts: {{ albumItem.shipping_country }}</p>
+                <p id="genre">Stāvoklis: {{ albumItem.condition }}</p>
+                <p id="label">Daudzums: {{ albumItem.quantity }}</p>
+                <p id="format">Cena: {{ albumItem.price }}</p>
 
                 <hr>
 
                 <div id="button_sec">
-                    <button id="add_to_cart_btn" @click="addToShoppingList()">Add to cart</button>
-                    <a :href="`/albuminfo/${album.id}`"><button id="release_page_btn">View Release Page</button></a>
+                    <button id="add_to_cart_btn" @click="addToShoppingList()">Pievienot grozam</button>
+                    <a :href="`/albuminfo/${album.id}`"><button id="release_page_btn">Skatīt izlaiduma lapu</button></a>
                 </div>
             </div>
 
@@ -306,56 +306,56 @@ loadFromShoppingList();
         <div id="footer_top">
             <div id="footer_info">
                 <div id="footer_logo">
-                    <img src="../images/footer_images/vinyl_icon.svg">
+                    <img src="../../images/footer_images/vinyl_icon.svg">
                     <p>MusicVault</p>
                 </div>
                 <p id="footer_info_text">
-                    Your premier destination for music records. Discover,
-                    collect, and enjoy music the way it was meant to be
-                    heard.
+                    Jūsu galvenais mūzikas ierakstu galamērķis. Atklājiet,
+                    kolekcionējiet un baudiet mūziku tā, kā tā ir radīta
+                    skanēt.
                 </p>
 
                 <div id="icons">
-                    <img class="icon" src="../images/footer_images/facebook_icon.svg">
-                    <img class="icon" src="../images/footer_images/instagram_icon.svg">
-                    <img class="icon" src="../images/footer_images/twitter_icon.svg">
-                    <img class="icon" src="../images/footer_images/youtube_icon.svg">
+                    <img class="icon" src="../../images/footer_images/facebook_icon.svg">
+                    <img class="icon" src="../../images/footer_images/instagram_icon.svg">
+                    <img class="icon" src="../../images/footer_images/twitter_icon.svg">
+                    <img class="icon" src="../../images/footer_images/youtube_icon.svg">
                 </div>
                 
             </div>
 
             <div>
-                <h6>Quick Links</h6>
+                <h6>Ātrās saites</h6>
 
                 <ul>
-                    <li>New Releases</li>
-                    <li>Pre-Orders</li>
-                    <li>Sale Items</li>
-                    <li>Rare Finds</li>
-                    <li>Gift Cards</li>
+                    <li>Jaunumi</li>
+                    <li>Priekšpasūtījumi</li>
+                    <li>Izpārdošana</li>
+                    <li>Reti atradumi</li>
+                    <li>Dāvanu kartes</li>
                 </ul>
             </div>
 
             <div>
                 
-                <h6>Genres</h6>
+                <h6>Žanri</h6>
 
                 <ul>
-                    <li>Rock</li>
-                    <li>Jazz</li>
-                    <li>Electronic</li>
-                    <li>Hip-Hop</li>
-                    <li>Classical</li>
+                    <li>Roks</li>
+                    <li>Džezs</li>
+                    <li>Elektronika</li>
+                    <li>Hip-Hopss</li>
+                    <li>Klasika</li>
                 </ul>
             </div>
 
             <div id="subscribe_form">
-                <h6>Stay Updated</h6>
-                <p>Get notified about new releases and exclusive deals.</p>
+                <h6>Sekojiet jaunumiem</h6>
+                <p>Saņemiet paziņojumus par jaunumiem un ekskluzīviem piedāvājumiem.</p>
 
                 <form action="" method="post">
-                    <input id="email_input" placeholder="Enter your email" name="subscription-email" type="email" required>
-                    <input id="subscribe_form_submit" type="submit" value="Subscribe">
+                    <input id="email_input" placeholder="Ievadiet e-pastu" name="subscription-email" type="email" required>
+                    <input id="subscribe_form_submit" type="submit" value="Abonēt">
                 </form>
             </div>
         </div>
@@ -364,13 +364,13 @@ loadFromShoppingList();
         <div id="footer_bottom">
 
             <ul>
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
-                <li>Shipping Info</li>
-                <li>Returns</li>
+                <li>Privātuma politika</li>
+                <li>Lietošanas noteikumi</li>
+                <li>Piegādes informācija</li>
+                <li>Atgriešana</li>
             </ul>
 
-            <p>&copy; 2025 MusicVault. All rights reserved.</p>
+            <p>&copy; 2025 MusicVault. Visas tiesības aizsargātas.</p>
 
         </div>
         </div>
@@ -383,7 +383,7 @@ loadFromShoppingList();
 <style scoped>
 @font-face {
   font-family: Segoe UI Symbol;
-  src: url('../assets/fonts/Segoe-UI-Symbol.ttf');
+  src: url('../../assets/fonts/Segoe-UI-Symbol.ttf');
 }
 
 html {

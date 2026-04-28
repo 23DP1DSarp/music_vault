@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import axiosInstance from '@/axios';
-import type { RefSymbol } from '@vue/reactivity';
 import {ref} from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -66,7 +65,7 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/';
+        window.location.href='/ru';
     }
 }
 
@@ -124,19 +123,19 @@ loadFromShoppingList();
 <body v-if="loading !== true">
     <nav>
         <div id="navwrapper">
-        <RouterLink to="/">
+        <RouterLink to="/ru">
             <div id="logo">
-            <img src="../images/nav_images/vinyl_icon.svg">
+            <img src="../../images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
         </div></RouterLink>
 
         <div id="navbuttons">
             <ul>
-                <li>New Releases</li>
-                <li>Genres</li>
-                <li>Artists</li>
-                <li>Forums</li>
-                <RouterLink to="/add-album" v-if="isLoggedIn">Add Album</RouterLink>
+                <li>Новинки</li>
+                <li>Жанры</li>
+                <li>Исполнители</li>
+                <li>Форумы</li>
+                <RouterLink to="/add-album" v-if="isLoggedIn">Добавить альбом</RouterLink>
             </ul>
         </div>
 
@@ -155,14 +154,14 @@ loadFromShoppingList();
                 </RouterLink>
               </div>
             </div>
-            <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
-            <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
+            <input type="text" id="searchbar" name="recordsearch" placeholder="Поиск записей...">
+            <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
             <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.name}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
-                <button id="logoutbtn">Log out</button>
+                <button id="logoutbtn">Выйти</button>
             </form>
-            <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
-            <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+            <RouterLink to="/login" v-if="!isLoggedIn">Войти</RouterLink>
+            <RouterLink to="/register" v-if="!isLoggedIn">Регистрация</RouterLink>
         </div>
     </div>
     </nav>
@@ -172,12 +171,12 @@ loadFromShoppingList();
 
         <div id="shopping_menu">
           <div id="close_btn" @click="shoppingMenu()">
-            <img src="../images/shopping_cart images/close-x-svgrepo-com.svg">
+            <img src="../../images/shopping_cart images/close-x-svgrepo-com.svg">
           </div>
           <div class="shopping_item" v-for="(item, index) in shoppingList">
             <div id="info_div">
               <h2>{{ item.title }}</h2>
-              <p @click="deleteFromShoppingList(index)">Delete</p>
+              <p @click="deleteFromShoppingList(index)">Удалить</p>
             </div>
             <div id="price_div">
               <b><p id="price">{{ item.price }}$</p></b>
@@ -196,34 +195,34 @@ loadFromShoppingList();
             
 
             <div id="left_side">
-                <h1>Discover Your Next Favorite Record</h1>
-                <p id="subtext">From rare pressings to the latest releases. Curated vinyl records for every music lover.</p>
+                <h1>Откройте свою следующую любимую запись</h1>
+                <p id="subtext">От редких прессований до новейших релизов. Отобранные виниловые пластинки для каждого любителя музыки.</p>
 
                 <div id="hero_buttons">
-                    <RouterLink to="/catalog" id="shop_button">Shop New Releases</RouterLink>
-                    <button id="browse_button">Browse Collection</button>
+                    <RouterLink to="/catalog" id="shop_button">Shop Новинки</RouterLink>
+                    <button id="browse_button">Просмотреть коллекцию</button>
                 </div>
 
                 <div id="stats">
                     <div class="stat">
                         <h2>10K+</h2>
-                        <p>Records in Stock</p>
+                        <p>Записей в наличии</p>
                     </div>
 
                     <div class="stat">
                         <h2>500+</h2>
-                        <p>Artists</p>
+                        <p>Исполнители</p>
                     </div>
 
                     <div class="stat">
                         <h2>50+</h2>
-                        <p>Genres</p>
+                        <p>Жанры</p>
                     </div>
                 </div>
             </div>
 
             <div id="right_side">
-                <img src="../images/main_page_images/Vinyl_records_collection.png">
+                <img src="../../images/main_page_images/Vinyl_records_collection.png">
             </div>
             
             <div id="order_items">
@@ -235,33 +234,33 @@ loadFromShoppingList();
 
 
         <div id="record_browse">
-            <h4>Browse Records</h4>
-            <p id="results_count">6 records found</p>
+            <h4>Просмотр записей</h4>
+            <p id="results_count">Найдено 6 записей</p>
 
             <div id="filters">
                 <form action="/show_albums" method="GET">
-                    <label>Genre:</label>
-                    <button class="form_button">All</button>
-                    <button class="form_button" type="submit" name="genre" value="Rock">Rock</button>
-                    <button class="form_button" name="genre" value="Jazz">Jazz</button>
-                    <button class="form_button" name="genre" value="Electronic">Electronic</button>
-                    <button class="form_button" name="genre" value="Pop">Pop</button>
-                    <button class="form_button" name="genre" value="Hip-Hop">Hip-Hop</button>
-                    <button class="form_button" name="genre" value="Classical">Classical</button>
+                    <label>Жанр:</label>
+                    <button class="form_button">Все</button>
+                    <button class="form_button" type="submit" name="genre" value="Рок">Рок</button>
+                    <button class="form_button" name="genre" value="Джаз">Джаз</button>
+                    <button class="form_button" name="genre" value="Электроника">Электроника</button>
+                    <button class="form_button" name="genre" value="Pop">Поп</button>
+                    <button class="form_button" name="genre" value="Хип-хоп">Хип-хопs</button>
+                    <button class="form_button" name="genre" value="Классика">Классика</button>
 
-                    <label>Condition:</label>
+                    <label>Состояние:</label>
                     <select name="condition" id="condtion_select">
-                        <option value="brand_new">Brand New</option>
-                        <option value="new">New</option>
-                        <option value="used">Used</option>
+                        <option value="brand_new">Новый</option>
+                        <option value="new">Новый</option>
+                        <option value="used">Б/у</option>
                     </select>
 
-                    <label>Sort By:</label>
+                    <label>Сортировать по:</label>
                     <select name="sort" id="sort_select">
-                        <option>Name: A-Z</option>
-                        <option>Name: Z-A</option>
-                        <option>Price: Highest</option>
-                        <option>Price: Lowest</option>
+                        <option>Название: A-Z</option>
+                        <option>Название: Z-A</option>
+                        <option>Цена: выше</option>
+                        <option>Цена: ниже</option>
                     </select>
                 </form>
 
@@ -272,7 +271,7 @@ loadFromShoppingList();
         </div>
 
         <div id="albums">
-            <h2>All Albums</h2>
+            <h2>Все альбомы</h2>
             <div id="album_cards">
             <div id="album_data" v-for="album in albums">
                     
@@ -297,56 +296,56 @@ loadFromShoppingList();
         <div id="footer_top">
             <div id="footer_info">
                 <div id="footer_logo">
-                    <img src="../images/footer_images/vinyl_icon.svg">
+                    <img src="../../images/footer_images/vinyl_icon.svg">
                     <p>MusicVault</p>
                 </div>
                 <p id="footer_info_text">
-                    Your premier destination for music records. Discover,
-                    collect, and enjoy music the way it was meant to be
-                    heard.
+                    Ваше главное место для музыкальных записей. Открывайте,
+                    коллекционируйте и наслаждайтесь музыкой так,
+                    как она была создана звучать.
                 </p>
 
                 <div id="icons">
-                    <img class="icon" src="../images/footer_images/facebook_icon.svg">
-                    <img class="icon" src="../images/footer_images/instagram_icon.svg">
-                    <img class="icon" src="../images/footer_images/twitter_icon.svg">
-                    <img class="icon" src="../images/footer_images/youtube_icon.svg">
+                    <img class="icon" src="../../images/footer_images/facebook_icon.svg">
+                    <img class="icon" src="../../images/footer_images/instagram_icon.svg">
+                    <img class="icon" src="../../images/footer_images/twitter_icon.svg">
+                    <img class="icon" src="../../images/footer_images/youtube_icon.svg">
                 </div>
                 
             </div>
 
             <div>
-                <h6>Quick Links</h6>
+                <h6>Быстрые ссылки</h6>
 
                 <ul>
-                    <li>New Releases</li>
-                    <li>Pre-Orders</li>
-                    <li>Sale Items</li>
-                    <li>Rare Finds</li>
-                    <li>Gift Cards</li>
+                    <li>Новинки</li>
+                    <li>Предзаказы</li>
+                    <li>Распродажа</li>
+                    <li>Редкие находки</li>
+                    <li>Подарочные карты</li>
                 </ul>
             </div>
 
             <div>
                 
-                <h6>Genres</h6>
+                <h6>Жанры</h6>
 
                 <ul>
-                    <li>Rock</li>
-                    <li>Jazz</li>
-                    <li>Electronic</li>
-                    <li>Hip-Hop</li>
-                    <li>Classical</li>
+                    <li>Рок</li>
+                    <li>Джаз</li>
+                    <li>Электроника</li>
+                    <li>Хип-хопs</li>
+                    <li>Классика</li>
                 </ul>
             </div>
 
             <div id="subscribe_form">
-                <h6>Stay Updated</h6>
-                <p>Get notified about new releases and exclusive deals.</p>
+                <h6>Будьте в курсе</h6>
+                <p>Получайте уведомления о новинках и эксклюзивных предложениях.</p>
 
                 <form action="" method="post">
-                    <input id="email_input" placeholder="Enter your email" name="subscription-email" type="email" required>
-                    <input id="subscribe_form_submit" type="submit" value="Subscribe">
+                    <input id="email_input" placeholder="Введите email" name="subscription-email" type="email" required>
+                    <input id="subscribe_form_submit" type="submit" value="Подписаться">
                 </form>
             </div>
         </div>
@@ -355,13 +354,13 @@ loadFromShoppingList();
         <div id="footer_bottom">
 
             <ul>
-                <li>Privacy Policy</li>
-                <li>Terms of Service</li>
-                <li>Shipping Info</li>
-                <li>Returns</li>
+                <li>Политика конфиденциальности</li>
+                <li>Условия использования</li>
+                <li>Информация о доставке</li>
+                <li>Возврат</li>
             </ul>
 
-            <p>&copy; 2025 MusicVault. All rights reserved.</p>
+            <p>&copy; 2025 MusicVault. Все права защищены.</p>
 
         </div>
         </div>
@@ -372,7 +371,7 @@ loadFromShoppingList();
 <style scoped>
 @font-face {
   font-family: Segoe UI Symbol;
-  src: url('../assets/fonts/Segoe-UI-Symbol.ttf');
+  src: url('../../assets/fonts/Segoe-UI-Symbol.ttf');
 }
 
 html {
