@@ -248,7 +248,17 @@ loadFromShoppingList();
         </div>
 
         <div id="rightbuttons">
-            
+            <div id="language_select" name="language">
+              <p>LV</p>
+              <div id="language_options">
+                <RouterLink to="/">
+                  EN
+                </RouterLink>
+                <RouterLink to="/ru">
+                  RU
+                </RouterLink>
+              </div>
+            </div>
             <input type="text" id="searchbar" name="recordsearch" placeholder="Meklēt ierakstus...">
             <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
             <p>{{user?.name}}</p>
@@ -541,6 +551,58 @@ nav {
   color: #0A0A0A;
   font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   cursor: pointer;
+}
+
+#language_select {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  padding: 9px;
+  border: #ECECF0 solid 1px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#language_select p {
+  margin: 0;
+  font-size: 14px;
+}
+
+#language_options {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  background-color: #FFFFFF;
+  border: #ECECF0 solid 1px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+  transition: 0.2s ease;
+  z-index: 100;
+}
+
+#language_select:hover #language_options {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#language_options a {
+  padding: 8px;
+  text-align: center;
+  font-size: 14px;
+  color: #0A0A0A;
+}
+
+#language_options a:hover {
+  background-color: #F3F3F5;
 }
 
 #logoutbtn:hover {

@@ -87,7 +87,6 @@ const router = createRouter({
       name: 'checkout',
       component: Checkout,
     },
-    // Russian routes
     {
       path: '/ru',
       name: 'main-ru',
@@ -134,11 +133,6 @@ const router = createRouter({
       component: () => import('@/views/ru/SellerForm.vue'),
     },
     {
-      path: '/ru/email/verify/:id/:hash',
-      name: 'emailverification-ru',
-      component: () => import('@/views/ru/auth/EmailVerification.vue'),
-    },
-    {
       path: '/ru/profilesettings',
       name: 'profilesettings-ru',
       component: () => import('@/views/ru/ProfileSettings.vue'),
@@ -158,7 +152,6 @@ const router = createRouter({
       name: 'checkout-ru',
       component: () => import('@/views/ru/Checkout.vue'),
     },
-    // Latvian routes
     {
       path: '/lv',
       name: 'main-lv',
@@ -203,11 +196,6 @@ const router = createRouter({
       path: '/lv/sellerform',
       name: 'sellerform-lv',
       component: () => import('@/views/lv/SellerForm.vue'),
-    },
-    {
-      path: '/lv/email/verify/:id/:hash',
-      name: 'emailverification-lv',
-      component: () => import('@/views/lv/auth/EmailVerification.vue'),
     },
     {
       path: '/lv/profilesettings',

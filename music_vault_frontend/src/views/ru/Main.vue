@@ -141,13 +141,10 @@ loadFromShoppingList();
 
         <div id="rightbuttons">
             <div id="language_select" name="language">
-              <p>EN</p>
+              <p>RU</p>
               <div id="language_options">
                 <RouterLink to="/en">
                   EN
-                </RouterLink>
-                <RouterLink to="/ru">
-                  RU
                 </RouterLink>
                 <RouterLink to="/lv">
                   LV
@@ -513,7 +510,6 @@ nav {
   font-size: 14px;
 }
 
-/* Dropdown container */
 #language_options {
   position: absolute;
   top: 40px;
@@ -524,8 +520,6 @@ nav {
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-
-  /* hidden by default */
   opacity: 0;
   visibility: hidden;
   transform: translateY(-5px);
@@ -533,14 +527,12 @@ nav {
   z-index: 100;
 }
 
-/* Show on hover */
 #language_select:hover #language_options {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
 
-/* Links styling */
 #language_options a {
   padding: 8px;
   text-align: center;
