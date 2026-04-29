@@ -166,14 +166,12 @@ const validateForm = (e: Event) => {
 const submitForm = async () => {
   const formData = new FormData()
 
-  // Album fields
   Object.entries(album.value).forEach(([key, value]) => {
     if (value !== null) {
       formData.append(key, value as any)
     }
   })
 
-  // Tracks
   tracks.value.forEach((track, index) => {
     if (track.position !== '' && track.artist !== '' && track.song_title !== '' && track.duration !== '') {
         formData.append(`tracks[${index}][position]`, track.position)
