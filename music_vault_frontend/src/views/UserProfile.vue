@@ -12,7 +12,7 @@ const sortOrder = ref('asc');
 const sortBy = ref('title');
 
 const user = ref({
-    name: '',
+    username: '',
     email: '',
     created_at: new Date(),
 });
@@ -172,7 +172,7 @@ loadFromShoppingList();
             </div>
             <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
             <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <p>{{user?.name}}</p>
+            <p>{{user?.username}}</p>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>
@@ -204,7 +204,7 @@ loadFromShoppingList();
       
         <div id="profile_head">
             <img>
-                <h2>{{user.name}}</h2>
+                <h2>{{user.username}}</h2>
         </div>
 
         <div id="profile_main">

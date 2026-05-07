@@ -20,10 +20,11 @@ class CollectionController extends Controller
 
         $incomingFields['album_id'] = $album->id;
         $incomingFields['user_id'] = $userId;
+        $incomingFields['added_at'] = now();
 
         Collection::create($incomingFields);
 
-        return redirect('/');
+        return response()->json(['message' => 'Album added to collection']);
     }
 
     public function getCollection(Request $request) {

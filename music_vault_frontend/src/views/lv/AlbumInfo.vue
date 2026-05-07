@@ -9,7 +9,7 @@ const albumId = route.params.id;
 const loading = ref(true);
 
 const user = ref({
-    name: '',
+    username: '',
     email: '',
 });
 
@@ -166,7 +166,7 @@ loadFromShoppingList();
             </div>
             <input type="text" id="searchbar" name="recordsearch" placeholder="Meklēt ierakstus...">
             <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <p>{{user?.name}}</p>
+            <p>{{user?.username}}</p>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Iziet</button>
             </form>

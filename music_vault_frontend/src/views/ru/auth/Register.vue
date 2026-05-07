@@ -4,7 +4,7 @@ import { ref } from 'vue';
 
 
 interface RegisterForm {
-    name: string;
+    username: string;
     email: string;
     password: string;
     password_confirmation: string;
@@ -21,7 +21,7 @@ interface Country {
 const countries = ref<Country[]>([]);
 
 const form = ref<RegisterForm>({
-    name: '',
+    username: '',
     email: '',
     password: '',
     password_confirmation: '',
@@ -77,7 +77,7 @@ getCountries();
 
                 <div class="form_parts">
                     <label>Имя пользователя</label>
-                    <input name="name" type="text" v-model="form.name">
+                    <input name="username" type="text" v-model="form.username">
                 </div>
 
                 <div class="form_parts">

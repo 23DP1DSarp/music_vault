@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {   
+        Schema::create('currencies', function (Blueprint $table) {
+            $table->id();
+            $table->string('currency_name', 20);
+        });
+
         Schema::create('sellers', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('business_type', ['individual', 'company']);
-            $table->string('currency');
+            $table->foreignId('currency_id')->constrained();
             $table->string('full_name');
             $table->string('shipping_address');
             $table->float('minimal_order_total');
@@ -28,7 +32,8 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(): void
-    {
+    {   
         Schema::dropIfExists('sellers');
+        Schema::dropIfExists('currencies');
     }
 };

@@ -39,7 +39,7 @@ const selectedDecades = ref<string[]>([]);
 const shoppingList = ref<Item[]>([]);
 
 const user = ref({
-    name: '',
+    username: '',
     email: '',
 });
 
@@ -195,7 +195,7 @@ loadFromShoppingList();
             </div>
             <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
             <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <p>{{user?.name}}</p>
+            <p>{{user?.username}}</p>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>

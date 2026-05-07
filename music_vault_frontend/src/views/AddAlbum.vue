@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import axiosInstance from '@/axios';
 import {ref} from 'vue';
-import type { s, un } from 'vue-router/dist/router-CWoNjPRp.mjs';
-
+import { useRouter } from 'vue-router';
 
 const loading = ref(true);
 
+const router = useRouter();
+
 const user = ref({
-    name: '',
+    username: '',
     email: '',
 });
 
@@ -191,6 +192,9 @@ const submitForm = async () => {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
     console.log(response.data);
+    if (response.status === 200) {
+        router.push('/');
+    }
     } catch (error) {
     console.error(error);
     }
@@ -262,7 +266,7 @@ loadFromShoppingList();
             </div>
             <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
             <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <p>{{user?.name}}</p>
+            <p>{{user?.username}}</p>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>

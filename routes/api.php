@@ -152,7 +152,7 @@ Route::get('/email/verify/{id}/{hash}', function ($id, $hash) {
     return response()->json(['message' => 'Email verified!']);
 });
 */
-Route::middleware('auth:sanctum')->put('/change-user-info', function (
+Route::middleware('check.api.token')->put('/change-user-info', function (
     Request $request,
     UpdateUserProfileInformation $updater
 ) {
@@ -163,7 +163,7 @@ Route::middleware('auth:sanctum')->put('/change-user-info', function (
     ]);
 });
 
-Route::middleware('auth:sanctum')->put('/reset-password', function (
+Route::middleware('check.api.token')->put('/reset-password', function (
     Request $request,
     UpdateUserPassword $updater
 ) {
@@ -174,10 +174,7 @@ Route::middleware('auth:sanctum')->put('/reset-password', function (
     ]);
 });
 
-Route::delete('/delete-account', function (Request $request) {
-    $user = $request->user();
-    $user->delete();
-});
+Route::delete('/delete-account', [UserController::class, 'deleteUser'])->middleware('check.api.token');
 
 Route::get('/get_album_items', [ItemController::class, 'getAllAlbumItems']);
 

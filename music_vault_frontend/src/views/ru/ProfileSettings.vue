@@ -8,7 +8,7 @@ const loading = ref(true);
 const router = useRouter();
 
 const user = ref({
-    name: '',
+    username: '',
     email: '',
     country: '',
 });
@@ -17,7 +17,7 @@ const isLoggedIn = ref(false);
 const shoppingList = ref<Item[]>([]);
 
 interface AccountInfo {
-  name: string;
+  username: string;
   email: string;
 }
 
@@ -35,7 +35,7 @@ interface Item {
 }
 
 const accountInfo = ref<AccountInfo>({
-  name: '',
+  username: '',
   email: '',
 });
 
@@ -73,7 +73,7 @@ const logout = async () => {
 const changeAccountInfo = async (accountInfo: AccountInfo) => {
   try {
     const response = await axiosInstance.put('/change-user-info', {
-      name: accountInfo.name,
+      username: accountInfo.username,
       email: accountInfo.email,
     });
     console.log(response.data);
@@ -180,7 +180,7 @@ loadFromShoppingList();
             </div>
             <input type="text" id="searchbar" name="recordsearch" placeholder="Поиск записей...">
             <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.name}}</RouterLink>
+            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Выйти</button>
             </form>
@@ -216,7 +216,7 @@ loadFromShoppingList();
             <form @submit.prevent="changeAccountInfo(accountInfo)">
                 <div class="form_parts">
                     <label>Имя пользователя</label>
-                    <input type="text" v-model="accountInfo.name">
+                    <input type="text" v-model="accountInfo.username">
                 </div>
 
                 <div class="form_parts">

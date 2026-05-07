@@ -43,7 +43,6 @@ class AlbumController extends Controller
         }
             
         }
-        return redirect('/');
     }
 
     public function filterAlbums(Request $request)

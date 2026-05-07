@@ -8,7 +8,7 @@ const loading = ref(true);
 const router = useRouter();
 
 const user = ref({
-    name: '',
+    username: '',
     email: '',
 });
 
@@ -126,7 +126,7 @@ const sellItem = async (payload: SellItemForm) => {
     });
     console.log(response.data);
     if (response.status === 200) {
-        router.push('/');
+        router.push('/lv');
     }
   } catch (error) {
     console.error(error);
@@ -199,7 +199,7 @@ loadFromShoppingList();
             </div>
             <input type="text" id="searchbar" name="recordsearch" placeholder="Meklēt ierakstus...">
             <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.name}}</RouterLink>
+            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Iziet</button>
             </form>

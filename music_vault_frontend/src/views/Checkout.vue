@@ -8,7 +8,7 @@ const loading = ref(true);
 const router = useRouter();
 
 const user = ref({
-    name: '',
+    username: '',
     email: '',
 });
 
@@ -123,17 +123,15 @@ const deleteFromShoppingList = async (index: number) => {
   localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
 }
 
-const submitForm = async () => {
+const createOrder = async () => {
   const formData = new FormData()
 
-  // Album fields
   Object.entries(checkoutForm.value).forEach(([key, value]) => {
     if (value !== null) {
       formData.append(key, value as any)
     }
   })
 
-  // Tracks
   shoppingList.value.forEach((item, index) => {
         formData.append(`shoppingList[${index}][id]`, item.id)
         formData.append(`shoppingList[${index}][title]`, item.title)
@@ -156,20 +154,6 @@ const submitForm = async () => {
     console.error(error);
   }
 }
-
-const createOrder = async (payload: CheckoutForm) => {
-  try {
-    const response = await axiosInstance.post('/create_order', payload);
-    console.log(response.data);
-    if (response.status === 200) {
-        router.push('/');
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-
 
 
 
@@ -214,7 +198,7 @@ loadFromShoppingList();
             </div>
             <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
             <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.name}}</RouterLink>
+            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>
@@ -262,7 +246,7 @@ loadFromShoppingList();
                 </div>
             </div>
 
-            <form id="checkout_form"  @submit.prevent="submitForm()" method="POST" enctype="multipart/form-data">
+            <form id="checkout_form"  @submit.prevent="createOrder()" method="POST" enctype="multipart/form-data">
                 <div id="checkout_wrapper">
                     <div id="contact_info_side">
                         <label>First Name</label>

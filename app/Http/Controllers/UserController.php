@@ -18,7 +18,7 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'password_confirmation' => ['required'],
@@ -27,7 +27,7 @@ class UserController extends Controller
         ]);
 
         $user = User::create([
-            'name' => $validated['name'],
+            'username' => $validated['username'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'country_id' => $validated['country_id'],
@@ -109,5 +109,13 @@ class UserController extends Controller
     public function getCurrentUser(Request $request)
     {
         return response()->json($request->user());
+    }
+
+    public function deleteUser(Request $request)
+    {
+        $user = $request->user();
+        $user->delete();
+
+        return response()->json(['message' => 'Account deleted successfully'], 200);
     }
 }

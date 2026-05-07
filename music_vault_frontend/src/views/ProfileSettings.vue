@@ -8,17 +8,25 @@ const loading = ref(true);
 const router = useRouter();
 
 const user = ref({
-    name: '',
-    email: 'danila.sharpan@inbox.lv',
+    username: '',
+    email: '',
     country: '',
 });
 
 const isLoggedIn = ref(false);
 const shoppingList = ref<Item[]>([]);
 
+interface Country {
+  id: number;
+  country_name: string;
+}
+
+const countries = ref<Country[]>([]);
+
 interface AccountInfo {
-  name: string;
+  username: string;
   email: string;
+  country: string;
 }
 
 interface ResetPassword {
@@ -35,8 +43,9 @@ interface Item {
 }
 
 const accountInfo = ref<AccountInfo>({
-  name: '',
+  username: '',
   email: '',
+  country: '',
 });
 
 const resetPassword = ref<ResetPassword>({
@@ -45,12 +54,25 @@ const resetPassword = ref<ResetPassword>({
   confirm_new_password: '',
 });
 
+const getCountries = async () => {
+    try {
+      const response = await axiosInstance.get('/getcountries');
+      countries.value = response.data;
+      console.log(countries.value);
+    } catch (error) {
+      console.error(error);
+    }
+}
+
 const getUser = async () => {
     try {
         const response = await axiosInstance.get('/user');
         user.value = response.data;
         isLoggedIn.value = true;
         console.log(response.data);
+        accountInfo.value.username = response.data.username;
+        accountInfo.value.email = response.data.email;
+        accountInfo.value.country = response.data.country;
     } catch (error) {
         console.error(error);
         isLoggedIn.value = false;
@@ -73,7 +95,7 @@ const logout = async () => {
 const changeAccountInfo = async (accountInfo: AccountInfo) => {
   try {
     const response = await axiosInstance.put('/change-user-info', {
-      name: accountInfo.name,
+      username: accountInfo.username,
       email: accountInfo.email,
     });
     console.log(response.data);
@@ -142,6 +164,7 @@ const deleteFromShoppingList = async (index: number) => {
 }
 
 getUser();
+getCountries();
 loadFromShoppingList();
 </script>
 
@@ -180,7 +203,7 @@ loadFromShoppingList();
             </div>
             <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
             <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.name}}</RouterLink>
+            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>
@@ -216,7 +239,7 @@ loadFromShoppingList();
             <form @submit.prevent="changeAccountInfo(accountInfo)">
                 <div class="form_parts">
                     <label>Username</label>
-                    <input type="text" v-model="accountInfo.name">
+                    <input type="text" v-model="accountInfo.username">
                 </div>
 
                 <div class="form_parts">
@@ -224,13 +247,13 @@ loadFromShoppingList();
                     <input type="text" v-model="accountInfo.email">
                 </div>
 
-                <div class="form_parts">
+                <!---<div class="form_parts">
                     <label>Country</label>
-                    <select name="country">
-                      <option value="" disabled>Select country</option>
-                      <option></option>
+                    <select name="country" v-model="accountInfo.country">
+                      <option value="">Select your country</option>
+                      <option v-for="country in countries" :key="country.id" :value="country.id">{{ country.country_name }}</option>
                     </select>
-                </div>
+                </div>-->
 
                 <div class="form_parts">
                     <input id="submit_btn" type="submit" value="Submit Form">

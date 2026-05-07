@@ -20,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
         'country_id',
@@ -98,4 +98,10 @@ class User extends Authenticatable implements MustVerifyEmail
             'csrf_token' => $csrfToken,
         ];
     }
+
+    /**
+     * Delete the user account.
+     *
+     * @return bool
+     */
 }
