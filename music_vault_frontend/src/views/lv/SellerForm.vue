@@ -13,13 +13,19 @@ const user = ref({
 });
 
 interface SellerForm {
-    business_type: string;
-    currency: string;
+    currency_id: number;
     full_name: string;
     shipping_address: string;
     minimal_order_total: string;
     seller_terms: string;
 }
+
+interface Currency {
+  id: number;
+  currency_name: string;
+}
+
+const currencies = ref<Currency[]>([]);
 
 interface Item {
   id: string;
@@ -29,8 +35,7 @@ interface Item {
 }
 
 const sellerForm = ref(<SellerForm>({
-    business_type: '',
-    currency: '',
+    currency_id: 0,
     full_name: '',
     shipping_address: '',
     minimal_order_total: '',
@@ -62,7 +67,16 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/lv';
+        window.location.href='/ru';
+    }
+}
+
+const getCurrencies = async () => {
+    try {
+      const response = await axiosInstance.get('/get_currencies');
+      currencies.value = response.data;
+    } catch (error) {
+      console.error(error);
     }
 }
 
@@ -71,7 +85,7 @@ const createSeller = async (payload: SellerForm) => {
     const response = await axiosInstance.post('/createseller', payload);
     console.log(response.data);
     if (response.status === 200) {
-        router.push('/');
+        router.push('/ru');
     }
   } catch (error) {
     console.error(error);
@@ -105,6 +119,7 @@ const deleteFromShoppingList = async (index: number) => {
 }
 
 getUser();
+getCurrencies();
 loadFromShoppingList();
 </script>
 
@@ -175,13 +190,11 @@ loadFromShoppingList();
 
         <form id="seller_form" @submit.prevent="createSeller(sellerForm)" action="/login" method="post">
                 <div class="form_parts">
-                    <label>Uzņēmuma veids</label>
-                    <input v-model="sellerForm.business_type" name="business_type" type="text">
-                </div>
-
-                <div class="form_parts">
                     <label>Valūta</label>
-                    <input v-model="sellerForm.currency" name="currency" type="text">
+                    <select class="album_input" name="currency" v-model="sellerForm.currency_id">
+                      <option value="" disabled>Select currency</option>
+                      <option v-for="currency in currencies" :key="currency.id" :value="currency.id">{{ currency.currency_name }}</option>
+                    </select>
                 </div>
 
                 <div class="form_parts">
@@ -190,7 +203,7 @@ loadFromShoppingList();
                 </div>
 
                 <div class="form_parts">
-                    <label>Shipping Adrese</label>
+                    <label>Izsūtīšanas adrese</label>
                     <input v-model="sellerForm.shipping_address" name="shipping_address" type="text">
                 </div>
 
@@ -539,6 +552,16 @@ main {
   margin-top: 6px;
   margin-bottom: 6px;
   color: #C3C3C3;
+}
+
+#seller_form select {
+  width: 385.6px;
+  height: 53.6px;
+  border-style: solid;
+  border-color: #000000;
+  border-radius: 8px;
+  border-width: 1px;
+  padding: 1px 2px;
 }
 
 #submit_btn {

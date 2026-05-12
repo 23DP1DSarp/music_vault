@@ -12,8 +12,7 @@ class Seller extends Model
 
     protected $fillable = [
         'user_id',
-        'business_type',
-        'currency',
+        'currency_id',
         'full_name',
         'shipping_address',
         'minimal_order_total',

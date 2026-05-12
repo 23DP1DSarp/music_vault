@@ -11,8 +11,7 @@ class SellerController extends Controller
 {
     public function createSeller(Request $request) {
         $incomingFields = $request->validate([
-            'business_type' => 'required',
-            'currency' => 'required',
+            'currency_id' => 'required',
             'full_name' => 'required',
             'shipping_address' => 'required',
             'minimal_order_total' => 'required|numeric',

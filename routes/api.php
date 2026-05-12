@@ -183,3 +183,12 @@ Route::get('/get_album_item/{item}', [ItemController::class, 'getAlbumItem']);
 Route::get('/filter_album_items', [ItemController::class, 'filterAlbumItems']);
 
 Route::post('/create_order', [OrderController::class, 'createOrder']);
+
+
+Route::get('/get_currencies', function () {
+    return DB::table('currencies')
+    ->select(
+        'currencies.*',
+    )
+    ->get();
+});
