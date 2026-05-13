@@ -66,7 +66,7 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/';
+        window.location.href='/en';
     }
 }
 
@@ -147,7 +147,7 @@ loadFromShoppingList();
                 <RouterLink to="/ru">
                   RU
                 </RouterLink>
-                <RouterLink to="/lv">
+                <RouterLink to="/">
                   LV
                 </RouterLink>
               </div>
@@ -158,8 +158,8 @@ loadFromShoppingList();
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>
-            <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
-            <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+            <RouterLink to="/en/login" v-if="!isLoggedIn">Log In</RouterLink>
+            <RouterLink to="/en/register" v-if="!isLoggedIn">Sign Up</RouterLink>
         </div>
     </div>
     </nav>
@@ -197,7 +197,7 @@ loadFromShoppingList();
                 <p id="subtext">From rare pressings to the latest releases. Curated vinyl records for every music lover.</p>
 
                 <div id="hero_buttons">
-                    <RouterLink to="/catalog" id="shop_button">Shop New Releases</RouterLink>
+                    <RouterLink to="/en/catalog" id="shop_button">Shop New Releases</RouterLink>
                     <button id="browse_button">Browse Collection</button>
                 </div>
 

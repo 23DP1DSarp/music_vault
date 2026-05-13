@@ -207,10 +207,10 @@ loadFromShoppingList();
             <div id="language_select" name="language">
               <p>RU</p>
               <div id="language_options">
-                <RouterLink to="/">
+                <RouterLink to="/en">
                   EN
                 </RouterLink>
-                <RouterLink to="/lv">
+                <RouterLink to="/">
                   LV
                 </RouterLink>
               </div>

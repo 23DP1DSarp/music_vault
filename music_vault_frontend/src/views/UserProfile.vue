@@ -70,7 +70,7 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/';
+        window.location.href='/en';
     }
 }
 
@@ -142,7 +142,7 @@ loadFromShoppingList();
     <body>
         <nav>
         <div id="navwrapper">
-        <RouterLink to="/">
+        <RouterLink to="/en">
             <div id="logo">
             <img src="../images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
@@ -154,7 +154,7 @@ loadFromShoppingList();
                 <li>Genres</li>
                 <li>Artists</li>
                 <li>Forums</li>
-                <RouterLink to="/add-album" v-if="isLoggedIn">Add Album</RouterLink>
+                <RouterLink to="/en/add-album" v-if="isLoggedIn">Add Album</RouterLink>
             </ul>
         </div>
 
@@ -165,7 +165,7 @@ loadFromShoppingList();
                 <RouterLink to="/ru">
                   RU
                 </RouterLink>
-                <RouterLink to="/lv">
+                <RouterLink to="/">
                   LV
                 </RouterLink>
               </div>
@@ -176,8 +176,8 @@ loadFromShoppingList();
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>
-            <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
-            <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+            <RouterLink to="/en/login" v-if="!isLoggedIn">Log In</RouterLink>
+            <RouterLink to="/en/register" v-if="!isLoggedIn">Sign Up</RouterLink>
         </div>
     </div>
     </nav>

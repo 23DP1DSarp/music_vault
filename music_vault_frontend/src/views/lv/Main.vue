@@ -66,7 +66,7 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/lv';
+        window.location.href='/';
     }
 }
 
@@ -124,7 +124,7 @@ loadFromShoppingList();
 <body v-if="loading !== true">
     <nav>
         <div id="navwrapper">
-        <RouterLink to="/lv">
+        <RouterLink to="/">
             <div id="logo">
             <img src="../../images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
@@ -144,7 +144,7 @@ loadFromShoppingList();
             <div id="language_select" name="language">
               <p>LV</p>
               <div id="language_options">
-                <RouterLink to="/">
+                <RouterLink to="/en">
                   EN
                 </RouterLink>
                 <RouterLink to="/ru">
@@ -158,8 +158,8 @@ loadFromShoppingList();
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Iziet</button>
             </form>
-            <RouterLink to="/lv/login" v-if="!isLoggedIn">Ieiet</RouterLink>
-            <RouterLink to="/lv/register" v-if="!isLoggedIn">Reģistrēties</RouterLink>
+            <RouterLink to="/login" v-if="!isLoggedIn">Ieiet</RouterLink>
+            <RouterLink to="/register" v-if="!isLoggedIn">Reģistrēties</RouterLink>
         </div>
     </div>
     </nav>
@@ -197,7 +197,7 @@ loadFromShoppingList();
                 <p id="subtext">No retiem nospiedumiem līdz jaunākajiem izdevumiem. Atlasīti vinila ieraksti katram mūzikas cienītājam.</p>
 
                 <div id="hero_buttons">
-                    <RouterLink to="/lv/catalog" id="shop_button">Jaunumi</RouterLink>
+                    <RouterLink to="/catalog" id="shop_button">Jaunumi</RouterLink>
                     <button id="browse_button">Pārlūkot kolekciju</button>
                 </div>
 

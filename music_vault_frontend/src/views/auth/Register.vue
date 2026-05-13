@@ -55,7 +55,7 @@ const register = async (payload: RegisterForm) => {
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.api_token}`;
             axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = response.data.csrf_token;
             
-            window.location.href = "/";
+            window.location.href = "/en";
         }
     } catch (error) {
         console.error(error);
@@ -71,9 +71,9 @@ getCountries();
     <nav>
         <div id="logo">
             <img src="@/images/nav_images/vinyl_icon.svg">
-            <p><RouterLink to="/">MusicVault</RouterLink></p>
+            <p><RouterLink to="/en">MusicVault</RouterLink></p>
         </div>
-        <RouterLink to="/login">Log In</RouterLink>
+        <RouterLink to="/en/login">Log In</RouterLink>
        
     </nav>
 

@@ -67,7 +67,7 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/ru';
+        window.location.href='/en';
     }
 }
 
@@ -85,7 +85,7 @@ const createSeller = async (payload: SellerForm) => {
     const response = await axiosInstance.post('/createseller', payload);
     console.log(response.data);
     if (response.status === 200) {
-        router.push('/ru');
+        router.push('/en');
     }
   } catch (error) {
     console.error(error);
@@ -127,7 +127,7 @@ loadFromShoppingList();
     <body>
         <nav>
         <div id="navwrapper">
-        <RouterLink to="/">
+        <RouterLink to="/en">
             <div id="logo">
             <img src="../images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
@@ -150,7 +150,7 @@ loadFromShoppingList();
                 <RouterLink to="/ru">
                   RU
                 </RouterLink>
-                <RouterLink to="/lv">
+                <RouterLink to="/">
                   LV
                 </RouterLink>
               </div>
@@ -161,8 +161,8 @@ loadFromShoppingList();
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>
-            <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
-            <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+            <RouterLink to="/en/login" v-if="!isLoggedIn">Log In</RouterLink>
+            <RouterLink to="/en/register" v-if="!isLoggedIn">Sign Up</RouterLink>
         </div>
     </div>
     </nav>

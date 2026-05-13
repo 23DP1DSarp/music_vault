@@ -74,7 +74,7 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/';
+        window.location.href='/en';
     }
 }
 
@@ -199,8 +199,8 @@ loadFromShoppingList();
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>
-            <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
-            <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+            <RouterLink to="/en/login" v-if="!isLoggedIn">Log In</RouterLink>
+            <RouterLink to="/en/register" v-if="!isLoggedIn">Sign Up</RouterLink>
         </div>
     </div>
     </nav>
@@ -259,7 +259,7 @@ loadFromShoppingList();
                       
                   <img v-if="album.cover" :src="getImageUrl(album.cover)" :alt="album.title">
                       
-                  <a :href="`/albuminfo/${album.id}`"><h3>{{ album.title }}</h3></a>
+                  <a :href="`/en/albuminfo/${album.id}`"><h3>{{ album.title }}</h3></a>
                   <p>{{ album.author }}</p>
                   <div id="genre_and_year">
                     <p>{{ album.genre }}</p>

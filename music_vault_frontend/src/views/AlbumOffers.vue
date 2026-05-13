@@ -83,7 +83,7 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/';
+        window.location.href='/en';
     }
 }
 
@@ -235,7 +235,7 @@ loadFromShoppingList();
     <body>
         <nav>
         <div id="navwrapper">
-        <RouterLink to="/">
+        <RouterLink to="/en">
             <div id="logo">
                 <img src="../images/nav_images/vinyl_icon.svg">
                 <p>MusicVault</p>
@@ -248,7 +248,7 @@ loadFromShoppingList();
                 <li>Genres</li>
                 <li>Artists</li>
                 <li>Forums</li>
-                <RouterLink to="/add-album" v-if="isLoggedIn">Add Album</RouterLink>
+                <RouterLink to="/en/add-album" v-if="isLoggedIn">Add Album</RouterLink>
             </ul>
         </div>
 
@@ -356,7 +356,7 @@ loadFromShoppingList();
                   
                 
                 <div id="item_info_col">
-                    <p>Title: <a :href="`/offer/${albumItem.id}`">{{ albumItem.title }}</a></p>
+                    <p>Title: <a :href="`/en/offer/${albumItem.id}`">{{ albumItem.title }}</a></p>
                     <p>Condition: {{ albumItem.condition }}</p>
                     <p>Quantity: {{ albumItem.quantity }}</p>
                 </div>

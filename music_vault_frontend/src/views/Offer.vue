@@ -98,7 +98,7 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/';
+        window.location.href='/en';
     }
 };
 
@@ -187,7 +187,7 @@ loadFromShoppingList();
     <body v-if="loading !== true">
      <nav>
         <div id="navwrapper">
-        <RouterLink to="/">
+        <RouterLink to="/en">
             <div id="logo">
             <img src="../images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
@@ -210,7 +210,7 @@ loadFromShoppingList();
                 <RouterLink to="/ru">
                   RU
                 </RouterLink>
-                <RouterLink to="/lv">
+                <RouterLink to="/">
                   LV
                 </RouterLink>
               </div>
@@ -221,8 +221,8 @@ loadFromShoppingList();
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>
-            <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
-            <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+            <RouterLink to="/en/login" v-if="!isLoggedIn">Log In</RouterLink>
+            <RouterLink to="/en/register" v-if="!isLoggedIn">Sign Up</RouterLink>
         </div>
     </div>
     </nav>
@@ -300,7 +300,7 @@ loadFromShoppingList();
 
                 <div id="button_sec">
                     <button id="add_to_cart_btn" @click="addToShoppingList()">Add to cart</button>
-                    <a :href="`/albuminfo/${album.id}`"><button id="release_page_btn">View Release Page</button></a>
+                    <a :href="`/en/albuminfo/${album.id}`"><button id="release_page_btn">View Release Page</button></a>
                 </div>
             </div>
 

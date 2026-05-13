@@ -159,7 +159,7 @@ loadFromShoppingList();
                 <RouterLink to="/en">
                   EN
                 </RouterLink>
-                <RouterLink to="/lv">
+                <RouterLink to="/">
                   LV
                 </RouterLink>
               </div>

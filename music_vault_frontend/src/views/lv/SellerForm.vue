@@ -67,7 +67,7 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/ru';
+        window.location.href='/';
     }
 }
 
@@ -85,7 +85,7 @@ const createSeller = async (payload: SellerForm) => {
     const response = await axiosInstance.post('/createseller', payload);
     console.log(response.data);
     if (response.status === 200) {
-        router.push('/ru');
+        router.push('/');
     }
   } catch (error) {
     console.error(error);
@@ -127,7 +127,7 @@ loadFromShoppingList();
     <body>
         <nav>
         <div id="navwrapper">
-        <RouterLink to="/lv">
+        <RouterLink to="/">
             <div id="logo">
             <img src="../../images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
@@ -147,7 +147,7 @@ loadFromShoppingList();
             <div id="language_select" name="language">
               <p>LV</p>
               <div id="language_options">
-                <RouterLink to="/">
+                <RouterLink to="/en">
                   EN
                 </RouterLink>
                 <RouterLink to="/ru">
@@ -198,7 +198,7 @@ loadFromShoppingList();
                 </div>
 
                 <div class="form_parts">
-                    <label>Pilns vārds</label>
+                    <label>Pilnais vārds</label>
                     <input v-model="sellerForm.full_name" name="full_name" type="text">
                 </div>
 

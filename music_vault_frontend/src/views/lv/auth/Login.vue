@@ -10,7 +10,7 @@ const login = async (payload: any) => {
     if (response.data && response.data.api_token) {
       localStorage.setItem('auth_token', response.data.api_token)
       localStorage.setItem('user', JSON.stringify(response.data.user))
-      window.location.href = '/lv'
+      window.location.href = '/'
     }
   } catch (err) {
     form.value.error = 'Pieteikšanās neizdevās.'
@@ -26,7 +26,7 @@ const login = async (payload: any) => {
             <p><RouterLink to="/">MusicVault</RouterLink></p>
         </div>
          <div id="rightbuttons">
-        <RouterLink to="/lv/register">Reģistrēties</RouterLink>
+        <RouterLink to="/register">Reģistrēties</RouterLink>
     </div>
     </nav>
 

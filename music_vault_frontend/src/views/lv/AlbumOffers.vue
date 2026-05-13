@@ -235,7 +235,7 @@ loadFromShoppingList();
     <body>
         <nav>
         <div id="navwrapper">
-        <RouterLink to="/lv">
+        <RouterLink to="/">
             <div id="logo">
                 <img src="../../images/nav_images/vinyl_icon.svg">
                 <p>MusicVault</p>

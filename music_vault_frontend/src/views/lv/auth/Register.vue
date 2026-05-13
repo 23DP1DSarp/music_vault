@@ -57,9 +57,9 @@ getCountries();
     <nav>
       <div id="logo">
         <img src="@/images/nav_images/vinyl_icon.svg">
-        <p><RouterLink to="/lv">MusicVault</RouterLink></p>
+        <p><RouterLink to="/">MusicVault</RouterLink></p>
       </div>
-      <RouterLink to="/lv/login">Pieslēgties</RouterLink>
+      <RouterLink to="/login">Pieslēgties</RouterLink>
     </nav>
 
     <main>

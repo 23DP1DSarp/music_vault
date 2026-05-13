@@ -126,7 +126,7 @@ const sellItem = async (payload: SellItemForm) => {
     });
     console.log(response.data);
     if (response.status === 200) {
-        router.push('/lv');
+        router.push('/');
     }
   } catch (error) {
     console.error(error);
@@ -189,7 +189,7 @@ loadFromShoppingList();
             <div id="language_select" name="language">
               <p>LV</p>
               <div id="language_options">
-                <RouterLink to="/">
+                <RouterLink to="/en">
                   EN
                 </RouterLink>
                 <RouterLink to="/ru">

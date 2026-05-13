@@ -146,7 +146,7 @@ loadFromShoppingList();
                 <RouterLink to="/en">
                   EN
                 </RouterLink>
-                <RouterLink to="/lv">
+                <RouterLink to="/">
                   LV
                 </RouterLink>
               </div>
@@ -157,8 +157,8 @@ loadFromShoppingList();
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Выйти</button>
             </form>
-            <RouterLink to="/login" v-if="!isLoggedIn">Войти</RouterLink>
-            <RouterLink to="/register" v-if="!isLoggedIn">Регистрация</RouterLink>
+            <RouterLink to="/ru/login" v-if="!isLoggedIn">Войти</RouterLink>
+            <RouterLink to="/ru/register" v-if="!isLoggedIn">Регистрация</RouterLink>
         </div>
     </div>
     </nav>
