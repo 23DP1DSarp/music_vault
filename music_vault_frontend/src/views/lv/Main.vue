@@ -11,6 +11,7 @@ const router = useRouter();
 const user = ref({
     username: '',
     email: '',
+    role_id: 0,
 });
 
 const isLoggedIn = ref(false);
@@ -137,6 +138,7 @@ loadFromShoppingList();
                 <li>Mākslinieki</li>
                 <li>Forumi</li>
                 <RouterLink to="/add-album" v-if="isLoggedIn">Pievienot albumu</RouterLink>
+                <RouterLink to="/sell-item" v-if="isLoggedIn">Pārdot preci</RouterLink>
             </ul>
         </div>
 
@@ -198,7 +200,7 @@ loadFromShoppingList();
 
                 <div id="hero_buttons">
                     <RouterLink to="/catalog" id="shop_button">Jaunumi</RouterLink>
-                    <button id="browse_button">Pārlūkot kolekciju</button>
+                    <RouterLink to="/albumoffers" id="browse_button">Pārlūkot kolekciju</RouterLink>
                 </div>
 
                 <div id="stats">
@@ -681,17 +683,17 @@ input::-webkit-inner-spin-button {
 }
 
 #browse_button {
-  width: 210px;
+  width: 230px;
   height: 40px;
   background-color: #FFFFFF;
   color: #0A0A0A;
   border: solid rgba(0, 0, 0, .1) 1px;
+  border-style: solid;
   border-radius: 8px;
   text-align: center;
-  vertical-align: middle;
   font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size:18px;
-  line-height: 20px;
+  line-height: 40px;
   letter-spacing: 0px;
   cursor: pointer;
 }

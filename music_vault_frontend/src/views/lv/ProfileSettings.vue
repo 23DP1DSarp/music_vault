@@ -291,7 +291,7 @@ loadFromShoppingList();
             <p>Konta dzēšana ir neatgriezeniska. Rīkojieties uzmanīgi.</p>
             <form @submit.prevent="deleteAccount">
                 <div class="form_parts">
-                    <input id="delete_btn" type="submit" value="Dzēst Account">
+                    <input id="delete_btn" type="submit" value="Dzēst kontu">
                 </div>
             </form>
         </div>

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import axiosInstance from '@/axios';
 import {ref} from 'vue';
-
+import { useRouter } from 'vue-router';
 
 const loading = ref(true);
+const router = useRouter();
 
 const user = ref({
     username: '',
@@ -190,6 +191,9 @@ const submitForm = async () => {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
     console.log(response.data);
+    if (response.status === 200) {
+        router.push('/');
+    }
     } catch (error) {
     console.error(error);
     }

@@ -248,7 +248,6 @@ loadFromShoppingList();
                 <hr>
 
                 <div id="button_sec">
-                    <button id="add_to_cart_btn">Pievienot grozam</button>
                     <button id="add_to_collection_btn" @click="addToCollection">Pievienot kolekcijai</button>
                 </div>
             </div>

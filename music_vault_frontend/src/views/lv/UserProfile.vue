@@ -215,6 +215,7 @@ loadFromShoppingList();
                 <p><strong>Valsts: </strong> </p>
                 <p><strong>Pievienotie albumi: </strong> </p>
                 <p><strong>Rakstītie komentāri: </strong> </p>
+                <a :href="`/profilesettings`"><button id="profile_settings_btn">Profila iestatījumi</button></a>
             </aside>
 
             <div id="album_collection">
@@ -559,6 +560,22 @@ main {
     letter-spacing: 0px;
     color: #0A0A0A;
     background-color: #ECECF0;
+}
+
+#profile_settings_btn {
+  width: 100%;
+  height: 40px;
+  background-color: #FFFFFF;
+  color: #0A0A0A;
+  border: solid rgba(0, 0, 0, .1) 1px;
+  border-radius: 8px;
+  text-align: center;
+  vertical-align: middle;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:18px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  cursor: pointer;
 }
 
 #album_collection {

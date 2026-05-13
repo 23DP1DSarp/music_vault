@@ -174,6 +174,16 @@ const deleteFromShoppingList = async (index: number) => {
   localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
 }
 
+const updateItemInShoppingList = async (index: number, operator: string) => {
+  if (operator === "-" && shoppingList.value[index]?.quantity) {
+    shoppingList.value[index].quantity -= 1;
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value))
+  } else if (operator === "+" && shoppingList.value[index]?.quantity) {
+    shoppingList.value[index].quantity += 1;
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value))
+  }
+}
+
 getUser();
 getItem();
 loadFromShoppingList();
@@ -240,7 +250,11 @@ loadFromShoppingList();
             </div>
             <div id="price_div">
               <b><p id="price">{{ item.price }}$</p></b>
-              <p>Daudzums: {{ item.quantity }}</p>
+              <div id="item_quantity">
+                <button class="quantity_btn" @click="updateItemInShoppingList(index, '-')">-</button>
+                <input id="quantity_input" type="number" v-model="item.quantity">
+                <button class="quantity_btn" @click="updateItemInShoppingList(index, '+')">+</button>
+              </div>
             </div>
             
           </div>
@@ -291,16 +305,16 @@ loadFromShoppingList();
                 <h1>Piedāvājuma dati</h1>
                 <p id="author">Pārdevējs: {{ albumItem.seller_name }}</p>
                 <p id="release_date">Pievienots: {{ albumItem.created_at }}</p>
-                <p id="country">Shipping Valsts: {{ albumItem.shipping_country }}</p>
+                <p id="country">Sūtīšanas valsts: {{ albumItem.shipping_country }}</p>
                 <p id="genre">Stāvoklis: {{ albumItem.condition }}</p>
                 <p id="label">Daudzums: {{ albumItem.quantity }}</p>
-                <p id="format">Cena: {{ albumItem.price }}</p>
+                <p id="format">Cena: {{ albumItem.price + "€"}}</p>
 
                 <hr>
 
                 <div id="button_sec">
                     <button id="add_to_cart_btn" @click="addToShoppingList()">Pievienot grozam</button>
-                    <a :href="`/albuminfo/${album.id}`"><button id="release_page_btn">Skatīt izlaiduma lapu</button></a>
+                    <a :href="`/albuminfo/${album.id}`"><button id="release_page_btn">Skatīt albuma lapu</button></a>
                 </div>
             </div>
 

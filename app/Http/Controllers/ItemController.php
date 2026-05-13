@@ -61,7 +61,7 @@ class ItemController extends Controller
         ->join('genres', 'albums.genre_id', '=', 'genres.id')
         ->join('countries', 'countries.id', '=', 'albums.country_id')
         ->where('items.category', 'album')
-        ->select('items.*', 'albums.release_date as release_date', 'genres.genre_title as genre', 'countries.country_name as country', 'users.name as seller_name')
+        ->select('items.*', 'albums.release_date as release_date', 'genres.genre_title as genre', 'countries.country_name as country', 'users.username as seller_name')
         ->get();
         return $items;
     }
@@ -75,7 +75,7 @@ class ItemController extends Controller
         ->join('albums', 'album_items.album_id', '=', 'albums.id')
         ->where('items.id', '=', $item->id)
         ->where('items.category', 'album')
-        ->select('items.*', 'users.name as seller_name', 'sellers.full_name as sellers_full_name', 'albums.id as album_id', 'countries.id as shipping_country', 'sellers.shipping_address as origin_address', DB::raw('DATE(items.created_at) as created_at'))
+        ->select('items.*', 'users.username as seller_name', 'sellers.full_name as sellers_full_name', 'albums.id as album_id', 'countries.country_name as shipping_country', 'sellers.shipping_address as origin_address', DB::raw('DATE(items.created_at) as created_at'))
         ->get();
         return $item;
     }
