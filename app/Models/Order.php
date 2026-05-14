@@ -20,10 +20,6 @@ class Order extends Model
         'shipping_address',
         'postal_code',
         'phone_number',
-        'credit_card_number',
-        'expiry_month',
-        'expiry_year',
-        'cvv',
     ];
 
     public function order_items() {
