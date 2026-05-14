@@ -20,7 +20,7 @@ interface Item {
   quantity: number;
   price: number;
   origin_address: string;
-  country_id: number;
+  shipping_country_id: number;
   sellers_full_name: string;
 }
 
@@ -138,7 +138,7 @@ const submitForm = async () => {
         formData.append(`shoppingList[${index}][quantity]`, String(item.quantity))
         formData.append(`shoppingList[${index}][price]`, String(item.price))
         formData.append(`shoppingList[${index}][origin_address]`, item.origin_address)
-        formData.append(`shoppingList[${index}][country_id]`, String(item.country_id))
+        formData.append(`shoppingList[${index}][shipping_country_id]`, String(item.shipping_country_id))
         formData.append(`shoppingList[${index}][sellers_full_name]`, item.sellers_full_name)
   })
 

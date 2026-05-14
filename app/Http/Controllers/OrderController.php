@@ -39,7 +39,7 @@ class OrderController extends Controller
                 'quantity' => $data['quantity'],
                 'price' => $data['price'],
                 'item_id' => $data['id'],
-                'country_id' => $data['country_id']
+                'shipping_country_id' => $data['country_id']
             ]);
         }
             
