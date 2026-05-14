@@ -15,7 +15,7 @@ class OrderController extends Controller
             'shipping_address' => 'required',
             'buyers_first_name' => 'required',
             'buyers_last_name' => 'required',
-            'country_id' => 'integer|required',
+            'shipping_country_id' => 'integer|required',
             'city' => 'required',
             'shipping_address' => 'required',
             'postal_code' => 'required',
