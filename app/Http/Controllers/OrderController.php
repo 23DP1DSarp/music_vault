@@ -15,7 +15,7 @@ class OrderController extends Controller
             'shipping_address' => 'required',
             'buyers_first_name' => 'required',
             'buyers_last_name' => 'required',
-            'shipping_country_id' => 'integer|required',
+            'country_id' => 'integer|required',
             'city' => 'required',
             'shipping_address' => 'required',
             'postal_code' => 'required',
@@ -39,7 +39,7 @@ class OrderController extends Controller
                 'quantity' => $data['quantity'],
                 'price' => $data['price'],
                 'item_id' => $data['id'],
-                'shipping_country_id' => $data['country_id']
+                'shipping_country_id' => $data['shipping_country_id']
             ]);
         }
             
