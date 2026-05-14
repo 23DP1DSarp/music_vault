@@ -45,7 +45,8 @@ const albumItem = ref({
     picture: '',
     seller_name: '',
     sellers_full_name: '',
-    shipping_country: 0,
+  shipping_country: 0,
+  shipping_country_id: 0,
     origin_address: '',
     album_id: '',
     created_at: '',
@@ -113,7 +114,7 @@ const getItem = async () => {
     item.quantity = 1;
     item.price = albumItem.value.price;
     item.origin_address = albumItem.value.origin_address;
-    item.country_id = albumItem.value.shipping_country;
+    item.country_id = albumItem.value.shipping_country_id;
     item.sellers_full_name = albumItem.value.sellers_full_name;
     console.log(response.data);
   } catch (error) {

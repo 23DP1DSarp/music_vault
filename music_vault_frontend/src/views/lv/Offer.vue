@@ -19,7 +19,7 @@ interface Item {
   quantity: number;
   price: number;
   origin_address: string;
-  country_id: number;
+  shipping_country_id: number;
   sellers_full_name: string;
   available_quantity: number;
 }
@@ -30,7 +30,7 @@ const item: Item = {
   quantity: 0,
   price: 0,
   origin_address: '',
-  country_id: 0,
+  shipping_country_id: 0,
   sellers_full_name: '',
   available_quantity: 0,
 } 
@@ -46,6 +46,7 @@ const albumItem = ref({
     seller_name: '',
     sellers_full_name: '',
     shipping_country: 0,
+    shipping_country_id: 0,
     origin_address: '',
     album_id: '',
     created_at: '',
@@ -113,7 +114,7 @@ const getItem = async () => {
     item.quantity = 1;
     item.price = albumItem.value.price;
     item.origin_address = albumItem.value.origin_address;
-    item.country_id = albumItem.value.shipping_country;
+    item.shipping_country_id = albumItem.value.shipping_country_id;
     item.sellers_full_name = albumItem.value.sellers_full_name;
     console.log(response.data);
   } catch (error) {
