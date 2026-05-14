@@ -148,7 +148,8 @@ const submitForm = async () => {
     });
     console.log(response.data);
     if (response.status === 200) {
-        router.push('/');
+      localStorage.removeItem("shoppingList");
+      router.push('/');
     }
   } catch (error) {
     console.error(error);

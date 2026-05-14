@@ -4,12 +4,44 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderConfirmation;
+use App\Models\Item;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+
 
 class OrderController extends Controller
 {
+
+  /*  public function checkAvaliabllity(Request $request) {
+        $shoppingList = $request->validate([
+            'shoppingList' => 'required|array|min:1'
+        ]);
+
+        $unavailableItems = [];
+
+        foreach ($shoppingList['shoppingList'] as $data) {
+            $item = Item::find($data['id']);
+            if (!$item || $item->quantity < $data['quantity']) {
+                $unavailableItems[] = [
+                    'id' => $data['id'],
+                    'requested_quantity' => $data['quantity'],
+                    'available_quantity' => $item ? $item->quantity : 0
+                ];
+            }
+        }
+
+        if (!empty($unavailableItems)) {
+            return response()->json(['unavailable_items' => $unavailableItems], 200);
+        } else {
+            return $this->createOrder($request);
+        }
+
+    } */
+
     public function createOrder(Request $request) {
         $incomingFields = $request->validate([
             'shipping_address' => 'required',
@@ -41,9 +73,32 @@ class OrderController extends Controller
                 'item_id' => $data['id'],
                 'shipping_country_id' => $data['shipping_country_id']
             ]);
+
+            Item::where('id',$data['id'])->update(['quantity'=> DB::raw('quantity - ' . $data['quantity'])]);
+
+            if (Item::where('id',$data['id'])->value('quantity') <= 0) {
+                Item::where('id', $data['id'])->delete();
+            }
         }
-            
+
+        $this->sendWelcomeEmail();
+
+        return response()->json(['order_id' => $order->id], 201);
     }
+
+   public function sendWelcomeEmail()
+{
+    $details = [
+        'name' => User::where('id', $this->getUserId(request()))->value('username'),
+        'message' => 'You have ordered an item from our marketplace. We will process your order and ship it to you as soon as possible. Thank you for shopping with us!
+        Your order id is ' . Order::where('user_id', $this->getUserId(request()))->latest()->value('id') . 'And your ordered items are ' . implode(', ', Order::where('user_id', $this->getUserId(request()))->latest()->first()->order_items()->pluck('title')->toArray()),
+        'link' => 'https://music-vault.com'
+    ];
+
+    Mail::to(User::where('id', $this->getUserId(request()))->value('email'))->send(new OrderConfirmation($details));
+
+    return "Email Sent!";
+}
 
     private function getUserId(Request $request)
     {
