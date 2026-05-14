@@ -46,7 +46,8 @@ class AlbumController extends Controller
     }
 
     public function filterAlbums(Request $request)
-    {
+    {   
+
         $genres = $request->input('genres', []);
         $countries = $request->input('countries', []);
         $decades = $request->input('decades', []);
@@ -54,19 +55,23 @@ class AlbumController extends Controller
         if (!empty($genres) || !empty($countries) || !empty($decades)) {
             $albums = DB::table('albums')
                 ->when(!empty($genres), function ($query) use ($genres) {
-                    $query->whereIn('genres.genre_title', $genres);
+                    $query->whereIn('genres.id', $genres);
                 })
                 ->when(!empty($countries), function ($query) use ($countries) {
                     $query->whereIn('countries.country_name', $countries);
-                })
+                }) 
+                
                 ->when(!empty($decades), function ($query) use ($decades) {
-                    $query->whereBetween(DB::raw('YEAR(albums.release_date)'), [$decades[0], $decades[0] + 9]);
+                    // Group decade ranges so the OR'ed ranges are wrapped in parentheses
+                    $query->where(function ($q) use ($decades) {
+                        $q->whereBetween(DB::raw('YEAR(albums.release_date)'), [$decades[0], $decades[0] + 9]);
 
-                    if (count($decades) > 1) {
-                        for ($i=1; $i < count($decades); $i++) { 
-                            $query->orWhereBetween(DB::raw('YEAR(albums.release_date)'), [$decades[$i], $decades[$i] + 9]);
+                        if (count($decades) > 1) {
+                            for ($i = 1; $i < count($decades); $i++) {
+                                $q->orWhereBetween(DB::raw('YEAR(albums.release_date)'), [$decades[$i], $decades[$i] + 9]);
+                            }
                         }
-                    }
+                    });
                 })
                 ->join('genres', 'genres.id', '=', 'albums.genre_id')
                 ->join('countries', 'countries.id', '=', 'albums.country_id')
@@ -87,7 +92,7 @@ class AlbumController extends Controller
                 )
                 ->get();
         }
-
+           
         return response()->json($albums);
     }
 /*

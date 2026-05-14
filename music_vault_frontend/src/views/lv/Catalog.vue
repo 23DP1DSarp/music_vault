@@ -9,6 +9,7 @@ interface Album {
   author: string;
   release_date: Date;
   genre: string;
+  genre_id: number;
   country: string;
   cover: string;
 }
@@ -24,13 +25,13 @@ const loading = ref(true);
 
 const albums = ref<Album[]>([]);
 
-const genres: string[] = [];
+const genres: { id: number; title: string }[] = [];
 
 const countries: string[] = [];
 
 const decades: string[] = [];
 
-const selectedGenres = ref<string[]>([]);
+const selectedGenres = ref<number[]>([]);
 
 const selectedCountries = ref<string[]>([]);
 
@@ -104,8 +105,8 @@ const filterAlbums = async () => {
 const getGenres = async () => {
   console.log('Function called...')
   albums.value.forEach(album => {
-  if (!genres.includes(album.genre)) {
-    genres.push(album.genre)
+  if (!genres.find(g => g.id === album.genre_id)) {
+    genres.push({ id: album.genre_id, title: album.genre });
   }
   })
 }
@@ -230,9 +231,9 @@ loadFromShoppingList();
             <h1>Filtri</h1>
                 <div id="genre_filters">
                     <h2>Žanrs</h2>
-                    <div class="genre_filter" v-for="genre in genres" :key="genre">
-                        <input type="checkbox" :value="genre" v-model="selectedGenres" @change="filterAlbums">
-                        <label>{{ genre }}</label>
+                    <div class="genre_filter" v-for="genre in genres" :key="genre.id">
+                      <input type="checkbox" :value="genre.id" v-model="selectedGenres" @change="filterAlbums">
+                      <label>{{ genre.title }}</label>
                     </div>
                 </div>
 
