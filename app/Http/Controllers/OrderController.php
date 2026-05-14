@@ -20,10 +20,6 @@ class OrderController extends Controller
             'shipping_address' => 'required',
             'postal_code' => 'required',
             'phone_number' => 'integer|required',
-            'credit_card_number' => 'integer|required',
-            'expiry_month' => 'integer|required',
-            'expiry_year' => 'integer|required',
-            'cvv' => 'integer|required',
             'shoppingList' => 'required|array|min:1'
         ]);
 
