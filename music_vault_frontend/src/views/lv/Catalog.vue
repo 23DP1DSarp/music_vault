@@ -39,8 +39,9 @@ const selectedDecades = ref<string[]>([]);
 const shoppingList = ref<Item[]>([]);
 
 const user = ref({
-    username: '',
-    email: '',
+  username: '',
+  email: '',
+  role_id: 0,
 });
 
 const isLoggedIn = ref(false);
@@ -177,7 +178,7 @@ loadFromShoppingList();
                 <li>Žanri</li>
                 <li>Mākslinieki</li>
                 <li>Forumi</li>
-                <RouterLink to="/add-album" v-if="isLoggedIn">Pievienot albumu</RouterLink>
+                <RouterLink to="/add-album" v-if="isLoggedIn && user.role_id === 2">Pievienot albumu</RouterLink>
             </ul>
         </div>
 

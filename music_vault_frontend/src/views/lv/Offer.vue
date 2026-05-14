@@ -177,6 +177,9 @@ const deleteFromShoppingList = async (index: number) => {
 const updateItemInShoppingList = async (index: number, operator: string) => {
   if (operator === "-" && shoppingList.value[index]?.quantity) {
     shoppingList.value[index].quantity -= 1;
+    if (shoppingList.value[index].quantity === 0) {
+      shoppingList.value.splice(index, 1);
+    }
     localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value))
   } else if (operator === "+" && shoppingList.value[index]?.quantity) {
     shoppingList.value[index].quantity += 1;

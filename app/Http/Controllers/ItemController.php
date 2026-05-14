@@ -116,7 +116,7 @@ class ItemController extends Controller
                     ->join('countries', 'countries.id', '=', 'albums.country_id')
                     ->where('items.category', 'album')
                     ->select('items.*', 'albums.release_date as release_date', 'genres.genre_title as genre', 
-                    'countries.country_name as country', 'users.name as seller_name')
+                    'countries.country_name as country', 'users.username as seller_name')
                     ->get();
             } else {
                 $items = DB::table('items')

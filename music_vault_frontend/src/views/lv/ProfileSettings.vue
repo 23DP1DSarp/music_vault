@@ -276,7 +276,7 @@ loadFromShoppingList();
                 </div>
 
                 <div class="form_parts">
-                    <label>Confirm Jaunā parole</label>
+                    <label>Apstiprināt paroli</label>
                     <input type="password" v-model="resetPassword.confirm_new_password">
                 </div>
 

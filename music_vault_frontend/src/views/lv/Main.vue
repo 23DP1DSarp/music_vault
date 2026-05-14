@@ -11,7 +11,7 @@ const router = useRouter();
 const user = ref({
     username: '',
     email: '',
-    role_id: 0,
+    user_role_id: 0,
 });
 
 const isLoggedIn = ref(false);
@@ -137,8 +137,8 @@ loadFromShoppingList();
                 <li>Žanri</li>
                 <li>Mākslinieki</li>
                 <li>Forumi</li>
-                <RouterLink to="/add-album" v-if="isLoggedIn">Pievienot albumu</RouterLink>
-                <RouterLink to="/sell-item" v-if="isLoggedIn">Pārdot preci</RouterLink>
+                    <RouterLink to="/add-album" v-if="isLoggedIn && user.user_role_id === 2">Pievienot albumu</RouterLink>
+                    <RouterLink to="/sell-item" v-if="isLoggedIn && user.user_role_id === 2">Pārdot preci</RouterLink>
             </ul>
         </div>
 
@@ -270,23 +270,6 @@ loadFromShoppingList();
             </div>
         </div>
 
-        <div id="albums">
-            <h2>Visi albumi</h2>
-            <div id="album_cards">
-            <div id="album_data" v-for="album in albums">
-                    
-                    <img v-if="album.cover" :src="getImageUrl(album.cover)" :alt="album.title">
-                    
-                    <a :href="`/albuminfo/${album.id}`"><h3>{{ album.title }}</h3></a>
-                    <p>{{ album.author }}</p>
-                    <div id="genre_and_year">
-                    <p>{{ album.genre }}</p>
-                    <p>&nbsp;•&nbsp;</p>
-                    <p>{{ new Date(album.release_date).getFullYear()}}</p>
-                    </div>
-        </div>
-            </div>
-        </div>
 
     
     </main>
