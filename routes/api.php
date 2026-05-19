@@ -182,7 +182,7 @@ Route::get('/get_album_item/{item}', [ItemController::class, 'getAlbumItem']);
 
 Route::get('/filter_album_items', [ItemController::class, 'filterAlbumItems']);
 
-Route::post('/create_order', [OrderController::class, 'createOrder']);
+Route::post('/create_order', [OrderController::class, 'checkAvaliabllity']);
 
 
 Route::get('/get_currencies', function () {
@@ -192,3 +192,5 @@ Route::get('/get_currencies', function () {
     )
     ->get();
 });
+
+Route::get('/getusercountry', [UserController::class, 'getUserCountry']);
