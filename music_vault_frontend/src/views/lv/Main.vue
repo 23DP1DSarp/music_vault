@@ -133,12 +133,9 @@ loadFromShoppingList();
 
         <div id="navbuttons">
             <ul>
-                <li>Jaunumi</li>
-                <li>Žanri</li>
-                <li>Mākslinieki</li>
-                <li>Forumi</li>
-                    <RouterLink to="/add-album" v-if="isLoggedIn && user.user_role_id === 2">Pievienot albumu</RouterLink>
-                    <RouterLink to="/sell-item" v-if="isLoggedIn && user.user_role_id === 2">Pārdot preci</RouterLink>
+                <RouterLink to="/catalog">Jaunumi</RouterLink>
+                <RouterLink to="/add-album" v-if="isLoggedIn">Pievienot albumu</RouterLink>
+                <RouterLink to="/sell-item" v-if="isLoggedIn && user.user_role_id === 2">Pārdot preci</RouterLink>
             </ul>
         </div>
 
@@ -154,7 +151,7 @@ loadFromShoppingList();
                 </RouterLink>
               </div>
             </div>
-            <input type="text" id="searchbar" name="recordsearch" placeholder="Meklēt ierakstus...">
+           <!--<input type="text" id="searchbar" name="recordsearch" placeholder="Meklēt ierakstus...">--> 
             <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
             <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
@@ -200,24 +197,7 @@ loadFromShoppingList();
 
                 <div id="hero_buttons">
                     <RouterLink to="/catalog" id="shop_button">Jaunumi</RouterLink>
-                    <RouterLink to="/albumoffers" id="browse_button">Pārlūkot kolekciju</RouterLink>
-                </div>
-
-                <div id="stats">
-                    <div class="stat">
-                        <h2>10K+</h2>
-                        <p>Ieraksti noliktavā</p>
-                    </div>
-
-                    <div class="stat">
-                        <h2>500+</h2>
-                        <p>Mākslinieki</p>
-                    </div>
-
-                    <div class="stat">
-                        <h2>50+</h2>
-                        <p>Žanri</p>
-                    </div>
+                    <RouterLink to="/albumoffers" id="browse_button">Apskatīt piedavājumus</RouterLink>
                 </div>
             </div>
 
@@ -232,46 +212,6 @@ loadFromShoppingList();
 
         </div>
 
-
-        <div id="record_browse">
-            <h4>Pārlūkot ierakstus</h4>
-            <p id="results_count">Atrasti 6 ieraksti</p>
-
-            <div id="filters">
-                <form action="/show_albums" method="GET">
-                    <label>Žanrs:</label>
-                    <button class="form_button">Visi</button>
-                    <button class="form_button" type="submit" name="genre" value="Roks">Roks</button>
-                    <button class="form_button" name="genre" value="Džezs">Džezs</button>
-                    <button class="form_button" name="genre" value="Elektronika">Elektronika</button>
-                    <button class="form_button" name="genre" value="Pop">Pops</button>
-                    <button class="form_button" name="genre" value="Hip-Hops">Hip-Hopss</button>
-                    <button class="form_button" name="genre" value="Klasika">Klasika</button>
-
-                    <label>Stāvoklis:</label>
-                    <select name="condition" id="condtion_select">
-                        <option value="brand_new">Jauns</option>
-                        <option value="new">Jauns</option>
-                        <option value="used">Lietots</option>
-                    </select>
-
-                    <label>Kārtot pēc:</label>
-                    <select name="sort" id="sort_select">
-                        <option>Nosaukums: A-Z</option>
-                        <option>Nosaukums: Z-A</option>
-                        <option>Cena: augstākā</option>
-                        <option>Cena: zemākā</option>
-                    </select>
-                </form>
-
-                
-
-
-            </div>
-        </div>
-
-
-    
     </main>
 
     <footer>
@@ -322,7 +262,7 @@ loadFromShoppingList();
                 </ul>
             </div>
 
-            <div id="subscribe_form">
+          <!--  <div id="subscribe_form">
                 <h6>Sekojiet jaunumiem</h6>
                 <p>Saņemiet paziņojumus par jaunumiem un ekskluzīviem piedāvājumiem.</p>
 
@@ -330,7 +270,7 @@ loadFromShoppingList();
                     <input id="email_input" placeholder="Ievadiet e-pastu" name="subscription-email" type="email" required>
                     <input id="subscribe_form_submit" type="submit" value="Abonēt">
                 </form>
-            </div>
+            </div>-->
         </div>
 
         

@@ -22,6 +22,7 @@ interface Item {
   origin_address: string;
   shipping_country_id: number;
   sellers_full_name: string;
+  error?: string;
 }
 
 interface CheckoutForm {
@@ -123,6 +124,16 @@ const deleteFromShoppingList = async (index: number) => {
   localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
 }
 
+const updateItemInShoppingList = async (index: number, operator: string) => {
+  if (operator === "-" && shoppingList.value[index]?.quantity) {
+    shoppingList.value[index].quantity -= 1;
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value))
+  } else if (operator === "+" && shoppingList.value[index]?.quantity) {
+    shoppingList.value[index].quantity += 1;
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value))
+  }
+}
+
 const submitForm = async () => {
   const formData = new FormData()
 
@@ -150,24 +161,21 @@ const submitForm = async () => {
     if (response.status === 200) {
       localStorage.removeItem("shoppingList");
       router.push('/');
+    } else if (response.status === 202) {
+
+      shoppingList.value.forEach((item, index) => {
+        response.data.unavailable_items.forEach((unavailableItem: any) => {
+        if (unavailableItem.id == shoppingList.value[index]?.id && shoppingList.value[index]) {
+          console.log('Unavailable items:');
+          shoppingList.value[index].error = `Prece "${item.title}" nav pieejama. Pieejamais daudzums: ${unavailableItem.available_quantity}`;
+        }
+      })
+  })
     }
   } catch (error) {
     console.error(error);
   }
 }
-
-const createOrder = async (payload: CheckoutForm) => {
-  try {
-    const response = await axiosInstance.post('/create_order', payload);
-    console.log(response.data);
-    if (response.status === 200) {
-        router.push('/');
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 
 
 
@@ -237,6 +245,11 @@ loadFromShoppingList();
             <div id="price_div">
               <b><p id="price">{{ item.price }}$</p></b>
               <p>Daudzums: {{ item.quantity }}</p>
+              <div id="item_quantity">
+                <button class="quantity_btn" @click="updateItemInShoppingList(index, '-')">-</button>
+                <input id="quantity_input" type="number" v-model="item.quantity">
+                <button class="quantity_btn" @click="updateItemInShoppingList(index, '+')">+</button>
+              </div>
             </div>
             
           </div>
@@ -253,10 +266,19 @@ loadFromShoppingList();
                   <div id="info_div">
                     <h2>{{ item.title }}</h2>
                     <p @click="deleteFromShoppingList(index)">Dzēst</p>
+                    <br>
+                    <div class="error_box" v-if="item.error">
+                      <p>{{ item.error }}</p>
+                    </div>
                   </div>
                   <div id="price_div">
                     <b><p id="price">{{ item.price }}$</p></b>
                     <p>Daudzums: {{ item.quantity }}</p>
+                    <div id="item_quantity">
+                      <button class="quantity_btn" @click="updateItemInShoppingList(index, '-')">-</button>
+                      <input id="quantity_input" type="number" v-model="item.quantity">
+                      <button class="quantity_btn" @click="updateItemInShoppingList(index, '+')">+</button>
+                    </div>
                   </div>
                 </div>
             </div>
@@ -640,6 +662,9 @@ main h1 {
   max-width: inherit;
 }
 
+.error_box {
+  color: #ec1c31;
+}
 
 #checkout_form {
   display: flex;

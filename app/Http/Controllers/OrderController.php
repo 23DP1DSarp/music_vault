@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Mail;
 class OrderController extends Controller
 {
 
-  /*  public function checkAvaliabllity(Request $request) {
+    public function checkAvaliabllity(Request $request) {
         $shoppingList = $request->validate([
             'shoppingList' => 'required|array|min:1'
         ]);
@@ -35,12 +35,12 @@ class OrderController extends Controller
         }
 
         if (!empty($unavailableItems)) {
-            return response()->json(['unavailable_items' => $unavailableItems], 200);
+            return response()->json(['unavailable_items' => $unavailableItems], 202);
         } else {
             return $this->createOrder($request);
         }
 
-    } */
+    } 
 
     public function createOrder(Request $request) {
         $incomingFields = $request->validate([
@@ -81,24 +81,44 @@ class OrderController extends Controller
             }
         }
 
-        $this->sendWelcomeEmail();
+        $shoppingList = $request->input('shoppingList', []);
 
-        return response()->json(['order_id' => $order->id], 201);
+        $this->sendWelcomeEmail($shoppingList);
+
+        
+
+
     }
 
-   public function sendWelcomeEmail()
-{
-    $details = [
-        'name' => User::where('id', $this->getUserId(request()))->value('username'),
-        'message' => 'You have ordered an item from our marketplace. We will process your order and ship it to you as soon as possible. Thank you for shopping with us!
-        Your order id is ' . Order::where('user_id', $this->getUserId(request()))->latest()->value('id') . 'And your ordered items are ' . implode(', ', Order::where('user_id', $this->getUserId(request()))->latest()->first()->order_items()->pluck('title')->toArray()),
-        'link' => 'https://music-vault.com'
-    ];
+    public function sendOrderConfirmation($shoppingList)
+    {
+        $details = [
+            'name' => User::where('id', $this->getUserId(request()))->value('username'),
+            'message' => 'Jūs esat pasūtījis preci mūsu tirgū. Mēs apstrādāsim jūsu pasūtījumu un nosūtīsim to pēc iespējas ātrāk. Paldies, ka iepirkāties pie mums!\n        Jūsu pasūtījuma ID ir ' . Order::where('user_id', $this->getUserId(request()))->latest()->value('id') . ' un jūsu pasūtītās preces: ' . implode(', ', array_map(function($item) {
+                return $item['title'] . ' (Daudzums: ' . $item['quantity'] . ')';
+            }, $shoppingList))
 
-    Mail::to(User::where('id', $this->getUserId(request()))->value('email'))->send(new OrderConfirmation($details));
+        ];
 
-    return "Email Sent!";
-}
+        Mail::to(User::where('id', $this->getUserId(request()))->value('email'))->send(new OrderConfirmation($details));
+
+        return "Email Sent!";
+    }
+
+    public function sendSellerNotification($shoppingList)
+    {
+        $details = [
+            'name' => User::where('id', $this->getUserId(request()))->value('username'),
+            'message' => 'Jūs esat pārdevis preci mūsu tirgū. Mēs apstrādāsim pasūtījumu un informēsim jūs, kad tas tiks nosūtīts pircējam. Paldies, ka pārdodat pie mums!\n            Jūsu pasūtījuma ID ir ' . Order::where('user_id', $this->getUserId(request()))->latest()->value('id') . ' un jūsu pārdotās preces: ' . implode(', ', array_map(function($item) {
+                return $item['title'] . ' (Daudzums: ' . $item['quantity'] . ')';
+            }, $shoppingList))
+
+        ];
+
+        Mail::to(User::where('id', $this->getUserId(request()))->value('email'))->send(new OrderConfirmation($details));
+
+        return "Email Sent!";
+    }
 
     private function getUserId(Request $request)
     {

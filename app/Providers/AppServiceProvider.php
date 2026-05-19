@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,5 +32,11 @@ class AppServiceProvider extends ServiceProvider
                $notifiable->getKey() . '/' .
                sha1($notifiable->getEmailForVerification());
         });
+
+        DB::listen(function ($query) {
+        logger($query->sql);
+        logger($query->bindings);
+        logger($query->time);
+    });
     }
 }

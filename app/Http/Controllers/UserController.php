@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Auth\Events\Registered;
 
 class UserController extends Controller
 {
@@ -118,4 +119,15 @@ class UserController extends Controller
 
         return response()->json(['message' => 'Account deleted successfully'], 200);
     }
+
+    public function getUserCountry(Request $request)
+    {
+        $countryName = DB::table('users')
+            ->where('users.id', $request->query('userId'))
+            ->join('countries', 'users.country_id', '=', 'countries.id')
+            ->select('countries.country_name as name')
+            ->first();
+        return $countryName;
+    }
+
 }

@@ -12,9 +12,13 @@ const sortOrder = ref('asc');
 const sortBy = ref('title');
 
 const user = ref({
+    id: 0,
     username: '',
     email: '',
     created_at: new Date(),
+    date_of_birth: new Date(),
+    country_id: 0,
+    country: '',
 });
 
 const isLoggedIn = ref(false);
@@ -55,10 +59,12 @@ const getUser = async () => {
         user.value = response.data;
         isLoggedIn.value = true;
         console.log(response.data);
+        console.log(user.value);
     } catch (error) {
         console.error(error);
         isLoggedIn.value = false;
     } finally {
+        getUserCountry({ userId: user.value.id });
         loading.value = false;
     }
 };
@@ -103,6 +109,19 @@ const sortAlbums = async (sortBy: string) => {
     console.error(err);
   } finally {
     loading.value = false;
+  }
+}
+
+const getUserCountry = async (payload: { userId: number }) => {
+  try {
+    const response = await axiosInstance.get('/getusercountry', {
+      params: {
+        userId: payload.userId,
+      }
+    });
+    user.value.country = response.data.name;
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -211,10 +230,8 @@ loadFromShoppingList();
             <aside id="profile_info">
                 <h3>Profila informācija</h3>
                 <p><strong>Dalībnieks kopš: </strong>{{new Date(user.created_at).toLocaleDateString()}}</p>
-                <p><strong>Dzimšanas diena: </strong> </p>
-                <p><strong>Valsts: </strong> </p>
-                <p><strong>Pievienotie albumi: </strong> </p>
-                <p><strong>Rakstītie komentāri: </strong> </p>
+                <p><strong>Dzimšanas diena: </strong>{{ new Date(user.date_of_birth).toLocaleDateString() }}</p>
+                <p><strong>Valsts: </strong>{{ user.country }}</p>
                 <a :href="`/profilesettings`"><button id="profile_settings_btn">Profila iestatījumi</button></a>
             </aside>
 
@@ -222,7 +239,7 @@ loadFromShoppingList();
                 <h3>Kolekcija</h3>
                 <div id="filters">
                     <button class="filter_btn" @click="sortAlbums('title')">Nosaukums</button>
-                    <button class="filter_btn" @click="sortAlbums('author')">Mākslinieks</button>
+                    <button class="filter_btn" @click="sortAlbums('author')">Autors</button>
                     <button class="filter_btn" @click="sortAlbums('genre')">Žanrs</button>
                     <button class="filter_btn" @click="sortAlbums('release_date')">Gads</button>
                 </div>

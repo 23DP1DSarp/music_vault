@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Order Confirmation</title>
+    <title>Seller Notification</title>
 </head>
 <body style="font-family: Arial, sans-serif; background-color: #f8f8f8; padding: 20px;">
     <div style="max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px;">
