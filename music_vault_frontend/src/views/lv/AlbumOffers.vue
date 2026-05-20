@@ -293,6 +293,7 @@ loadFromShoppingList();
             </div>
             
           </div>
+          <a :href="`/checkout`"><button id="checkout_btn">Noformēt pasūtījumu</button></a>
         </div>
 
        <!-- <div id="album_info">
@@ -793,6 +794,21 @@ main {
 
 
 
+#checkout_btn {
+  width: 100%;
+  height: 40px;
+  background-color: #FFFFFF;
+  color: #0A0A0A;
+  border: solid rgba(0, 0, 0, .1) 1px;
+  border-radius: 8px;
+  text-align: center;
+  vertical-align: middle;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:18px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  cursor: pointer;
+}
 
 
 
