@@ -2,7 +2,7 @@
 import axiosInstance from '@/axios';
 import {ref} from 'vue';
 import { useRoute } from 'vue-router';
-import { f } from 'vue-router/dist/router-CWoNjPRp.mjs';
+
 
 const route = useRoute();
 const albumId = route.params.id;
