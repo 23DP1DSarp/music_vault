@@ -73,6 +73,32 @@ class CollectionController extends Controller
         return response()->json($albums);
     }
 
+    public function isAddedToCollection(Request $request, Album $album) {
+        $userId = $this->getUserId($request);
+        if (!$userId) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $exists = Collection::where('user_id', $userId)
+            ->where('album_id', $album->id)
+            ->exists();
+
+        return response()->json(['added_to_collection' => $exists]);
+    }
+
+    public function deleteFromCollection(Request $request, Album $album) {
+        $userId = $this->getUserId($request);
+        if (!$userId) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        Collection::where('user_id', $userId)
+            ->where('album_id', $album->id)
+            ->delete();
+
+        return response()->json(['message' => 'Album removed from collection']);
+    }
+
     private function getUserId(Request $request)
     {
         $user = $request->user();

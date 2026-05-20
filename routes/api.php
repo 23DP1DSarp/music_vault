@@ -118,6 +118,9 @@ Route::get('/order_albums', function(Request $request) {
     return response()->json($albums);
 });
 
+Route::get('/order_instruments', [ItemController::class, 'orderInstruments']);
+Route::get('/order_services', [ItemController::class, 'orderServices']);
+
 Route::get('/album_info/{album}', function(Album $album) {
     $album = DB::table('albums')
     ->where('albums.id', '=', $album->id)
@@ -177,10 +180,15 @@ Route::middleware('check.api.token')->put('/reset-password', function (
 Route::delete('/delete-account', [UserController::class, 'deleteUser'])->middleware('check.api.token');
 
 Route::get('/get_album_items', [ItemController::class, 'getAllAlbumItems']);
+Route::get('/get_instrument_items', [ItemController::class, 'getAllInstrumentItems']);
+Route::get('/get_service_items', [ItemController::class, 'getAllServiceItems']);
 
 Route::get('/get_album_item/{item}', [ItemController::class, 'getAlbumItem']);
+Route::get('/get_item/{item}', [ItemController::class, 'getItem']);
 
 Route::get('/filter_album_items', [ItemController::class, 'filterAlbumItems']);
+Route::get('/filter_instrument_items', [ItemController::class, 'filterInstrumentItems']);
+Route::get('/filter_service_items', [ItemController::class, 'filterServiceItems']);
 
 Route::post('/create_order', [OrderController::class, 'checkAvaliabllity']);
 
@@ -194,3 +202,15 @@ Route::get('/get_currencies', function () {
 });
 
 Route::get('/getusercountry', [UserController::class, 'getUserCountry']);
+
+Route::get('/is_added_to_collection/{album}', [CollectionController::class, 'isAddedToCollection']);
+
+Route::delete('/delete_from_collection/{album}', [CollectionController::class, 'deleteFromCollection']);
+
+Route::post('/add_to_wishlist/{item}', [ItemController::class, 'addToWishlist']);
+
+Route::delete('/delete_from_wishlist/{item}', [ItemController::class, 'deleteFromWishlist']);
+
+Route::get('/is_added_to_wishlist/{item}', [ItemController::class, 'isAddedToWishlist']);
+
+Route::get('/getwishlist', [ItemController::class, 'getWishlist']);

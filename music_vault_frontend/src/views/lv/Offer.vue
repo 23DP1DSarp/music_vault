@@ -78,6 +78,10 @@ const shoppingList = ref<Item[]>([]);
 
 const isLoggedIn = ref(false);
 
+const addedToWishlist = ref(false);
+
+const addedToShoppingList = ref(false);
+
 const getUser = async () => {
     try {
         const response = await axiosInstance.get('/user');
@@ -106,7 +110,7 @@ const logout = async () => {
 
 const getItem = async () => {
   try {
-    const response = await axiosInstance.get(`/get_album_item/${itemId}`);
+    const response = await axiosInstance.get(`/get_item/${itemId}`);
     albumItem.value = response.data[0];
     item.id = albumItem.value.id;
     item.title = albumItem.value.title;
@@ -120,7 +124,11 @@ const getItem = async () => {
   } catch (error) {
     console.error(error);
   } finally {
-    getAlbumWithTracks(albumItem.value.album_id);
+    if (albumItem.value && albumItem.value.album_id) {
+      await getAlbumWithTracks(String(albumItem.value.album_id));
+    }
+    // check if this item is already present in the shopping list
+    isAddedToShoppingList();
   }
 };
 
@@ -161,6 +169,7 @@ const shoppingMenu = async () => {
 const addToShoppingList = async () => {
   shoppingList.value.push(item);
   localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
+  addedToShoppingList.value = true;
 }
 
 const loadFromShoppingList = async () => {
@@ -170,9 +179,20 @@ const loadFromShoppingList = async () => {
   }
 }
 
-const deleteFromShoppingList = async (index: number) => { 
-  shoppingList.value.splice(index);
-  localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
+const deleteFromShoppingList = async (index?: number) => { 
+  if (typeof index === 'number') {
+    shoppingList.value.splice(index, 1);
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
+    return;
+  }
+
+  if (!item.id) return;
+  const idx = shoppingList.value.findIndex(i => String(i.id) === String(item.id));
+  if (idx !== -1) {
+    shoppingList.value.splice(idx, 1);
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
+    addedToShoppingList.value = false;
+  }
 }
 
 const updateItemInShoppingList = async (index: number, operator: string) => {
@@ -188,9 +208,68 @@ const updateItemInShoppingList = async (index: number, operator: string) => {
   }
 }
 
+const addToWishlist = async () => {
+  try {
+    const response = await axiosInstance.post(`/add_to_wishlist/${itemId}`);
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isAddedToWishlist();
+  }
+}
+
+const deleteFromWishlist = async () => {
+  try {
+    const response = await axiosInstance.delete(`/delete_from_wishlist/${itemId}`);
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isAddedToWishlist();
+  }
+}
+
+const isAddedToWishlist = async () => {
+  try {
+    const response = await axiosInstance.get(`/is_added_to_wishlist/${itemId}`);
+    addedToWishlist.value = response.data.added_to_wishlist;
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const isAddedToShoppingList = () => {
+  // prefer in-memory shoppingList if available, otherwise read localStorage
+  let list: Item[] = [];
+  if (shoppingList.value && shoppingList.value.length) {
+    list = shoppingList.value;
+  } else {
+    const stored = localStorage.getItem('shoppingList');
+    if (stored) {
+      try {
+        list = JSON.parse(stored);
+      } catch (e) {
+        list = [];
+      }
+    }
+  }
+
+  if (!item.id) {
+    addedToShoppingList.value = false;
+    return false;
+  }
+
+  addedToShoppingList.value = list.some(shoppingItem => String(shoppingItem.id) === String(item.id));
+  return addedToShoppingList.value;
+}
+
 getUser();
 getItem();
 loadFromShoppingList();
+isAddedToWishlist();
+isAddedToShoppingList();
 </script> 
 
 
@@ -317,7 +396,10 @@ loadFromShoppingList();
                 <hr>
 
                 <div id="button_sec">
-                    <button id="add_to_cart_btn" @click="addToShoppingList()">Pievienot grozam</button>
+                    <button id="add_to_cart_btn" @click="addToShoppingList()" v-if="!addedToShoppingList">Pievienot grozam</button>
+                    <button id="already_added_btn" @click="deleteFromShoppingList()" v-else>Albums ir pievienots grozam</button>
+                    <button id="add_to_wishlist_btn" @click="addToWishlist" v-if="!addedToWishlist">Pievienot vēlmju sarakstam</button>
+                    <button id="already_added_btn" @click="deleteFromWishlist" v-else>Albums ir pievienots vēlmju sarakstam</button>
                     <a :href="`/albuminfo/${album.id}`"><button id="release_page_btn">Skatīt albuma lapu</button></a>
                 </div>
             </div>
@@ -711,6 +793,38 @@ main {
   background-color: #030213;
   color: #FFFFFF;
   border-style: none;
+  border-radius: 8px;
+  text-align: center;
+  vertical-align: middle;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:18px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  cursor: pointer;
+}
+
+#add_to_wishlist_btn {
+  width: 100%;
+  height: 40px;
+  background-color: #030213;
+  color: #FFFFFF;
+  border-style: none;
+  border-radius: 8px;
+  text-align: center;
+  vertical-align: middle;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:18px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  cursor: pointer;
+}
+
+#already_added_btn {
+  width: 100%;
+  height: 40px;
+  background-color: #FFFFFF;
+  color: #0A0A0A;
+  border: solid rgba(0, 0, 0, .1) 1px;
   border-radius: 8px;
   text-align: center;
   vertical-align: middle;

@@ -106,7 +106,7 @@ const logout = async () => {
 
 const getItem = async () => {
   try {
-    const response = await axiosInstance.get(`/get_album_item/${itemId}`);
+    const response = await axiosInstance.get(`/get_item/${itemId}`);
     albumItem.value = response.data[0];
     item.id = albumItem.value.id;
     item.title = albumItem.value.title;

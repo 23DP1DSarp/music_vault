@@ -2,6 +2,7 @@
 import axiosInstance from '@/axios';
 import {ref} from 'vue';
 import { useRoute } from 'vue-router';
+import { f } from 'vue-router/dist/router-CWoNjPRp.mjs';
 
 const route = useRoute();
 const albumId = route.params.id;
@@ -45,6 +46,8 @@ const tracks = ref<Track[]>([]);
 const isLoggedIn = ref(false);
 
 const shoppingList = ref<Item[]>([]);
+
+const addedToCollection = ref(false);
 
 const getUser = async () => {
     try {
@@ -97,6 +100,8 @@ const addToCollection = async () => {
     console.log(response.data);
   } catch (error) {
     console.error(error);
+  } finally {
+    isAddedToCollection();
   }
 }
 
@@ -126,9 +131,30 @@ const deleteFromShoppingList = async (index: number) => {
   localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
 }
 
+const isAddedToCollection = async () => {
+  try {
+    const response = await axiosInstance.get(`/is_added_to_collection/${albumId}`);
+    addedToCollection.value = response.data.added_to_collection;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const deleteFromCollection = async () => {
+  try {
+    const response = await axiosInstance.delete(`/delete_from_collection/${albumId}`);
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isAddedToCollection();
+  }
+}
+
 getUser();
 getAlbumwithTracks();
 loadFromShoppingList();
+isAddedToCollection();
 </script> 
 
 
@@ -243,12 +269,11 @@ loadFromShoppingList();
                 <p id="country">Valsts: {{album.country}}</p>
                 <p id="genre">Žanrs: {{album.genre}}</p>
                 <p id="label">Izdevniecība: {{album.label}}</p>
-                <p id="format">Formāts: {{album.format}}</p>
-
                 <hr>
 
                 <div id="button_sec">
-                    <button id="add_to_collection_btn" @click="addToCollection">Pievienot kolekcijai</button>
+                    <button id="add_to_collection_btn" @click="addToCollection" v-if="!addedToCollection">Pievienot kolekcijai</button>
+                    <button id="already_added_btn" @click="deleteFromCollection" v-else>Albums ir pievienots kolekcijai</button>
                 </div>
             </div>
 
@@ -633,7 +658,7 @@ main {
   gap: 10px;
 }
 
-#add_to_cart_btn {
+#add_to_collection_btn {
   width: 100%;
   height: 40px;
   background-color: #030213;
@@ -649,7 +674,7 @@ main {
   cursor: pointer;
 }
 
-#add_to_collection_btn {
+#already_added_btn {
   width: 100%;
   height: 40px;
   background-color: #FFFFFF;

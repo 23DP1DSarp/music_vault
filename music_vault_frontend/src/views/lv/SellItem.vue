@@ -240,7 +240,7 @@ loadFromShoppingList();
                           <option value="" disabled>Izvēlieties kategoriju</option>
                           <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
                         </select>
-                        <label v-show="item.category === 'Album'">Album Nosaukums</label>
+                        <label v-show="item.category === 'Album'">Albuma nosaukums</label>
                         <select class="album_input" name="album_id" v-model="item.album_id" v-show="item.category === 'Album'">
                           <option value="" disabled>Izvēlieties albumu</option>
                           <option v-for="album in albums" :key="album.id" :value="album.id">{{ album.title }}</option>
@@ -254,7 +254,7 @@ loadFromShoppingList();
                         </div>
 
 
-                        <label v-show="item.category !== 'Service'">Quantity</label>
+                        <label v-show="item.category !== 'Service'">Daudzumus</label>
                         <input class="album_input" v-show="item.category !== 'Service'" v-model.number="item.quantity" name="quantity" type="number" >
                         <label>Cena</label>
                         <input class="album_input" v-model.number="item.price" name="price" type="number" step="0.01">

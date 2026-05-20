@@ -36,10 +36,14 @@ interface Item {
   id: string;
   title: string;
   quantity: number;
+  seller_name: string;
   price: number;
+  picture: string;
 }
 
 const collectionAlbums = ref<Album[]>([]);
+
+const wishlistItems = ref<Item[]>([]);
 
 const shoppingList = ref<Item[]>([]);
 
@@ -47,6 +51,16 @@ const getCollectionAlbums = async () => {
   try {
     const response = await axiosInstance.get('/getcollection');
     collectionAlbums.value = response.data;
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const getWishlistItems = async () => {
+  try {
+    const response = await axiosInstance.get('/getwishlist');
+    wishlistItems.value = response.data;
     console.log(response.data);
   } catch (error) {
     console.error(error);
@@ -153,7 +167,9 @@ const deleteFromShoppingList = async (index: number) => {
 
 getUser();
 getCollectionAlbums();
+getWishlistItems();
 loadFromShoppingList();
+
 </script>
 
 
@@ -235,6 +251,7 @@ loadFromShoppingList();
                 <a :href="`/profilesettings`"><button id="profile_settings_btn">Profila iestatījumi</button></a>
             </aside>
 
+            <div id="lists">
             <div id="album_collection">
                 <h3>Kolekcija</h3>
                 <div id="filters">
@@ -255,7 +272,29 @@ loadFromShoppingList();
                 </div>
                 </div>
             </div>
+
+            <div id="wishlist">
+                <h3>Vēlmju saraksts</h3>
+                <div id="items_grid">
+                  <div id="filters">
+                    <button class="filter_btn" @click="sortAlbums('title')">Nosaukums</button>
+                    <button class="filter_btn" @click="sortAlbums('author')">Autors</button>
+                    <button class="filter_btn" @click="sortAlbums('genre')">Žanrs</button>
+                    <button class="filter_btn" @click="sortAlbums('release_date')">Gads</button>
+                </div>
+                <div class="item_card" v-for="item in wishlistItems" :key="item.id">
+                    <img v-if="item.picture" :src="getImageUrl(item.picture)" :alt="item.title">
+                    <div id="text_info">
+                        <p>Nosaukums: {{ item.title }}</p>
+                        <p>Pārdevējs: {{ item.seller_name }}</p>
+                        <p>Cena: {{ item.price }}$</p>
+                        <p>Daudzums: {{ item.quantity }}</p>
+                    </div>
+                </div>
+                </div>
+            </div>
         </div>
+      </div>
     </main>
 
     <footer>
@@ -595,7 +634,7 @@ main {
   cursor: pointer;
 }
 
-#album_collection {
+#album_collection, #wishlist {
     width: 100%;
     height: fit-content;
     padding: 20px;
@@ -635,6 +674,13 @@ main {
     cursor: pointer;
 }
 
+#lists {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+}
+
 .album_card {
     width: 100%;
     height: 200px;
@@ -645,7 +691,17 @@ main {
     gap: 33px;
 }
 
-.album_card img {
+.item_card {
+    width: 100%;
+    height: 200px;
+    padding: 20px 0px 20px 0px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    gap: 33px;
+}
+
+.album_card img, .item_card img {
     width: 150px;
     height: 150px;
     border-radius: 8px;

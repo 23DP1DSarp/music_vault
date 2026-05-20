@@ -295,12 +295,12 @@ loadFromShoppingList();
           </div>
         </div>
 
-        <div id="album_info">
+       <!-- <div id="album_info">
                 <div id="album_text_info">
                     <h1> - </h1>
                     <p></p>
                 </div>
-        </div>
+        </div>-->
 
 
         <div id="offers_section">
