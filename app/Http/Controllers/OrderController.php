@@ -83,7 +83,7 @@ class OrderController extends Controller
 
         $shoppingList = $request->input('shoppingList', []);
 
-        $this->sendWelcomeEmail($shoppingList);
+        $this->sendOrderConfirmation($shoppingList);
 
         
 
@@ -101,6 +101,8 @@ class OrderController extends Controller
         ];
 
         Mail::to(User::where('id', $this->getUserId(request()))->value('email'))->send(new OrderConfirmation($details));
+
+        $this->sendSellerNotification($shoppingList);
 
         return "Email Sent!";
     }
