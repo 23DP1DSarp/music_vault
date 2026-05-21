@@ -205,7 +205,7 @@ loadFromShoppingList();
                 </RouterLink>
               </div>
             </div>
-            <input type="text" id="searchbar" name="recordsearch" placeholder="Meklēt ierakstus...">
+            <!--<input type="text" id="searchbar" name="recordsearch" placeholder="Meklēt ierakstus...">--> 
             <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
             <p>{{user?.username}}</p>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
