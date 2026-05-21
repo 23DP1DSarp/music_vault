@@ -33,6 +33,7 @@ const user = ref({
     username: '',
     email: '',
     created_at: '',
+    user_role_id: 0,
 });
 
 const isLoggedIn = ref(false);
@@ -244,11 +245,10 @@ loadFromShoppingList();
 
         <div id="navbuttons">
             <ul>
-                <li>Jaunumi</li>
-                <li>Žanri</li>
-                <li>Mākslinieki</li>
-                <li>Forumi</li>
+                <RouterLink to="/catalog">Jaunumi</RouterLink>
                 <RouterLink to="/add-album" v-if="isLoggedIn">Pievienot albumu</RouterLink>
+                <RouterLink to="/sell-item" v-if="isLoggedIn && user.user_role_id === 2">Pārdot preci</RouterLink>
+                <RouterLink to="/sellerform" v-if="isLoggedIn && user.user_role_id !== 2">Kļūt par pārdevēju</RouterLink>
             </ul>
         </div>
 

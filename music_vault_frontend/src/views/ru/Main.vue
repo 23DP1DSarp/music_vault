@@ -10,6 +10,7 @@ const router = useRouter();
 const user = ref({
     username: '',
     email: '',
+    user_role_id: 0
 });
 
 const isLoggedIn = ref(false);
@@ -131,11 +132,10 @@ loadFromShoppingList();
 
         <div id="navbuttons">
             <ul>
-                <li>Новинки</li>
-                <li>Жанры</li>
-                <li>Исполнители</li>
-                <li>Форумы</li>
+                <RouterLink to="/catalog">Новинки</RouterLink>
                 <RouterLink to="/add-album" v-if="isLoggedIn">Добавить альбом</RouterLink>
+                <RouterLink to="/sell-item" v-if="isLoggedIn && user.user_role_id === 2">Продать товар</RouterLink>
+                <RouterLink to="/sellerform" v-if="isLoggedIn && user.user_role_id !== 2">Стать продавцом</RouterLink>
             </ul>
         </div>
 
