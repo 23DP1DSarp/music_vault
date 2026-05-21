@@ -152,7 +152,7 @@ const validateForm = (e: Event) => {
     track.error = undefined
 
     if (anyFilled && !allFilled) {
-      track.error = 'Track is incomplete. Fill all fields or leave it empty.'
+      track.error = 'Visi lauki ir jāaizpilda, lai pievienotu dziesmu sarakstam.'
       hasErrors = true
     }
   })
