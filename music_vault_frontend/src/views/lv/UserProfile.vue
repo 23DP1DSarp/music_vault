@@ -277,14 +277,7 @@ loadFromShoppingList();
             <div id="wishlist">
                 <h3>Vēlmju saraksts</h3>
                 <div id="items_grid">
-                  <div id="filters">
-                    <button class="filter_btn" @click="sortAlbums('title')">Nosaukums</button>
-                    <button class="filter_btn" @click="sortAlbums('author')">Autors</button>
-                    <button class="filter_btn" @click="sortAlbums('genre')">Žanrs</button>
-                    <button class="filter_btn" @click="sortAlbums('release_date')">Gads</button>
-                </div>
                 <div class="item_card" v-for="item in wishlistItems" :key="item.id">
-                    <img v-if="item.picture" :src="getImageUrl(item.picture)" :alt="item.title">
                     <div id="text_info">
                         <p>Nosaukums: {{ item.title }}</p>
                         <p>Pārdevējs: {{ item.seller_name }}</p>
