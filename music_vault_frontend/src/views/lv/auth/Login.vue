@@ -16,6 +16,21 @@ const login = async (payload: any) => {
     form.value.error = 'Pieteikšanās neizdevās.'
   }
 }
+
+const hamburgerMenu = async () => {
+
+  let hamburgerSlider = document.getElementById('hamburger_menu') as HTMLFormElement;
+
+  if (hamburgerSlider.style.visibility === "hidden" || hamburgerSlider.style.visibility === '') {
+    hamburgerSlider?.style.setProperty('width','70%');
+    hamburgerSlider?.style.setProperty('visibility','visible');
+  } else {
+    hamburgerSlider?.style.setProperty('width','0%');
+    hamburgerSlider?.style.setProperty('visibility','hidden');
+  }
+  
+}
+
 </script>
 
 <template>
@@ -27,8 +42,21 @@ const login = async (payload: any) => {
         </div>
          <div id="rightbuttons">
         <RouterLink to="/register">Reģistrēties</RouterLink>
-    </div>
+        </div>
     </nav>
+
+   <!-- <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="hamburgerMenu()">
+
+    <div id="hamburger_menu">
+          <div id="close_btn" @click="hamburgerMenu()">
+            <img src="../../images/shopping_cart images/close-x-svgrepo-com.svg">
+          </div>
+          
+          <RouterLink to="/register">Reģistrēties</RouterLink>
+          
+          
+    </div>-->
+
 
     <main>
             <h1>Pieslēgties</h1>
@@ -178,143 +206,76 @@ form {
   flex-direction: column;
 }
 
-footer {
-  border-top: solid #ECECF0 1px;
-}
-
-footer h6 {
-  font-size: 16px;
-  margin-top: 15px;
-  line-height: 24px;
-}
-
-#footer_wrapper {
-  width: 1550px;
-  margin: 0 auto;
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-top: 50px;
-  padding-bottom: 50px;
-}
 
 
-#footer_top {
+
+
+
+@media (max-width:480px) {
+
+nav {
   display: flex;
   flex-direction: row;
-  padding-bottom: 20px;
-  margin: 0 auto;
-  border-bottom: solid #ECECF0 1px;
-}
-
-#footer_info {
-  display: flex;
-  flex-direction: column;
-  width: 357px;
-  font-size: 13.89px;
-  line-height: 20px;
-  letter-spacing: 0px;
-  color: #717182;
-}
-
-#footer_info_text {
-  width: 317.84px;
-  height: 54px;
-  margin-bottom: 20px;
-}
-
-#footer_info p {
-  margin-top: 15px;
-}
-
-#footer_logo {
-  display: flex;
-  flex-direction: row;
+  margin-left: 4.167vw;
+  margin-right: 4.167vw;
+  justify-content: space-between;
   align-items: center;
-  font-size: 17.72px;
-  font-weight: normal;
+  padding: 0;
+  font-size: 19.53px;
   line-height: 28px;
   letter-spacing: -0.5px;
-  gap: 5px;
   color: #0A0A0A;
 }
 
-#footer_logo img {
-  width: 24px;
-  height: 24px;
+main {
+  width: 83.333vw;
+  padding-top: 13.542vw;
+  padding-bottom: 13.542vw;
+  margin: 0 auto;
 }
 
-#icons {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-}
-
-.icon {
-  width: 16px;
-  height: 16px;
-  padding: 6px;
-  border: #ECECF0 solid 1px;
+#sign_up_form input {
+  width: 82.333vw;
+  height: 10.417vw;
+  border-style: solid;
+  border-color: #000000;
   border-radius: 8px;
+  border-width: 1px;
+  padding: 1px 2px;
 }
 
-#footer_top ul {
-  width: 366px;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0px;
-  color: #717182;
+#submit_btn {
+  min-width: 84vw;
+  min-height: 11.25vw;
+  margin-top: 10.417vw;
+  background-color: #000000;
+  color: #E4E4E4;
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 28px;
+  letter-spacing: -0.5px;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#hamburger_menu {
+  height: 100%;
+  width: 0px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #E4E4E4;
+  overflow-x: hidden; 
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  transition: 0.5s;
+  visibility: hidden;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 20px;
 }
 
-#subscribe_form p {
-  color: #717182;
-  line-height: 20px;
-  letter-spacing: 0px;
-}
-
-#email_input {
-  background-color: #F3F3F5;
-  border-style: none;
-  width: 366px;
-  height: 36px;
-  color: #717182;
-  padding: 0px 0px 0px 10px;
-  border-radius: 8px;
-  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 14px;
-}
-
-#subscribe_form_submit {
-  margin-top: 5px;
-  width: 376px;
-  height: 32px;
-  border-style: none;
-  border-radius: 8px;
-  background-color: #030213;
-  color: #E4E4E4;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0px;
-  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-#footer_bottom {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0px;
-  color: #717182;
-  margin-top: 40px;
-}
-
-#footer_bottom ul {
-  display: flex;
-  flex-direction: row;
-  gap: 24px;
 }
 
 </style>
