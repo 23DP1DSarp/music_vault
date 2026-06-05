@@ -212,12 +212,26 @@ loadFromShoppingList();
               </div>
 
               <div id="rightbuttons_mobile">
+                <ul>
                   <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
                   <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                       <button id="logoutbtn">Iziet</button>
                   </form>
                   <RouterLink to="/login" v-if="!isLoggedIn">Ieiet</RouterLink>
                   <RouterLink to="/register" v-if="!isLoggedIn">Reģistrēties</RouterLink>
+                </ul>
+              </div>
+              
+              <div id="language_options_mobile">
+                <ul>
+                  <p>LV</p>
+                  <RouterLink to="/en">
+                    EN
+                  </RouterLink>
+                  <RouterLink to="/ru">
+                    RU
+                  </RouterLink>
+                </ul>
               </div>
               
               
@@ -1033,6 +1047,10 @@ nav {
   padding: 0;
 }
 
+#navbuttons_mobile {
+  height: min-content;
+}
+
 #navbuttons_mobile ul {
   display: flex;
   flex-direction: column;
@@ -1044,9 +1062,16 @@ nav {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  margin-top: 50px;
+  margin-top: 0px;
 }
 
+#rightbuttons_mobile ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
 #hamburger_icon {
   width: 24px;
   height: 24px;
@@ -1074,8 +1099,26 @@ nav {
   visibility: hidden;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 50px;
 }
+
+#language_options_mobile {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+#language_options_mobile ul {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 0;
+}
+
+#language_options_mobile p {
+  margin: 0;
+}
+
 
 main {
   margin: 0 auto;
