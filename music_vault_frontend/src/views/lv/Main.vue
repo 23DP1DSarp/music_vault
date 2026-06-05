@@ -83,12 +83,36 @@ const shoppingMenu = async () => {
 
   let shoppingSlider = document.getElementById('shopping_menu') as HTMLFormElement;
 
-  if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
-    shoppingSlider?.style.setProperty('width','25%');
-    shoppingSlider?.style.setProperty('visibility','visible');
-  } else {
+  if (window.innerWidth <= 480) {
+    if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
+      shoppingSlider?.style.setProperty('width','70%');
+      shoppingSlider?.style.setProperty('visibility','visible');
+    } else {
     shoppingSlider?.style.setProperty('width','0%');
     shoppingSlider?.style.setProperty('visibility','hidden');
+    }
+  }
+  else {
+    if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
+      shoppingSlider?.style.setProperty('width','25%');
+      shoppingSlider?.style.setProperty('visibility','visible');
+    } else {
+      shoppingSlider?.style.setProperty('width','0%');
+      shoppingSlider?.style.setProperty('visibility','hidden');
+    }
+  }
+}
+
+const hamburgerMenu = async () => {
+
+  let hamburgerSlider = document.getElementById('hamburger_menu') as HTMLFormElement;
+
+  if (hamburgerSlider.style.visibility === "hidden" || hamburgerSlider.style.visibility === '') {
+    hamburgerSlider?.style.setProperty('width','70%');
+    hamburgerSlider?.style.setProperty('visibility','visible');
+  } else {
+    hamburgerSlider?.style.setProperty('width','0%');
+    hamburgerSlider?.style.setProperty('visibility','hidden');
   }
   
 }
@@ -121,6 +145,13 @@ loadFromShoppingList();
 </script>
 
 <template>
+<html lang="lv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicVault</title>
+</head>
 
 <body v-if="loading !== true">
     <nav>
@@ -152,7 +183,6 @@ loadFromShoppingList();
                 </RouterLink>
               </div>
             </div>
-           <!--<input type="text" id="searchbar" name="recordsearch" placeholder="Meklēt ierakstus...">--> 
             <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
             <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
@@ -160,6 +190,38 @@ loadFromShoppingList();
             </form>
             <RouterLink to="/login" v-if="!isLoggedIn">Ieiet</RouterLink>
             <RouterLink to="/register" v-if="!isLoggedIn">Reģistrēties</RouterLink>
+        </div>
+
+        <div id="mobile_btns">
+          <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
+          <img id="hamburger_icon" src="../../images/nav_images/burger-menu-svgrepo-com.svg" @click="hamburgerMenu()">
+        </div>
+
+        <div id="hamburger_menu">
+              <div id="close_btn" @click="hamburgerMenu()">
+                <img src="../../images/shopping_cart images/close-x-svgrepo-com.svg">
+              </div>
+
+              <div id="navbuttons_mobile">
+                  <ul>
+                      <RouterLink to="/catalog">Jaunumi</RouterLink>
+                      <RouterLink to="/add-album" v-if="isLoggedIn">Pievienot albumu</RouterLink>
+                      <RouterLink to="/sell-item" v-if="isLoggedIn && user.user_role_id === 2">Pārdot preci</RouterLink>
+                      <RouterLink to="/sellerform" v-if="isLoggedIn && user.user_role_id !== 2">Kļūt par pārdevēju</RouterLink>
+                  </ul>
+              </div>
+
+              <div id="rightbuttons_mobile">
+                  <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
+                  <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
+                      <button id="logoutbtn">Iziet</button>
+                  </form>
+                  <RouterLink to="/login" v-if="!isLoggedIn">Ieiet</RouterLink>
+                  <RouterLink to="/register" v-if="!isLoggedIn">Reģistrēties</RouterLink>
+              </div>
+              
+              
+              
         </div>
     </div>
     </nav>
@@ -239,7 +301,7 @@ loadFromShoppingList();
                 
             </div>
 
-            <div>
+            <div class="footer_links">
                 <h6>Ātrās saites</h6>
 
                 <ul>
@@ -251,7 +313,7 @@ loadFromShoppingList();
                 </ul>
             </div>
 
-            <div>
+            <div class="footer_links">
                 
                 <h6>Žanri</h6>
 
@@ -264,7 +326,7 @@ loadFromShoppingList();
                 </ul>
             </div>
 
-          <!--  <div id="subscribe_form">
+          <!-- <div id="subscribe_form">
                 <h6>Sekojiet jaunumiem</h6>
                 <p>Saņemiet paziņojumus par jaunumiem un ekskluzīviem piedāvājumiem.</p>
 
@@ -291,6 +353,7 @@ loadFromShoppingList();
         </div>
     </footer>
 </body>
+</html>
 </template>
 
 <style scoped>
@@ -485,6 +548,10 @@ nav {
 
 #logoutbtn:hover {
   color: #717182;
+}
+
+#mobile_btns, #hamburger_menu {
+  display: none;
 }
 
 main {
@@ -927,4 +994,241 @@ path {
   cursor: pointer;
 }
 
+@media (max-width:480px) {
+
+#navwrapper {
+  align-items: center;
+}
+
+body {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+nav {
+  width: 100%;
+}
+
+#navbuttons, #rightbuttons {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+#mobile_btns, #hamburger_menu {
+  display: block;
+}
+
+#mobile_btns {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+#logoutbtn {
+  font-size: 19.53px;
+  padding: 0;
+}
+
+#navbuttons_mobile ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+}
+
+#rightbuttons_mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 50px;
+}
+
+#hamburger_icon {
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  border-style: solid;
+  border: #ECECF0 solid 1px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+#hamburger_menu {
+  height: 100%;
+  width: 0px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #E4E4E4;
+  overflow-x: hidden; 
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  transition: 0.5s;
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+main {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+}
+
+
+#hero_section {
+  width: 80vw;
+  height: 485px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 25px;
+  justify-content: center;
+  align-items: center;
+}
+
+#left_side {
+  width: 100%;
+  height: 360px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#left_side h1 {
+  width: 100%;
+  font-size: 48px;
+  font-weight: normal;
+  line-height: 60px;
+  letter-spacing: -1.5px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+#subtext {
+  width: 100%;
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: 0px;
+  margin-bottom: 0;
+  text-align: center;
+  color: #717182;
+}
+
+#hero_buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 40px;
+  margin-bottom: 0;
+}
+
+#shop_button {
+  width: 100%;
+  height: 40px;
+  background-color: #030213;
+  color: #FFFFFF;
+  border-style: none;
+  border-radius: 8px;
+  text-align: center;
+  
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:18px;
+  line-height: 40px;
+  letter-spacing: 0px;
+  cursor: pointer;
+}
+
+#browse_button {
+  width: 100%;
+  height: 40px;
+  background-color: #FFFFFF;
+  color: #0A0A0A;
+  border: solid rgba(0, 0, 0, .1) 1px;
+  border-style: solid;
+  border-radius: 8px;
+  text-align: center;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:18px;
+  line-height: 40px;
+  letter-spacing: 0px;
+  cursor: pointer;
+}
+
+#right_side {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+#right_side img {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+#footer_top {
+  width: 90vw;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  align-items: center;
+}
+
+#footer_info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 357px;
+  margin-right: 0;
+  font-size: 13.89px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  color: #717182;
+  text-align: center;
+  align-items: center;
+}
+
+.footer_links {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.footer_links ul {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0;
+  align-items: center;
+}
+
+#footer_bottom, #footer_bottom ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 0;
+  padding-right: 0;
+  align-items: center;
+}
+
+}
 </style>
