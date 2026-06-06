@@ -136,16 +136,56 @@ const getDecades = async () => {
 const shoppingMenu = async () => {
 
   let shoppingSlider = document.getElementById('shopping_menu') as HTMLFormElement;
-  
-  if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
-    shoppingSlider?.style.setProperty('width','25%');
-    shoppingSlider?.style.setProperty('visibility','visible');
-  } else {
+
+  if (window.innerWidth <= 480) {
+    if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
+      shoppingSlider?.style.setProperty('width','70%');
+      shoppingSlider?.style.setProperty('visibility','visible');
+    } else {
     shoppingSlider?.style.setProperty('width','0%');
     shoppingSlider?.style.setProperty('visibility','hidden');
+    }
+  }
+  else {
+    if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
+      shoppingSlider?.style.setProperty('width','25%');
+      shoppingSlider?.style.setProperty('visibility','visible');
+    } else {
+      shoppingSlider?.style.setProperty('width','0%');
+      shoppingSlider?.style.setProperty('visibility','hidden');
+    }
+  }
+}
+
+
+const hamburgerMenu = async () => {
+
+  let hamburgerSlider = document.getElementById('hamburger_menu') as HTMLFormElement;
+
+  if (hamburgerSlider.style.visibility === "hidden" || hamburgerSlider.style.visibility === '') {
+    hamburgerSlider?.style.setProperty('width','70%');
+    hamburgerSlider?.style.setProperty('visibility','visible');
+  } else {
+    hamburgerSlider?.style.setProperty('width','0%');
+    hamburgerSlider?.style.setProperty('visibility','hidden');
   }
   
 }
+
+const filterMenu = async () => {
+
+  let hamburgerSlider = document.getElementById('mobile_filters') as HTMLFormElement;
+
+  if (hamburgerSlider.style.visibility === "hidden" || hamburgerSlider.style.visibility === '') {
+    hamburgerSlider?.style.setProperty('width','70%');
+    hamburgerSlider?.style.setProperty('visibility','visible');
+  } else {
+    hamburgerSlider?.style.setProperty('width','0%');
+    hamburgerSlider?.style.setProperty('visibility','hidden');
+  }
+  
+}
+
 
 const loadFromShoppingList = async () => {
   const stored = localStorage.getItem('shoppingList');
@@ -187,7 +227,7 @@ loadFromShoppingList();
             <div id="language_select" name="language">
               <p>LV</p>
               <div id="language_options">
-                <RouterLink to="/">
+                <RouterLink to="/en">
                   EN
                 </RouterLink>
                 <RouterLink to="/ru">
@@ -195,18 +235,62 @@ loadFromShoppingList();
                 </RouterLink>
               </div>
             </div>
-           <!--<input type="text" id="searchbar" name="recordsearch" placeholder="Meklēt ierakstus...">--> 
             <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <p>{{user?.username}}</p>
+            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Iziet</button>
             </form>
             <RouterLink to="/login" v-if="!isLoggedIn">Ieiet</RouterLink>
             <RouterLink to="/register" v-if="!isLoggedIn">Reģistrēties</RouterLink>
         </div>
+
+        <div id="mobile_btns">
+          <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
+          <img id="hamburger_icon" src="../../images/nav_images/burger-menu-svgrepo-com.svg" @click="hamburgerMenu()">
+        </div>
+
+        <div id="hamburger_menu">
+              <div id="close_btn" @click="hamburgerMenu()">
+                <img src="../../images/shopping_cart images/close-x-svgrepo-com.svg">
+              </div>
+
+              <div id="navbuttons_mobile">
+                  <ul>
+                      <RouterLink to="/catalog">Jaunumi</RouterLink>
+                      <RouterLink to="/add-album" v-if="isLoggedIn">Pievienot albumu</RouterLink>
+                      <RouterLink to="/sell-item" v-if="isLoggedIn && user.user_role_id === 2">Pārdot preci</RouterLink>
+                      <RouterLink to="/sellerform" v-if="isLoggedIn && user.user_role_id !== 2">Kļūt par pārdevēju</RouterLink>
+                  </ul>
+              </div>
+
+              <div id="rightbuttons_mobile">
+                <ul>
+                  <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
+                  <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
+                      <button id="logoutbtn">Iziet</button>
+                  </form>
+                  <RouterLink to="/login" v-if="!isLoggedIn">Ieiet</RouterLink>
+                  <RouterLink to="/register" v-if="!isLoggedIn">Reģistrēties</RouterLink>
+                </ul>
+              </div>
+              
+              <div id="language_options_mobile">
+                <ul>
+                  <p>LV</p>
+                  <RouterLink to="/en">
+                    EN
+                  </RouterLink>
+                  <RouterLink to="/ru">
+                    RU
+                  </RouterLink>
+                </ul>
+              </div>
+              
+              
+              
+        </div>
     </div>
     </nav>
-
 
         <main>
         
@@ -228,7 +312,7 @@ loadFromShoppingList();
           <a :href="`/checkout`"><button id="checkout_btn">Noformēt pasūtījumu</button></a>
         </div>
 
-        <form id="filters">
+       <form id="filters">
             <h1>Filtri</h1>
                 <div id="genre_filters">
                     <h2>Žanrs</h2>
@@ -255,8 +339,44 @@ loadFromShoppingList();
                 </div>
         </form>
 
+
+        <form id="mobile_filters">
+          <div id="mobile_filters_header">
+            <h1>Filtri</h1>
+            <div id="close_btn" @click="filterMenu()">
+                <img src="../../images/shopping_cart images/close-x-svgrepo-com.svg">
+            </div>
+          </div>
+                <div id="genre_filters">
+                    <h2>Žanrs</h2>
+                    <div class="genre_filter" v-for="genre in genres" :key="genre.id">
+                      <input type="checkbox" :value="genre.id" v-model="selectedGenres" @change="filterAlbums">
+                      <label>{{ genre.title }}</label>
+                    </div>
+                </div>
+
+                <div id="decade_filters">
+                    <h2>Dekāde</h2>
+                    <div class="decade_filter" v-for="decade in decades" :key="decade">
+                        <input type="checkbox" :value="decade" v-model="selectedDecades" @change="filterAlbums">
+                        <label>{{ decade }}</label>
+                    </div>
+                </div>
+
+                <div id="country_filters">
+                    <h2>Valsts</h2>
+                    <div class="country_filter" v-for="country in countries" :key="country">
+                        <input type="checkbox" :value="country" v-model="selectedCountries" @change="filterAlbums">
+                        <label>{{ country }}</label>
+                    </div>
+                </div>
+        </form>
+
         <div id="albums">
-            <h1>Katalogs</h1>
+            <div id="albums_header">
+              <h1>Katalogs</h1>
+              <img id="filters_btn" src="../../images/catalog_images/filter-svgrepo-com.svg" @click="filterMenu()">
+            </div>
             <div id="album_cards">
               <div id="album_data" v-if="loading == false" v-for="album in albums">
                       
@@ -299,7 +419,7 @@ loadFromShoppingList();
                     
                 </div>
 
-                <div>
+                <div class="footer_links">
                     <h6>Ātrās saites</h6>
 
                     <ul>
@@ -311,7 +431,7 @@ loadFromShoppingList();
                     </ul>
                 </div>
 
-                <div>
+                <div class="footer_links">
                     
                     <h6>Žanri</h6>
 
@@ -324,18 +444,7 @@ loadFromShoppingList();
                     </ul>
                 </div>
 
-                <div id="subscribe_form">
-                    <h6>Sekojiet jaunumiem</h6>
-                    <p>Saņemiet paziņojumus par jaunumiem un ekskluzīviem piedāvājumiem.</p>
-
-                    <form action="" method="post">
-                        <input id="email_input" placeholder="Ievadiet e-pastu" name="subscription-email" type="email" required>
-                        <input id="subscribe_form_submit" type="submit" value="Abonēt">
-                    </form>
-                </div>
             </div>
-
-            
             <div id="footer_bottom">
 
                 <ul>
@@ -348,6 +457,7 @@ loadFromShoppingList();
                 <p>&copy; 2025 MusicVault. Visas tiesības aizsargātas.</p>
 
             </div>
+            
             </div>
         </footer>
     </body>
@@ -519,6 +629,10 @@ nav {
 
 #logoutbtn:hover {
   color: #717182;
+}
+
+#mobile_btns, #hamburger_menu, #mobile_filters, #filters_btn {
+  display: none;
 }
 
 main {
@@ -846,6 +960,320 @@ footer h6 {
   line-height: 20px;
   letter-spacing: 0px;
   cursor: pointer;
+}
+
+
+@media (max-width:480px) {
+
+
+#navwrapper {
+  align-items: center;
+}
+
+body {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+nav {
+  width: 100%;
+}
+
+#navbuttons, #rightbuttons {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+#mobile_btns, #hamburger_menu {
+  display: block;
+}
+
+#mobile_btns {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+#logoutbtn {
+  font-size: 19.53px;
+  padding: 0;
+}
+
+#navbuttons_mobile {
+  height: min-content;
+}
+
+#navbuttons_mobile ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+}
+
+#rightbuttons_mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 0px;
+}
+
+#rightbuttons_mobile ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+#hamburger_icon {
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  border-style: solid;
+  border: #ECECF0 solid 1px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+#hamburger_menu {
+  height: 100%;
+  width: 0px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #E4E4E4;
+  overflow-x: hidden; 
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  transition: 0.5s;
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  font-size: 19.53px;
+}
+
+#language_options_mobile {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+#language_options_mobile ul {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 0;
+}
+
+#language_options_mobile p {
+  margin: 0;
+}
+
+
+#mobile_filters {
+  height: 100%;
+  width: 0px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #E4E4E4;
+  overflow-x: hidden; 
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  transition: 0.5s;
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  font-size: 16px;
+}
+
+#mobile_filters_header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  vertical-align: middle;
+}
+
+#mobile_filters_header h1 {
+  margin: 0;
+}
+
+#close_btn {
+  height: 48px;
+}
+
+#mobile_filters [type="checkbox"] {
+  width: 20px;
+  height: 20px;
+}
+
+#price_range_filters_inputs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  height: 25px;
+}
+
+#country_filters {
+  margin-bottom: 50px;
+}
+
+#albums_header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 25px;
+  margin-bottom: 50px;
+  margin-left: 5px;
+}
+
+#albums_header h1 {
+  padding-bottom: 0;
+  margin: 0;
+}
+
+#filters_btn {
+  width: 16px;
+  height: 16px;
+  padding: 9px;
+  border-style: solid;
+  border: #ECECF0 solid 1px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  display: block;
+}
+
+#filters {
+  display: none; 
+}
+
+#album_cards {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  justify-items: center;
+  gap: 25px;
+  width: 300px;
+  margin-bottom: 50px;
+}
+
+#album_data {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 230px;
+  height: 350px;
+  border: solid #E4E4E4 1px;
+  border-radius: 14px;
+}
+
+#album_data img {
+  width: 100%;
+  height: 220px;
+  border-radius: 14px;
+}
+
+#album_data h3 {
+  font-size: 20px;
+  line-height: 24px;
+  margin: 0;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+#album_data p {
+  margin: 0;
+  margin-left: 15px;
+  font-size: 16px;
+  line-height: 20px;
+  color: #717182;
+}
+
+#genre_and_year {
+  display: flex;
+  flex-direction: row;
+}
+
+#footer_wrapper {
+  width: 90vw;
+  margin: 0 auto;
+  padding: 0;
+  align-items: center;
+  text-align: center;
+}
+
+
+#footer_top {
+  width: 90vw;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  align-items: center;
+  text-align: center;
+}
+
+#footer_info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 357px;
+  margin-right: 0;
+  font-size: 13.89px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  color: #717182;
+  text-align: center;
+  align-items: center;
+}
+
+.footer_links {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.footer_links ul {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0;
+  align-items: center;
+  text-align: center;
+}
+
+#footer_bottom, #footer_bottom ul {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 0;
+  padding-right: 0;
+  align-items: center;
+  text-align: center;
+}
+
 }
 
 </style>
