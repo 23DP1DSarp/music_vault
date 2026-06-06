@@ -397,69 +397,79 @@ loadFromShoppingList();
         </main>
 
         <footer>
-            <div id="footer_wrapper">
-            <div id="footer_top">
-                <div id="footer_info">
-                    <div id="footer_logo">
-                        <img src="../../images/footer_images/vinyl_icon.svg">
-                        <p>MusicVault</p>
-                    </div>
-                    <p id="footer_info_text">
-                        Jūsu galvenais mūzikas ierakstu galamērķis. Atklājiet,
-                        kolekcionējiet un baudiet mūziku tā, kā tā ir radīta
-                        skanēt.
-                    </p>
-
-                    <div id="icons">
-                        <img class="icon" src="../../images/footer_images/facebook_icon.svg">
-                        <img class="icon" src="../../images/footer_images/instagram_icon.svg">
-                        <img class="icon" src="../../images/footer_images/twitter_icon.svg">
-                        <img class="icon" src="../../images/footer_images/youtube_icon.svg">
-                    </div>
-                    
+        <div id="footer_wrapper">
+        <div id="footer_top">
+            <div id="footer_info">
+                <div id="footer_logo">
+                    <img src="../../images/footer_images/vinyl_icon.svg">
+                    <p>MusicVault</p>
                 </div>
+                <p id="footer_info_text">
+                    Jūsu galvenais mūzikas ierakstu galamērķis. Atklājiet,
+                    kolekcionējiet un baudiet mūziku tā, kā tā ir radīta
+                    skanēt.
+                </p>
 
-                <div class="footer_links">
-                    <h6>Ātrās saites</h6>
-
-                    <ul>
-                        <li>Jaunumi</li>
-                        <li>Priekšpasūtījumi</li>
-                        <li>Izpārdošana</li>
-                        <li>Reti atradumi</li>
-                        <li>Dāvanu kartes</li>
-                    </ul>
+                <div id="icons">
+                    <img class="icon" src="../../images/footer_images/facebook_icon.svg">
+                    <img class="icon" src="../../images/footer_images/instagram_icon.svg">
+                    <img class="icon" src="../../images/footer_images/twitter_icon.svg">
+                    <img class="icon" src="../../images/footer_images/youtube_icon.svg">
                 </div>
-
-                <div class="footer_links">
-                    
-                    <h6>Žanri</h6>
-
-                    <ul>
-                        <li>Roks</li>
-                        <li>Džezs</li>
-                        <li>Elektronika</li>
-                        <li>Hip-Hopss</li>
-                        <li>Klasika</li>
-                    </ul>
-                </div>
-
+                
             </div>
-            <div id="footer_bottom">
+
+            <div class="footer_links">
+                <h6>Ātrās saites</h6>
 
                 <ul>
-                    <li>Privātuma politika</li>
-                    <li>Lietošanas noteikumi</li>
-                    <li>Piegādes informācija</li>
-                    <li>Atgriešana</li>
+                    <li>Jaunumi</li>
+                    <li>Priekšpasūtījumi</li>
+                    <li>Izpārdošana</li>
+                    <li>Reti atradumi</li>
+                    <li>Dāvanu kartes</li>
                 </ul>
-
-                <p>&copy; 2025 MusicVault. Visas tiesības aizsargātas.</p>
-
             </div>
-            
+
+            <div class="footer_links">
+                
+                <h6>Žanri</h6>
+
+                <ul>
+                    <li>Roks</li>
+                    <li>Džezs</li>
+                    <li>Elektronika</li>
+                    <li>Hip-Hopss</li>
+                    <li>Klasika</li>
+                </ul>
             </div>
-        </footer>
+
+          <!-- <div id="subscribe_form">
+                <h6>Sekojiet jaunumiem</h6>
+                <p>Saņemiet paziņojumus par jaunumiem un ekskluzīviem piedāvājumiem.</p>
+
+                <form action="" method="post">
+                    <input id="email_input" placeholder="Ievadiet e-pastu" name="subscription-email" type="email" required>
+                    <input id="subscribe_form_submit" type="submit" value="Abonēt">
+                </form>
+            </div>-->
+        </div>
+
+        
+        <div id="footer_bottom">
+
+            <ul>
+                <li>Privātuma politika</li>
+                <li>Lietošanas noteikumi</li>
+                <li>Piegādes informācija</li>
+                <li>Atgriešana</li>
+            </ul>
+
+            <p>&copy; 2025 MusicVault. Visas tiesības aizsargātas.</p>
+
+        </div>
+        </div>
+    </footer>
     </body>
 </template>
 
@@ -804,28 +814,34 @@ footer {
   border-top: solid #ECECF0 1px;
 }
 
+#footer_top {
+  width: 80vw;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
 footer h6 {
   font-size: 16px;
   margin-top: 15px;
   line-height: 24px;
 }
 
-#footer_wrapper {
-  width: 80vw;
+#footer_bottom {
   margin: 0 auto;
-  padding-left: 100px;
-  padding-right: 100px;
-  padding-top: 50px;
-  padding-bottom: 50px;
-}
-
-
-#footer_top {
+  padding-left: 150px;
+  padding-right: 150px;
+  align-items: center;
   display: flex;
   flex-direction: row;
-  padding-bottom: 20px;
-  margin: 0 auto;
-  border-bottom: solid #ECECF0 1px;
+  justify-content: space-between;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  color: #717182;
+  border-top: solid #ECECF0 1px;
 }
 
 #footer_info {
@@ -927,16 +943,6 @@ footer h6 {
   cursor: pointer;
 }
 
-#footer_bottom {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0px;
-  color: #717182;
-  margin-top: 40px;
-}
 
 #footer_bottom ul {
   display: flex;

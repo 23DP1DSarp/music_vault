@@ -120,6 +120,20 @@ const shoppingMenu = async () => {
   
 }
 
+const hamburgerMenu = async () => {
+
+  let hamburgerSlider = document.getElementById('hamburger_menu') as HTMLFormElement;
+
+  if (hamburgerSlider.style.visibility === "hidden" || hamburgerSlider.style.visibility === '') {
+    hamburgerSlider?.style.setProperty('width','70%');
+    hamburgerSlider?.style.setProperty('visibility','visible');
+  } else {
+    hamburgerSlider?.style.setProperty('width','0%');
+    hamburgerSlider?.style.setProperty('visibility','hidden');
+  }
+  
+}
+
 const loadFromShoppingList = async () => {
   const stored = localStorage.getItem('shoppingList');
   if (stored) {
@@ -161,7 +175,7 @@ isAddedToCollection();
 
 <template>
     <body v-if="loading !== true">
-     <nav>
+      <nav>
         <div id="navwrapper">
         <RouterLink to="/">
             <div id="logo">
@@ -190,14 +204,59 @@ isAddedToCollection();
                 </RouterLink>
               </div>
             </div>
-            <!--<input type="text" id="searchbar" name="recordsearch" placeholder="Meklēt ierakstus...">--> 
             <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <p>{{user?.username}}</p>
+            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Iziet</button>
             </form>
             <RouterLink to="/login" v-if="!isLoggedIn">Ieiet</RouterLink>
             <RouterLink to="/register" v-if="!isLoggedIn">Reģistrēties</RouterLink>
+        </div>
+
+        <div id="mobile_btns">
+          <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
+          <img id="hamburger_icon" src="../../images/nav_images/burger-menu-svgrepo-com.svg" @click="hamburgerMenu()">
+        </div>
+
+        <div id="hamburger_menu">
+              <div id="close_btn" @click="hamburgerMenu()">
+                <img src="../../images/shopping_cart images/close-x-svgrepo-com.svg">
+              </div>
+
+              <div id="navbuttons_mobile">
+                  <ul>
+                      <RouterLink to="/catalog">Jaunumi</RouterLink>
+                      <RouterLink to="/add-album" v-if="isLoggedIn">Pievienot albumu</RouterLink>
+                      <RouterLink to="/sell-item" v-if="isLoggedIn && user.user_role_id === 2">Pārdot preci</RouterLink>
+                      <RouterLink to="/sellerform" v-if="isLoggedIn && user.user_role_id !== 2">Kļūt par pārdevēju</RouterLink>
+                  </ul>
+              </div>
+
+              <div id="rightbuttons_mobile">
+                <ul>
+                  <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
+                  <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
+                      <button id="logoutbtn">Iziet</button>
+                  </form>
+                  <RouterLink to="/login" v-if="!isLoggedIn">Ieiet</RouterLink>
+                  <RouterLink to="/register" v-if="!isLoggedIn">Reģistrēties</RouterLink>
+                </ul>
+              </div>
+              
+              <div id="language_options_mobile">
+                <ul>
+                  <p>LV</p>
+                  <RouterLink to="/en">
+                    EN
+                  </RouterLink>
+                  <RouterLink to="/ru">
+                    RU
+                  </RouterLink>
+                </ul>
+              </div>
+              
+              
+              
         </div>
     </div>
     </nav>
@@ -232,7 +291,15 @@ isAddedToCollection();
                 </div>
             </div>
 
-            <h1>Dziesmu saraksts</h1>
+            <div id="album_info_mobile">
+              <div id="album_text_info_mobile">
+                <img id="album_cover" v-if="album.cover" :src="getImageUrl(album.cover)" :alt="album.title">
+                <h1>{{album.title}} - {{album.author}}</h1>
+              </div>
+              <p>{{album.notes}}</p>
+            </div>
+
+            <h1 id="tracklist_title">Dziesmu saraksts</h1>
             <div id="tracklist">
                 <div id="track_position_col">
                     <h4 id="track_position_title">№</h4>
@@ -263,7 +330,7 @@ isAddedToCollection();
 
         </div>
 
-            <div id="album_data">
+           <div id="album_data">
                 <h1>Albuma dati</h1>
                 <p id="author">Autors: {{album.author}}</p>
                 <p id="release_date">Izdošanas datums: {{album.release_date}}</p>
@@ -279,6 +346,22 @@ isAddedToCollection();
             </div>
 
             
+           <div id="album_data_mobile">
+              <h1>Albuma dati</h1>
+              <div id="album_data_mobile_wrapper">
+                <p id="author">Autors: {{album.author}}</p>
+                <p id="release_date">Izdošanas datums: {{album.release_date}}</p>
+                <p id="country">Valsts: {{album.country}}</p>
+                <p id="genre">Žanrs: {{album.genre}}</p>
+                <p id="label">Izdevniecība: {{album.label}}</p>
+                <hr>
+
+                <div id="button_sec">
+                    <button id="add_to_collection_btn" @click="addToCollection" v-if="!addedToCollection">Pievienot kolekcijai</button>
+                    <button id="already_added_btn" @click="deleteFromCollection" v-else>Albums ir pievienots kolekcijai</button>
+                </div>
+              </div>
+            </div>
 
     </main>
 
@@ -306,7 +389,7 @@ isAddedToCollection();
                 
             </div>
 
-            <div>
+            <div class="footer_links">
                 <h6>Ātrās saites</h6>
 
                 <ul>
@@ -318,7 +401,7 @@ isAddedToCollection();
                 </ul>
             </div>
 
-            <div>
+            <div class="footer_links">
                 
                 <h6>Žanri</h6>
 
@@ -331,7 +414,7 @@ isAddedToCollection();
                 </ul>
             </div>
 
-            <div id="subscribe_form">
+        <!--   <div id="subscribe_form">
                 <h6>Sekojiet jaunumiem</h6>
                 <p>Saņemiet paziņojumus par jaunumiem un ekskluzīviem piedāvājumiem.</p>
 
@@ -339,7 +422,7 @@ isAddedToCollection();
                     <input id="email_input" placeholder="Ievadiet e-pastu" name="subscription-email" type="email" required>
                     <input id="subscribe_form_submit" type="submit" value="Abonēt">
                 </form>
-            </div>
+            </div>--> 
         </div>
 
         
@@ -528,6 +611,10 @@ nav {
   color: #717182;
 }
 
+#mobile_btns, #hamburger_menu, #mobile_filters, #album_info_mobile, #album_text_info_mobile, #album_data_mobile {
+  display: none;
+}
+
 main {
   width: 80vw;
   margin: 0 auto;
@@ -697,28 +784,34 @@ footer {
   border-top: solid #ECECF0 1px;
 }
 
+#footer_top {
+  width: 80vw;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
 footer h6 {
   font-size: 16px;
   margin-top: 15px;
   line-height: 24px;
 }
 
-#footer_wrapper {
-  width: 80vw;
+#footer_bottom {
   margin: 0 auto;
-  padding-left: 100px;
-  padding-right: 100px;
-  padding-top: 50px;
-  padding-bottom: 50px;
-}
-
-
-#footer_top {
+  padding-left: 150px;
+  padding-right: 150px;
+  align-items: center;
   display: flex;
   flex-direction: row;
-  padding-bottom: 20px;
-  margin: 0 auto;
-  border-bottom: solid #ECECF0 1px;
+  justify-content: space-between;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  color: #717182;
+  border-top: solid #ECECF0 1px;
 }
 
 #footer_info {
@@ -820,16 +913,6 @@ footer h6 {
   cursor: pointer;
 }
 
-#footer_bottom {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0px;
-  color: #717182;
-  margin-top: 40px;
-}
 
 #footer_bottom ul {
   display: flex;
@@ -855,5 +938,301 @@ footer h6 {
   letter-spacing: 0px;
   cursor: pointer;
 }
+
+@media (max-width:480px) {
+
+#navwrapper {
+  align-items: center;
+}
+
+body {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+nav {
+  width: 100%;
+}
+
+#navbuttons, #rightbuttons {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+#mobile_btns, #hamburger_menu {
+  display: block;
+}
+
+#mobile_btns {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+#logoutbtn {
+  font-size: 19.53px;
+  padding: 0;
+}
+
+#navbuttons_mobile {
+  height: min-content;
+}
+
+#navbuttons_mobile ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+}
+
+#rightbuttons_mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 0px;
+}
+
+#rightbuttons_mobile ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+#hamburger_icon {
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  border-style: solid;
+  border: #ECECF0 solid 1px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+#hamburger_menu {
+  height: 100%;
+  width: 0px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #E4E4E4;
+  overflow-x: hidden; 
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  transition: 0.5s;
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  font-size: 19.53px;
+}
+
+#language_options_mobile {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+#language_options_mobile ul {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 0;
+}
+
+#language_options_mobile p {
+  margin: 0;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+#album_info {
+  display: none;
+}
+
+#album_info_mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+#album_text_info_mobile {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  gap: 55px;
+  align-items:baseline;
+}
+
+#album_text_info_mobile img {
+  height: 84px;
+  border-radius: 16px;
+  width: 200px;
+}
+
+
+#album_text_info_mobile h1 {
+  font-size: 19.53px;
+  line-height: 28px;
+  letter-spacing: -0.5px;
+}
+
+#album_info_mobile p {
+  font-size: 13.89px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  width: fit-content;
+}
+
+#tracklist  {
+  background-color: #ECECF0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 35px;
+  padding-right: 35px;
+  width: max-content;
+  gap: 40px;
+}
+
+#tracklist_title {
+  width: max-content;
+  margin-top: 50px;
+  text-align: center;
+}
+
+#tracklist h4 {
+  padding-bottom: 20px;
+}
+
+#tracklist p {
+  padding-bottom: 15px;
+}
+
+
+.track_data {
+  display: flex;
+  flex-direction: row;
+  margin-left: 35px;
+  margin-right: 35px;
+  justify-content: space-between;
+}
+
+#track_artist_col {
+  display: none;
+}
+
+.duration {
+  text-align: right;
+}
+
+#album_data {
+  display: none;
+}
+
+#album_data_mobile {
+  display: block;
+}
+
+#album_data_mobile_wrapper {
+  width: 82%;
+  max-width: 357px;
+  padding-top: 5px;
+  background-color: #ECECF0;
+  border-radius: 10px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 21.440px;
+  z-index: 1;
+}
+
+#album_data_mobile h1 {
+  text-align: center;
+  vertical-align: middle;
+}
+
+#footer_wrapper {
+  width: 90vw;
+  margin: 0 auto;
+  padding: 0;
+  align-items: center;
+  text-align: center;
+}
+
+
+#footer_top {
+  width: 90vw;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  align-items: center;
+  text-align: center;
+}
+
+#footer_info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 357px;
+  margin-right: 0;
+  font-size: 13.89px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  color: #717182;
+  text-align: center;
+  align-items: center;
+}
+
+.footer_links {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.footer_links ul {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0;
+  align-items: center;
+  text-align: center;
+}
+
+#footer_bottom, #footer_bottom ul {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 0;
+  padding-right: 0;
+  align-items: center;
+  text-align: center;
+}
+
+
+}
+
 
 </style>
