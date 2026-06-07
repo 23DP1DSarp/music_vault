@@ -1131,8 +1131,6 @@ main {
   width: 53px;
 }
 
-
-
 #checkout_wrapper {
   display: flex;
   flex-direction: column;
@@ -1242,9 +1240,6 @@ main {
   padding-right: 0;
   align-items: center;
 }
-
-
-
 
 }
 
