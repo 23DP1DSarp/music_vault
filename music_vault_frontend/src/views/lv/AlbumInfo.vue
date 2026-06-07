@@ -109,15 +109,25 @@ const addToCollection = async () => {
 const shoppingMenu = async () => {
 
   let shoppingSlider = document.getElementById('shopping_menu') as HTMLFormElement;
-  
-  if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
-    shoppingSlider?.style.setProperty('width','25%');
-    shoppingSlider?.style.setProperty('visibility','visible');
-  } else {
+
+  if (window.innerWidth <= 480) {
+    if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
+      shoppingSlider?.style.setProperty('width','70%');
+      shoppingSlider?.style.setProperty('visibility','visible');
+    } else {
     shoppingSlider?.style.setProperty('width','0%');
     shoppingSlider?.style.setProperty('visibility','hidden');
+    }
   }
-  
+  else {
+    if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
+      shoppingSlider?.style.setProperty('width','25%');
+      shoppingSlider?.style.setProperty('visibility','visible');
+    } else {
+      shoppingSlider?.style.setProperty('width','0%');
+      shoppingSlider?.style.setProperty('visibility','hidden');
+    }
+  }
 }
 
 const hamburgerMenu = async () => {
