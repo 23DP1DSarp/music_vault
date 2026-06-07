@@ -1034,6 +1034,7 @@ nav {
   padding: 0;
   margin: 0;
 }
+
 #hamburger_icon {
   width: 24px;
   height: 24px;
