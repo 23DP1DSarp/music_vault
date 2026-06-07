@@ -934,10 +934,6 @@ main {
     border-radius: 8px;
 }
 
-
-
-
-
 #checkout_btn {
   width: 100%;
   height: 40px;
@@ -953,19 +949,6 @@ main {
   letter-spacing: 0px;
   cursor: pointer;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 footer {
   border-top: solid #ECECF0 1px;

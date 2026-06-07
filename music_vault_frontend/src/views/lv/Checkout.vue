@@ -103,12 +103,36 @@ const shoppingMenu = async () => {
 
   let shoppingSlider = document.getElementById('shopping_menu') as HTMLFormElement;
 
-  if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
-    shoppingSlider?.style.setProperty('width','25%');
-    shoppingSlider?.style.setProperty('visibility','visible');
-  } else {
+  if (window.innerWidth <= 480) {
+    if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
+      shoppingSlider?.style.setProperty('width','70%');
+      shoppingSlider?.style.setProperty('visibility','visible');
+    } else {
     shoppingSlider?.style.setProperty('width','0%');
     shoppingSlider?.style.setProperty('visibility','hidden');
+    }
+  }
+  else {
+    if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
+      shoppingSlider?.style.setProperty('width','25%');
+      shoppingSlider?.style.setProperty('visibility','visible');
+    } else {
+      shoppingSlider?.style.setProperty('width','0%');
+      shoppingSlider?.style.setProperty('visibility','hidden');
+    }
+  }
+}
+
+const hamburgerMenu = async () => {
+
+  let hamburgerSlider = document.getElementById('hamburger_menu') as HTMLFormElement;
+
+  if (hamburgerSlider.style.visibility === "hidden" || hamburgerSlider.style.visibility === '') {
+    hamburgerSlider?.style.setProperty('width','70%');
+    hamburgerSlider?.style.setProperty('visibility','visible');
+  } else {
+    hamburgerSlider?.style.setProperty('width','0%');
+    hamburgerSlider?.style.setProperty('visibility','hidden');
   }
   
 }
@@ -219,7 +243,6 @@ loadFromShoppingList();
                 </RouterLink>
               </div>
             </div>
-            <!--<input type="text" id="searchbar" name="recordsearch" placeholder="Meklēt ierakstus...">--> 
             <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
             <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
@@ -227,6 +250,52 @@ loadFromShoppingList();
             </form>
             <RouterLink to="/login" v-if="!isLoggedIn">Ieiet</RouterLink>
             <RouterLink to="/register" v-if="!isLoggedIn">Reģistrēties</RouterLink>
+        </div>
+
+        <div id="mobile_btns">
+          <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
+          <img id="hamburger_icon" src="../../images/nav_images/burger-menu-svgrepo-com.svg" @click="hamburgerMenu()">
+        </div>
+
+        <div id="hamburger_menu">
+              <div id="close_btn" @click="hamburgerMenu()">
+                <img src="../../images/shopping_cart images/close-x-svgrepo-com.svg">
+              </div>
+
+              <div id="navbuttons_mobile">
+                  <ul>
+                      <RouterLink to="/catalog">Jaunumi</RouterLink>
+                      <RouterLink to="/add-album" v-if="isLoggedIn">Pievienot albumu</RouterLink>
+                      <RouterLink to="/sell-item" v-if="isLoggedIn && user.user_role_id === 2">Pārdot preci</RouterLink>
+                      <RouterLink to="/sellerform" v-if="isLoggedIn && user.user_role_id !== 2">Kļūt par pārdevēju</RouterLink>
+                  </ul>
+              </div>
+
+              <div id="rightbuttons_mobile">
+                <ul>
+                  <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
+                  <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
+                      <button id="logoutbtn">Iziet</button>
+                  </form>
+                  <RouterLink to="/login" v-if="!isLoggedIn">Ieiet</RouterLink>
+                  <RouterLink to="/register" v-if="!isLoggedIn">Reģistrēties</RouterLink>
+                </ul>
+              </div>
+              
+              <div id="language_options_mobile">
+                <ul>
+                  <p>LV</p>
+                  <RouterLink to="/en">
+                    EN
+                  </RouterLink>
+                  <RouterLink to="/ru">
+                    RU
+                  </RouterLink>
+                </ul>
+              </div>
+              
+              
+              
         </div>
     </div>
     </nav>
@@ -352,7 +421,7 @@ loadFromShoppingList();
                 
             </div>
 
-            <div>
+            <div class="footer_links">
                 <h6>Ātrās saites</h6>
 
                 <ul>
@@ -364,7 +433,7 @@ loadFromShoppingList();
                 </ul>
             </div>
 
-            <div>
+            <div class="footer_links">
                 
                 <h6>Žanri</h6>
 
@@ -377,7 +446,7 @@ loadFromShoppingList();
                 </ul>
             </div>
 
-            <div id="subscribe_form">
+          <!-- <div id="subscribe_form">
                 <h6>Sekojiet jaunumiem</h6>
                 <p>Saņemiet paziņojumus par jaunumiem un ekskluzīviem piedāvājumiem.</p>
 
@@ -385,7 +454,7 @@ loadFromShoppingList();
                     <input id="email_input" placeholder="Ievadiet e-pastu" name="subscription-email" type="email" required>
                     <input id="subscribe_form_submit" type="submit" value="Abonēt">
                 </form>
-            </div>
+            </div>-->
         </div>
 
         
@@ -613,6 +682,10 @@ main h1 {
   height: 48px;
 }
 
+#mobile_btns, #hamburger_menu {
+  display: none;
+}
+
 .shopping_item {
   display: flex;
   flex-direction: row;
@@ -748,28 +821,34 @@ footer {
   border-top: solid #ECECF0 1px;
 }
 
+#footer_top {
+  width: 80vw;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
 footer h6 {
   font-size: 16px;
   margin-top: 15px;
   line-height: 24px;
 }
 
-#footer_wrapper {
-  width: 80vw;
+#footer_bottom {
   margin: 0 auto;
-  padding-left: 100px;
-  padding-right: 100px;
-  padding-top: 50px;
-  padding-bottom: 50px;
-}
-
-
-#footer_top {
+  padding-left: 150px;
+  padding-right: 150px;
+  align-items: center;
   display: flex;
   flex-direction: row;
-  padding-bottom: 20px;
-  margin: 0 auto;
-  border-bottom: solid #ECECF0 1px;
+  justify-content: space-between;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  color: #717182;
+  border-top: solid #ECECF0 1px;
 }
 
 #footer_info {
@@ -871,17 +950,6 @@ footer h6 {
   cursor: pointer;
 }
 
-#footer_bottom {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  font-size: 14px;
-  line-height: 20px;
-  letter-spacing: 0px;
-  color: #717182;
-  margin-top: 40px;
-}
-
 #footer_bottom ul {
   display: flex;
   flex-direction: row;
@@ -905,5 +973,280 @@ footer h6 {
   letter-spacing: 0px;
   cursor: pointer;
 }
+
+@media (max-width:480px) {
+
+#navwrapper {
+  align-items: center;
+}
+
+body {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+nav {
+  width: 100%;
+}
+
+#navbuttons, #rightbuttons {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+#mobile_btns, #hamburger_menu {
+  display: block;
+}
+
+#mobile_btns {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+#logoutbtn {
+  font-size: 19.53px;
+  padding: 0;
+}
+
+#navbuttons_mobile {
+  height: min-content;
+}
+
+#navbuttons_mobile ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+}
+
+#rightbuttons_mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 0px;
+}
+
+#rightbuttons_mobile ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+
+#hamburger_icon {
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  border-style: solid;
+  border: #ECECF0 solid 1px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+#hamburger_menu {
+  height: 100%;
+  width: 0px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #E4E4E4;
+  overflow-x: hidden; 
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  transition: 0.5s;
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+#language_options_mobile {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+#language_options_mobile ul {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 0;
+}
+
+main {
+  padding-top: 0px;
+}
+
+#language_options_mobile p {
+  margin: 0;
+}
+
+#form_wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 90vw;
+}
+
+.selected_item {
+  display: flex;
+  flex-direction: row;
+}
+
+#info_div h2 {
+  margin-bottom: 0px;
+}
+
+#info_div p {
+  margin-top: 13px;
+}
+
+#price_div {
+  text-align: end;
+}
+
+#price_div p {
+  margin-top: 0px;
+  width: 100px;
+}
+
+#price {
+  margin-bottom: 8px;
+}
+
+#item_quantity {
+  display: flex;
+  flex-direction: row;
+}
+
+#item_quantity input {
+  width: 53px;
+}
+
+
+
+#checkout_wrapper {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  margin-left: 10px;
+  gap: 80px;
+}
+
+#checkout_wrapper input {
+  width: 82.333vw;
+  height: 10.417vw;
+}
+
+#checkout_wrapper select {
+  width: 84vw;
+  height: 11.5vw;
+}
+
+#payment_info_side {
+  display: flex;
+  flex-direction: column;
+}
+
+#payment_info_side label {
+  width: 10px;
+}
+
+#subpayment_info_side {
+  display: flex;
+  flex-direction: column;
+}
+
+#expiry_date_input {
+  display: flex;
+  flex-direction: row;
+}
+
+#expiry_date_input input {
+  width: 141px;
+}
+
+#submit_btn {
+  min-width: 83vw;
+  min-height: 11.25vw;
+  margin-top: 50px;
+  background-color: #000000;
+  color: #E4E4E4;
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 28px;
+  letter-spacing: -0.5px;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 8px;
+  border: none;
+  margin-left: 13px;
+}
+
+#footer_top {
+  width: 90vw;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  align-items: center;
+}
+
+#footer_info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 357px;
+  margin-right: 0;
+  font-size: 13.89px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  color: #717182;
+  text-align: center;
+  align-items: center;
+}
+
+.footer_links {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.footer_links ul {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0;
+  align-items: center;
+}
+
+#footer_bottom, #footer_bottom ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 0;
+  padding-right: 0;
+  align-items: center;
+}
+
+
+
+
+}
+
 
 </style>
