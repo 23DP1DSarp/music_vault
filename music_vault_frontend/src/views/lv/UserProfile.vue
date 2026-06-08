@@ -608,6 +608,10 @@ nav {
   color: #717182;
 }
 
+#mobile_btns, #hamburger_menu {
+  display: none;
+}
+
 main {
   width: 80vw;
   margin: 0 auto;
