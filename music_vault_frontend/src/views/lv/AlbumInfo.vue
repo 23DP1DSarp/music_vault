@@ -1067,6 +1067,7 @@ main {
   gap: 50px;
 }
 
+
 #album_info {
   display: none;
 }
@@ -1104,6 +1105,13 @@ main {
   line-height: 20px;
   letter-spacing: 0px;
   width: fit-content;
+}
+
+#tracklist_title {
+  width: max-content;
+  margin-top: 50px;
+  margin-left: 25px;
+  text-align: center;
 }
 
 #tracklist  {
