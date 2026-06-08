@@ -82,12 +82,36 @@ const shoppingMenu = async () => {
 
   let shoppingSlider = document.getElementById('shopping_menu') as HTMLFormElement;
 
-  if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
-    shoppingSlider?.style.setProperty('width','25%');
-    shoppingSlider?.style.setProperty('visibility','visible');
-  } else {
+  if (window.innerWidth <= 480) {
+    if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
+      shoppingSlider?.style.setProperty('width','70%');
+      shoppingSlider?.style.setProperty('visibility','visible');
+    } else {
     shoppingSlider?.style.setProperty('width','0%');
     shoppingSlider?.style.setProperty('visibility','hidden');
+    }
+  }
+  else {
+    if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
+      shoppingSlider?.style.setProperty('width','25%');
+      shoppingSlider?.style.setProperty('visibility','visible');
+    } else {
+      shoppingSlider?.style.setProperty('width','0%');
+      shoppingSlider?.style.setProperty('visibility','hidden');
+    }
+  }
+}
+
+const hamburgerMenu = async () => {
+
+  let hamburgerSlider = document.getElementById('hamburger_menu') as HTMLFormElement;
+
+  if (hamburgerSlider.style.visibility === "hidden" || hamburgerSlider.style.visibility === '') {
+    hamburgerSlider?.style.setProperty('width','70%');
+    hamburgerSlider?.style.setProperty('visibility','visible');
+  } else {
+    hamburgerSlider?.style.setProperty('width','0%');
+    hamburgerSlider?.style.setProperty('visibility','hidden');
   }
   
 }
@@ -160,7 +184,53 @@ loadFromShoppingList();
             <RouterLink to="/ru/login" v-if="!isLoggedIn">Войти</RouterLink>
             <RouterLink to="/ru/register" v-if="!isLoggedIn">Регистрация</RouterLink>
         </div>
+    
+
+    <div id="mobile_btns">
+          <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
+          <img id="hamburger_icon" src="../../images/nav_images/burger-menu-svgrepo-com.svg" @click="hamburgerMenu()">
+        </div>
     </div>
+        <div id="hamburger_menu">
+              <div id="close_btn" @click="hamburgerMenu()">
+                <img src="../../images/shopping_cart images/close-x-svgrepo-com.svg">
+              </div>
+
+              <div id="navbuttons_mobile">
+                  <ul>
+                      <RouterLink to="/catalog">Новинки</RouterLink>
+                      <RouterLink to="/add-album" v-if="isLoggedIn">Добавить альбом</RouterLink>
+                      <RouterLink to="/sell-item" v-if="isLoggedIn && user.user_role_id === 2">Продать товар</RouterLink>
+                      <RouterLink to="/sellerform" v-if="isLoggedIn && user.user_role_id !== 2">Стать продавцом</RouterLink>
+                  </ul>
+              </div>
+
+              <div id="rightbuttons_mobile">
+                <ul>
+                  <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
+                 <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
+                <button id="logoutbtn">Выйти</button>
+            </form>
+            <RouterLink to="/ru/login" v-if="!isLoggedIn">Войти</RouterLink>
+            <RouterLink to="/ru/register" v-if="!isLoggedIn">Регистрация</RouterLink>
+                </ul>
+              </div>
+              
+              <div id="language_options_mobile">
+                <ul>
+                  <p>RU</p>
+                  <RouterLink to="/en">
+                    EN
+                  </RouterLink>
+                  <RouterLink to="/">
+                    LV
+                  </RouterLink>
+                </ul>
+              </div>
+              
+              
+              
+        </div>
     </nav>
 
 
@@ -196,26 +266,11 @@ loadFromShoppingList();
                 <p id="subtext">От редких прессований до новейших релизов. Отобранные виниловые пластинки для каждого любителя музыки.</p>
 
                 <div id="hero_buttons">
-                    <RouterLink to="/catalog" id="shop_button">Shop Новинки</RouterLink>
+                    <RouterLink to="/catalog" id="shop_button">Смотреть новинки</RouterLink>
                     <button id="browse_button">Просмотреть коллекцию</button>
                 </div>
 
-                <div id="stats">
-                    <div class="stat">
-                        <h2>10K+</h2>
-                        <p>Записей в наличии</p>
-                    </div>
-
-                    <div class="stat">
-                        <h2>500+</h2>
-                        <p>Исполнители</p>
-                    </div>
-
-                    <div class="stat">
-                        <h2>50+</h2>
-                        <p>Жанры</p>
-                    </div>
-                </div>
+                
             </div>
 
             <div id="right_side">
@@ -230,42 +285,7 @@ loadFromShoppingList();
         </div>
 
 
-        <div id="record_browse">
-            <h4>Просмотр записей</h4>
-            <p id="results_count">Найдено 6 записей</p>
-
-            <div id="filters">
-                <form action="/show_albums" method="GET">
-                    <label>Жанр:</label>
-                    <button class="form_button">Все</button>
-                    <button class="form_button" type="submit" name="genre" value="Рок">Рок</button>
-                    <button class="form_button" name="genre" value="Джаз">Джаз</button>
-                    <button class="form_button" name="genre" value="Электроника">Электроника</button>
-                    <button class="form_button" name="genre" value="Pop">Поп</button>
-                    <button class="form_button" name="genre" value="Хип-хоп">Хип-хопs</button>
-                    <button class="form_button" name="genre" value="Классика">Классика</button>
-
-                    <label>Состояние:</label>
-                    <select name="condition" id="condtion_select">
-                        <option value="brand_new">Новый</option>
-                        <option value="new">Новый</option>
-                        <option value="used">Б/у</option>
-                    </select>
-
-                    <label>Сортировать по:</label>
-                    <select name="sort" id="sort_select">
-                        <option>Название: A-Z</option>
-                        <option>Название: Z-A</option>
-                        <option>Цена: выше</option>
-                        <option>Цена: ниже</option>
-                    </select>
-                </form>
-
-                
-
-
-            </div>
-        </div>
+        
 
     
     </main>
@@ -963,5 +983,272 @@ footer h6 {
 path {
   stroke: #ffffff;
   fill: black;
+}
+
+@media (max-width:480px) {
+
+#navwrapper {
+  align-items: center;
+}
+
+body {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+nav {
+  width: 100%;
+}
+
+#navbuttons, #rightbuttons {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+#mobile_btns, #hamburger_menu {
+  display: block;
+}
+
+#mobile_btns {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+#logoutbtn {
+  font-size: 19.53px;
+  padding: 0;
+}
+
+#navbuttons_mobile {
+  height: min-content;
+}
+
+#navbuttons_mobile ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+}
+
+#rightbuttons_mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 0px;
+}
+
+#rightbuttons_mobile ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+#hamburger_icon {
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  border-style: solid;
+  border: #ECECF0 solid 1px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+#hamburger_menu {
+  height: 100%;
+  width: 0px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #E4E4E4;
+  overflow-x: hidden; 
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  transition: 0.5s;
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+#language_options_mobile {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+#language_options_mobile ul {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 0;
+}
+
+#language_options_mobile p {
+  margin: 0;
+}
+
+
+main {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+}
+
+
+#hero_section {
+  width: 80vw;
+  height: 485px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 25px;
+  justify-content: center;
+  align-items: center;
+}
+
+#left_side {
+  width: 100%;
+  height: 360px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#left_side h1 {
+  width: 100%;
+  font-size: 48px;
+  font-weight: normal;
+  line-height: 60px;
+  letter-spacing: -1.5px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+#subtext {
+  width: 100%;
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: 0px;
+  margin-bottom: 0;
+  text-align: center;
+  color: #717182;
+}
+
+#hero_buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 40px;
+  margin-bottom: 0;
+}
+
+#shop_button {
+  width: 100%;
+  height: 40px;
+  background-color: #030213;
+  color: #FFFFFF;
+  border-style: none;
+  border-radius: 8px;
+  text-align: center;
+  
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:18px;
+  line-height: 40px;
+  letter-spacing: 0px;
+  cursor: pointer;
+}
+
+#browse_button {
+  width: 100%;
+  height: 40px;
+  background-color: #FFFFFF;
+  color: #0A0A0A;
+  border: solid rgba(0, 0, 0, .1) 1px;
+  border-style: solid;
+  border-radius: 8px;
+  text-align: center;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:18px;
+  line-height: 40px;
+  letter-spacing: 0px;
+  cursor: pointer;
+}
+
+#right_side {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+#right_side img {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+#footer_top {
+  width: 90vw;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  align-items: center;
+}
+
+#footer_info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 357px;
+  margin-right: 0;
+  font-size: 13.89px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  color: #717182;
+  text-align: center;
+  align-items: center;
+}
+
+.footer_links {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.footer_links ul {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0;
+  align-items: center;
+}
+
+#footer_bottom, #footer_bottom ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 0;
+  padding-right: 0;
+  align-items: center;
+}
+
 }
 </style>

@@ -79,7 +79,7 @@ const getUser = async () => {
         const response = await axiosInstance.get('/user');
         user.value = response.data;
         isLoggedIn.value = true;
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
         isLoggedIn.value = false;
@@ -89,9 +89,9 @@ const getUser = async () => {
 };
 
 const logout = async () => {
-    try{
+    try {
         const response = await axiosInstance.post('/logout');
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
     } finally {
@@ -103,7 +103,7 @@ const getGenres = async () => {
     try {
       const response = await axiosInstance.get('/getgenres');
       genres.value = response.data;
-      console.log(genres.value);
+      //console.log(genres.value);
     } catch (error) {
       console.error(error);
     }
@@ -113,7 +113,7 @@ const getCountries = async () => {
     try {
       const response = await axiosInstance.get('/getcountries');
       countries.value = response.data;
-      console.log(countries.value);
+      //console.log(countries.value);
     } catch (error) {
       console.error(error);
     }
@@ -132,14 +132,14 @@ const addTrack = () => {
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
-  console.log('Selected file:', file);
+  //console.log('Selected file:', file);
   if (file) {
     album.value.cover = file;
   }
 };
 
 const validateForm = (e: Event) => {
-  console.log('Validating form...');
+  //console.log('Validating form...');
   let hasErrors = false
 
   tracks.value.forEach(track => {
@@ -184,14 +184,14 @@ const submitForm = async () => {
   })
 
   try {
-    console.log('Submitting form with data:', {
+    /*console.log('Submitting form with data:', {
       album: album.value,
       tracks: tracks.value
-    });
+    });*/
     const response = await axiosInstance.post('/add_album_with_tracks', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
-    console.log(response.data);
+    //console.log(response.data);
     if (response.status === 200) {
         router.push('/');
     }

@@ -69,7 +69,7 @@ const getUser = async () => {
         const response = await axiosInstance.get('/user');
         user.value = response.data;
         isLoggedIn.value = true;
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
         isLoggedIn.value = false;
@@ -79,9 +79,9 @@ const getUser = async () => {
 };
 
 const logout = async () => {
-    try{
+    try {
         const response = await axiosInstance.post('/logout');
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
     } finally {
@@ -93,7 +93,7 @@ const getCountries = async () => {
     try {
       const response = await axiosInstance.get('/getcountries');
       countries.value = response.data;
-      console.log(countries.value);
+      //console.log(countries.value);
     } catch (error) {
       console.error(error);
     }
@@ -182,7 +182,7 @@ const submitForm = async () => {
     const response = await axiosInstance.post('/create_order', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
-    console.log(response.data);
+    //console.log(response.data);
     if (response.status === 200) {
       localStorage.removeItem("shoppingList");
       router.push('/');
@@ -191,7 +191,7 @@ const submitForm = async () => {
       shoppingList.value.forEach((item, index) => {
         response.data.unavailable_items.forEach((unavailableItem: any) => {
         if (unavailableItem.id == shoppingList.value[index]?.id && shoppingList.value[index]) {
-          console.log('Unavailable items:');
+          //console.log('Unavailable items:');
           shoppingList.value[index].error = `Prece "${item.title}" nav pieejama. Pieejamais daudzums: ${unavailableItem.available_quantity}`;
         }
       })

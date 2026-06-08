@@ -72,7 +72,7 @@ const getUser = async () => {
         const response = await axiosInstance.get('/user');
         user.value = response.data;
         isLoggedIn.value = true;
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
         isLoggedIn.value = false;
@@ -82,9 +82,9 @@ const getUser = async () => {
 };
 
 const logout = async () => {
-    try{
+    try {
         const response = await axiosInstance.post('/logout');
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
     } finally {
@@ -96,7 +96,7 @@ const getAlbums = async () => {
   try {
     const response = await axiosInstance.get('/');
     albums.value = response.data;
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     console.error(error);
   }
@@ -105,7 +105,7 @@ const getAlbums = async () => {
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
-  console.log('Selected file:', file);
+  //console.log('Selected file:', file);
   if (file) {
     item.value.picture = file;
   }
@@ -125,7 +125,7 @@ const sellItem = async (payload: SellItemForm) => {
     const response = await axiosInstance.post('/sellitem', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
-    console.log(response.data);
+    //console.log(response.data);
     if (response.status === 200) {
         router.push('/');
     }

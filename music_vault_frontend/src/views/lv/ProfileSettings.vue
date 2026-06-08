@@ -59,7 +59,7 @@ const getCountries = async () => {
     try {
       const response = await axiosInstance.get('/getcountries');
       countries.value = response.data;
-      console.log(countries.value);
+      //console.log(countries.value);
     } catch (error) {
       console.error(error);
     }
@@ -70,7 +70,7 @@ const getUser = async () => {
         const response = await axiosInstance.get('/user');
         user.value = response.data;
         isLoggedIn.value = true;
-        console.log(response.data);
+        //console.log(response.data);
         accountInfo.value.username = response.data.username;
         accountInfo.value.email = response.data.email;
         accountInfo.value.country = response.data.country;
@@ -83,9 +83,9 @@ const getUser = async () => {
 };
 
 const logout = async () => {
-    try{
+    try {
         const response = await axiosInstance.post('/logout');
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
     } finally {
@@ -99,7 +99,7 @@ const changeAccountInfo = async (accountInfo: AccountInfo) => {
       username: accountInfo.username,
       email: accountInfo.email,
     });
-    console.log(response.data);
+    //console.log(response.data);
     alert('Account information updated successfully!');
   } catch (error) {
     console.error(error);
@@ -119,7 +119,7 @@ const changePassword = async (resetPassword: ResetPassword) => {
       password: resetPassword.confirm_new_password,
       password_confirmation: resetPassword.confirm_new_password,
     });
-    console.log(response.data);
+    //console.log(response.data);
     alert('Password changed successfully!');
   } catch (error) {
     console.error(error);
@@ -129,7 +129,7 @@ const changePassword = async (resetPassword: ResetPassword) => {
 const deleteAccount = async () => {
   try {
     const response = await axiosInstance.delete('/delete-account');
-    console.log(response.data);
+    //console.log(response.data);
     alert('Account deleted successfully!');
     window.location.href='/';
   } catch (error) {

@@ -52,7 +52,7 @@ const getCollectionAlbums = async () => {
   try {
     const response = await axiosInstance.get('/getcollection');
     collectionAlbums.value = response.data;
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     console.error(error);
   }
@@ -62,7 +62,7 @@ const getWishlistItems = async () => {
   try {
     const response = await axiosInstance.get('/getwishlist');
     wishlistItems.value = response.data;
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     console.error(error);
   }
@@ -73,8 +73,8 @@ const getUser = async () => {
         const response = await axiosInstance.get('/user');
         user.value = response.data;
         isLoggedIn.value = true;
-        console.log(response.data);
-        console.log(user.value);
+        //console.log(response.data);
+        //console.log(user.value);
     } catch (error) {
         console.error(error);
         isLoggedIn.value = false;
@@ -85,9 +85,9 @@ const getUser = async () => {
 };
 
 const logout = async () => {
-    try{
+    try {
         const response = await axiosInstance.post('/logout');
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
     } finally {

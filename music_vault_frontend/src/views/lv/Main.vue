@@ -51,7 +51,7 @@ const getUser = async () => {
         const response = await axiosInstance.get('/user');
         user.value = response.data;
         isLoggedIn.value = true;
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
         isLoggedIn.value = false;
@@ -63,7 +63,7 @@ const getUser = async () => {
 const logout = async () => {
     try{
         const response = await axiosInstance.post('/logout');
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
     } finally {

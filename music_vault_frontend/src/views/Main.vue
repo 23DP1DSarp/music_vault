@@ -83,12 +83,36 @@ const shoppingMenu = async () => {
 
   let shoppingSlider = document.getElementById('shopping_menu') as HTMLFormElement;
 
-  if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
-    shoppingSlider?.style.setProperty('width','25%');
-    shoppingSlider?.style.setProperty('visibility','visible');
-  } else {
+  if (window.innerWidth <= 480) {
+    if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
+      shoppingSlider?.style.setProperty('width','70%');
+      shoppingSlider?.style.setProperty('visibility','visible');
+    } else {
     shoppingSlider?.style.setProperty('width','0%');
     shoppingSlider?.style.setProperty('visibility','hidden');
+    }
+  }
+  else {
+    if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
+      shoppingSlider?.style.setProperty('width','25%');
+      shoppingSlider?.style.setProperty('visibility','visible');
+    } else {
+      shoppingSlider?.style.setProperty('width','0%');
+      shoppingSlider?.style.setProperty('visibility','hidden');
+    }
+  }
+}
+
+const hamburgerMenu = async () => {
+
+  let hamburgerSlider = document.getElementById('hamburger_menu') as HTMLFormElement;
+
+  if (hamburgerSlider.style.visibility === "hidden" || hamburgerSlider.style.visibility === '') {
+    hamburgerSlider?.style.setProperty('width','70%');
+    hamburgerSlider?.style.setProperty('visibility','visible');
+  } else {
+    hamburgerSlider?.style.setProperty('width','0%');
+    hamburgerSlider?.style.setProperty('visibility','hidden');
   }
   
 }
@@ -161,7 +185,55 @@ loadFromShoppingList();
             <RouterLink to="/en/login" v-if="!isLoggedIn">Log In</RouterLink>
             <RouterLink to="/en/register" v-if="!isLoggedIn">Sign Up</RouterLink>
         </div>
+    
+
+
+    <div id="mobile_btns">
+          <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
+          <img id="hamburger_icon" src="../images/nav_images/burger-menu-svgrepo-com.svg" @click="hamburgerMenu()">
+        </div>
     </div>
+
+        <div id="hamburger_menu">
+              <div id="close_btn" @click="hamburgerMenu()">
+                <img src="../images/shopping_cart images/close-x-svgrepo-com.svg">
+              </div>
+
+              <div id="navbuttons_mobile">
+                  <ul>
+                    <RouterLink to="/catalog">New Releases</RouterLink>
+                    <RouterLink to="/add-album" v-if="isLoggedIn">Add Album</RouterLink>
+                    <RouterLink to="/sell-item" v-if="isLoggedIn && user.user_role_id === 2">Sell Item</RouterLink>
+                    <RouterLink to="/sellerform" v-if="isLoggedIn && user.user_role_id !== 2">Become a Seller</RouterLink>
+                  </ul>
+              </div>
+
+              <div id="rightbuttons_mobile">
+                <ul>
+                  <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
+                  <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
+                    <button id="logoutbtn">Log out</button>
+                  </form>
+                  <RouterLink to="/en/login" v-if="!isLoggedIn">Log In</RouterLink>
+                  <RouterLink to="/en/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+                </ul>
+              </div>
+              
+              <div id="language_options_mobile">
+                <ul>
+                  <p>EN</p>
+                  <RouterLink to="/ru">
+                  RU
+                </RouterLink>
+                <RouterLink to="/">
+                  LV
+                </RouterLink>
+                </ul>
+              </div>
+              
+              
+              
+        </div>
     </nav>
 
 
@@ -201,22 +273,7 @@ loadFromShoppingList();
                     <button id="browse_button">Browse Collection</button>
                 </div>
 
-                <div id="stats">
-                    <div class="stat">
-                        <h2>10K+</h2>
-                        <p>Records in Stock</p>
-                    </div>
-
-                    <div class="stat">
-                        <h2>500+</h2>
-                        <p>Artists</p>
-                    </div>
-
-                    <div class="stat">
-                        <h2>50+</h2>
-                        <p>Genres</p>
-                    </div>
-                </div>
+                
             </div>
 
             <div id="right_side">
@@ -230,43 +287,6 @@ loadFromShoppingList();
 
         </div>
 
-
-        <div id="record_browse">
-            <h4>Browse Records</h4>
-            <p id="results_count">6 records found</p>
-
-            <div id="filters">
-                <form action="/show_albums" method="GET">
-                    <label>Genre:</label>
-                    <button class="form_button">All</button>
-                    <button class="form_button" type="submit" name="genre" value="Rock">Rock</button>
-                    <button class="form_button" name="genre" value="Jazz">Jazz</button>
-                    <button class="form_button" name="genre" value="Electronic">Electronic</button>
-                    <button class="form_button" name="genre" value="Pop">Pop</button>
-                    <button class="form_button" name="genre" value="Hip-Hop">Hip-Hop</button>
-                    <button class="form_button" name="genre" value="Classical">Classical</button>
-
-                    <label>Condition:</label>
-                    <select name="condition" id="condtion_select">
-                        <option value="brand_new">Brand New</option>
-                        <option value="new">New</option>
-                        <option value="used">Used</option>
-                    </select>
-
-                    <label>Sort By:</label>
-                    <select name="sort" id="sort_select">
-                        <option>Name: A-Z</option>
-                        <option>Name: Z-A</option>
-                        <option>Price: Highest</option>
-                        <option>Price: Lowest</option>
-                    </select>
-                </form>
-
-                
-
-
-            </div>
-        </div>
 
 
     
@@ -965,5 +985,272 @@ footer h6 {
 path {
   stroke: #ffffff;
   fill: black;
+}
+
+@media (max-width:480px) {
+
+#navwrapper {
+  align-items: center;
+}
+
+body {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+nav {
+  width: 100%;
+}
+
+#navbuttons, #rightbuttons {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+#mobile_btns, #hamburger_menu {
+  display: block;
+}
+
+#mobile_btns {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+#logoutbtn {
+  font-size: 19.53px;
+  padding: 0;
+}
+
+#navbuttons_mobile {
+  height: min-content;
+}
+
+#navbuttons_mobile ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+}
+
+#rightbuttons_mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 0px;
+}
+
+#rightbuttons_mobile ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0;
+  margin: 0;
+}
+#hamburger_icon {
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  border-style: solid;
+  border: #ECECF0 solid 1px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+#hamburger_menu {
+  height: 100%;
+  width: 0px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #E4E4E4;
+  overflow-x: hidden; 
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  transition: 0.5s;
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+#language_options_mobile {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+#language_options_mobile ul {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 0;
+}
+
+#language_options_mobile p {
+  margin: 0;
+}
+
+
+main {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+}
+
+
+#hero_section {
+  width: 80vw;
+  height: 485px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 25px;
+  justify-content: center;
+  align-items: center;
+}
+
+#left_side {
+  width: 100%;
+  height: 360px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#left_side h1 {
+  width: 100%;
+  font-size: 48px;
+  font-weight: normal;
+  line-height: 60px;
+  letter-spacing: -1.5px;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+#subtext {
+  width: 100%;
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: 0px;
+  margin-bottom: 0;
+  text-align: center;
+  color: #717182;
+}
+
+#hero_buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 40px;
+  margin-bottom: 0;
+}
+
+#shop_button {
+  width: 100%;
+  height: 40px;
+  background-color: #030213;
+  color: #FFFFFF;
+  border-style: none;
+  border-radius: 8px;
+  text-align: center;
+  
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:18px;
+  line-height: 40px;
+  letter-spacing: 0px;
+  cursor: pointer;
+}
+
+#browse_button {
+  width: 100%;
+  height: 40px;
+  background-color: #FFFFFF;
+  color: #0A0A0A;
+  border: solid rgba(0, 0, 0, .1) 1px;
+  border-style: solid;
+  border-radius: 8px;
+  text-align: center;
+  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size:18px;
+  line-height: 40px;
+  letter-spacing: 0px;
+  cursor: pointer;
+}
+
+#right_side {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+#right_side img {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+#footer_top {
+  width: 90vw;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  align-items: center;
+}
+
+#footer_info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 357px;
+  margin-right: 0;
+  font-size: 13.89px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  color: #717182;
+  text-align: center;
+  align-items: center;
+}
+
+.footer_links {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.footer_links ul {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0;
+  align-items: center;
+}
+
+#footer_bottom, #footer_bottom ul {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 0;
+  padding-right: 0;
+  align-items: center;
+}
+
 }
 </style>

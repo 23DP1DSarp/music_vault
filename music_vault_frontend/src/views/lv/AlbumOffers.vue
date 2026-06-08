@@ -68,7 +68,7 @@ const getUser = async () => {
         const response = await axiosInstance.get('/user');
         user.value = response.data;
         isLoggedIn.value = true;
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
         isLoggedIn.value = false;
@@ -78,9 +78,9 @@ const getUser = async () => {
 };
 
 const logout = async () => {
-    try{
+    try {
         const response = await axiosInstance.post('/logout');
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
     } finally {
@@ -146,7 +146,7 @@ const filterAlbums = async () => {
 
 
 const getGenres = async () => {
-  console.log('Function called...')
+  //console.log('Function called...')
   albumItems.value.forEach(albumItem => {
   if (!genres.includes(albumItem.genre)) {
     genres.push(albumItem.genre)
@@ -155,7 +155,7 @@ const getGenres = async () => {
 }
 
 const getCountries = async () => {
-  console.log('Function called...')
+  //console.log('Function called...')
   albumItems.value.forEach(albumItem => {
   if (!countries.includes(albumItem.country)) {
     countries.push(albumItem.country)
@@ -164,7 +164,7 @@ const getCountries = async () => {
 }
 
 const getDecades = async () => {
-  console.log('Function called...')
+  //console.log('Function called...')
   albumItems.value.forEach(albumItem => {
   const year = new Date(albumItem.release_date).getFullYear();
   const decade = Math.floor(year / 10) * 10;

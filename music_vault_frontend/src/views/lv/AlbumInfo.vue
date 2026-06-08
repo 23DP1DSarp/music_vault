@@ -55,7 +55,7 @@ const getUser = async () => {
         const response = await axiosInstance.get('/user');
         user.value = response.data;
         isLoggedIn.value = true;
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
         isLoggedIn.value = false;
@@ -65,9 +65,9 @@ const getUser = async () => {
 };
 
 const logout = async () => {
-    try{
+    try {
         const response = await axiosInstance.post('/logout');
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
     } finally {
@@ -81,7 +81,7 @@ const getAlbumwithTracks = async () => {
     const response = await axiosInstance.get(`/album_info/${albumId}`);
     album.value = response.data[0];
     tracks.value = response.data[1];
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     console.error(error);
   }
@@ -98,7 +98,7 @@ const getImageUrl = (path: string): string => {
 const addToCollection = async () => {
   try {
     const response = await axiosInstance.post(`/add_to_collection/${album.value.id}`);
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     console.error(error);
   } finally {
@@ -178,7 +178,7 @@ const isAddedToCollection = async () => {
 const deleteFromCollection = async () => {
   try {
     const response = await axiosInstance.delete(`/delete_from_collection/${albumId}`);
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     console.error(error);
   } finally {

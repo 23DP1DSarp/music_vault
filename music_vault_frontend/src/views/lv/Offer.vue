@@ -88,7 +88,7 @@ const getUser = async () => {
         const response = await axiosInstance.get('/user');
         user.value = response.data;
         isLoggedIn.value = true;
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
         isLoggedIn.value = false;
@@ -98,9 +98,9 @@ const getUser = async () => {
 };
 
 const logout = async () => {
-    try{
+    try {
         const response = await axiosInstance.post('/logout');
-        console.log(response.data);
+        //console.log(response.data);
     } catch (error) {
         console.error(error);
     } finally {
@@ -121,14 +121,13 @@ const getItem = async () => {
     item.origin_address = albumItem.value.origin_address;
     item.shipping_country_id = albumItem.value.shipping_country_id;
     item.sellers_full_name = albumItem.value.sellers_full_name;
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     console.error(error);
   } finally {
     if (albumItem.value && albumItem.value.album_id) {
       await getAlbumWithTracks(String(albumItem.value.album_id));
     }
-    // check if this item is already present in the shopping list
     isAddedToShoppingList();
   }
 };
@@ -139,7 +138,7 @@ const getAlbumWithTracks = async (itemId: string) => {
     const response = await axiosInstance.get(`/album_info/${itemId}`);
     album.value = response.data[0];
     tracks.value = response.data[1];
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     console.error(error);
   }
@@ -236,7 +235,7 @@ const updateItemInShoppingList = async (index: number, operator: string) => {
 const addToWishlist = async () => {
   try {
     const response = await axiosInstance.post(`/add_to_wishlist/${itemId}`);
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     console.error(error);
   } finally {
@@ -247,7 +246,7 @@ const addToWishlist = async () => {
 const deleteFromWishlist = async () => {
   try {
     const response = await axiosInstance.delete(`/delete_from_wishlist/${itemId}`);
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     console.error(error);
   } finally {
@@ -259,7 +258,7 @@ const isAddedToWishlist = async () => {
   try {
     const response = await axiosInstance.get(`/is_added_to_wishlist/${itemId}`);
     addedToWishlist.value = response.data.added_to_wishlist;
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     console.error(error);
   }
