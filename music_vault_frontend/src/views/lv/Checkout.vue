@@ -547,6 +547,22 @@ nav {
   cursor: pointer;
 }
 
+#item_quantity {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+}
+
+#item_quantity input {
+  width: 30%;
+  align-items: end;
+}
+
+#price_div {
+  text-align: end;
+}
+
 #navbuttons {
   display: flex;
   flex-direction: row;

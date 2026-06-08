@@ -179,6 +179,16 @@ const loadFromShoppingList = async () => {
   }
 }
 
+const updateItemInShoppingList = async (index: number, operator: string) => {
+  if (operator === "-" && shoppingList.value[index]?.quantity) {
+    shoppingList.value[index].quantity -= 1;
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value))
+  } else if (operator === "+" && shoppingList.value[index]?.quantity) {
+    shoppingList.value[index].quantity += 1;
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value))
+  }
+}
+
 const deleteFromShoppingList = async (index: number) => { 
   shoppingList.value.splice(index);
   localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
@@ -294,6 +304,11 @@ loadFromShoppingList();
             <div id="price_div">
               <b><p id="price">{{ item.price }}$</p></b>
               <p>Daudzums: {{ item.quantity }}</p>
+              <div id="item_quantity">
+                <button class="quantity_btn" @click="updateItemInShoppingList(index, '-')">-</button>
+                <input id="quantity_input" type="number" v-model="item.quantity">
+                <button class="quantity_btn" @click="updateItemInShoppingList(index, '+')">+</button>
+              </div>
             </div>
             
           </div>

@@ -254,6 +254,7 @@ loadFromShoppingList();
             </div>
             <div id="price_div">
               <b><p id="price">{{ item.price }}$</p></b>
+              <p>Daudzums: {{ item.quantity }}</p>
               <div id="item_quantity">
                 <button class="quantity_btn" @click="updateItemInShoppingList(index, '-')">-</button>
                 <input id="quantity_input" type="number" v-model="item.quantity">
@@ -619,6 +620,28 @@ main {
 
 #price {
   font-size: 24px;
+}
+
+#price_div {
+  text-align: end;
+}
+
+#price_div p {
+  margin-top: 0px;
+  width: 100px;
+}
+
+#price {
+  margin-bottom: 8px;
+}
+
+#item_quantity {
+  display: flex;
+  flex-direction: row;
+}
+
+#item_quantity input {
+  width: 53px;
 }
 
 #quantity_input {

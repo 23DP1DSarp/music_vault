@@ -401,12 +401,14 @@ isAddedToShoppingList();
             </div>
             <div id="price_div">
               <b><p id="price">{{ item.price }}$</p></b>
+              <p>Daudzums: {{ item.quantity }}</p>
               <div id="item_quantity">
                 <button class="quantity_btn" @click="updateItemInShoppingList(index, '-')">-</button>
                 <input id="quantity_input" type="number" v-model="item.quantity">
                 <button class="quantity_btn" @click="updateItemInShoppingList(index, '+')">+</button>
               </div>
             </div>
+            
           </div>
           <a :href="`/checkout`"><button id="checkout_btn">Noformēt pasūtījumu</button></a>
         </div>
@@ -755,6 +757,10 @@ nav {
   color: #717182;
 }
 
+#mobile_btns, #hamburger_menu, #album_info_mobile, #album_text_info_mobile, #album_data_mobile {
+  display: none;
+}
+
 main {
   width: 80vw;
   margin: 0 auto;
@@ -808,6 +814,28 @@ main {
 
 #price {
   font-size: 24px;
+}
+
+#price_div {
+  text-align: end;
+}
+
+#price_div p {
+  margin-top: 0px;
+  width: 100px;
+}
+
+#price {
+  margin-bottom: 8px;
+}
+
+#item_quantity {
+  display: flex;
+  flex-direction: row;
+}
+
+#item_quantity input {
+  width: 53px;
 }
 
 #album_section {
@@ -1244,11 +1272,11 @@ main {
   flex-direction: row;
   width: fit-content;
   gap: 55px;
-  align-items:baseline;
+  align-items: center;
 }
 
 #album_text_info_mobile img {
-  height: 84px;
+  height: 100px;
   border-radius: 16px;
   width: 200px;
 }
@@ -1258,6 +1286,7 @@ main {
   font-size: 19.53px;
   line-height: 28px;
   letter-spacing: -0.5px;
+  margin: 0;
 }
 
 #album_info_mobile p {

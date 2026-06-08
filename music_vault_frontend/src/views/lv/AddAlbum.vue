@@ -245,6 +245,16 @@ const loadFromShoppingList = async () => {
   }
 }
 
+const updateItemInShoppingList = async (index: number, operator: string) => {
+  if (operator === "-" && shoppingList.value[index]?.quantity) {
+    shoppingList.value[index].quantity -= 1;
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value))
+  } else if (operator === "+" && shoppingList.value[index]?.quantity) {
+    shoppingList.value[index].quantity += 1;
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value))
+  }
+}
+
 const deleteFromShoppingList = async (index: number) => { 
   shoppingList.value.splice(index);
   localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
@@ -346,7 +356,7 @@ loadFromShoppingList();
 
     <main>
 
-        <div id="shopping_menu">
+       <div id="shopping_menu">
           <div id="close_btn" @click="shoppingMenu()">
             <img src="../../images/shopping_cart images/close-x-svgrepo-com.svg">
           </div>
@@ -358,6 +368,11 @@ loadFromShoppingList();
             <div id="price_div">
               <b><p id="price">{{ item.price }}$</p></b>
               <p>Daudzums: {{ item.quantity }}</p>
+              <div id="item_quantity">
+                <button class="quantity_btn" @click="updateItemInShoppingList(index, '-')">-</button>
+                <input id="quantity_input" type="number" v-model="item.quantity">
+                <button class="quantity_btn" @click="updateItemInShoppingList(index, '+')">+</button>
+              </div>
             </div>
             
           </div>
@@ -742,6 +757,28 @@ main h1 {
 
 #price {
   font-size: 24px;
+}
+
+#price_div {
+  text-align: end;
+}
+
+#price_div p {
+  margin-top: 0px;
+  width: 100px;
+}
+
+#price {
+  margin-bottom: 8px;
+}
+
+#item_quantity {
+  display: flex;
+  flex-direction: row;
+}
+
+#item_quantity input {
+  width: 53px;
 }
 
 #form_wrapper {

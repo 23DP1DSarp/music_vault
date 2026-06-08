@@ -151,6 +151,16 @@ const loadFromShoppingList = async () => {
   }
 }
 
+const updateItemInShoppingList = async (index: number, operator: string) => {
+  if (operator === "-" && shoppingList.value[index]?.quantity) {
+    shoppingList.value[index].quantity -= 1;
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value))
+  } else if (operator === "+" && shoppingList.value[index]?.quantity) {
+    shoppingList.value[index].quantity += 1;
+    localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value))
+  }
+}
+
 const deleteFromShoppingList = async (index: number) => { 
   shoppingList.value.splice(index);
   localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
@@ -286,6 +296,11 @@ isAddedToCollection();
             <div id="price_div">
               <b><p id="price">{{ item.price }}$</p></b>
               <p>Daudzums: {{ item.quantity }}</p>
+              <div id="item_quantity">
+                <button class="quantity_btn" @click="updateItemInShoppingList(index, '-')">-</button>
+                <input id="quantity_input" type="number" v-model="item.quantity">
+                <button class="quantity_btn" @click="updateItemInShoppingList(index, '+')">+</button>
+              </div>
             </div>
             
           </div>
@@ -678,6 +693,28 @@ main {
 
 #price {
   font-size: 24px;
+}
+
+#price_div {
+  text-align: end;
+}
+
+#price_div p {
+  margin-top: 0px;
+  width: 100px;
+}
+
+#price {
+  margin-bottom: 8px;
+}
+
+#item_quantity {
+  display: flex;
+  flex-direction: row;
+}
+
+#item_quantity input {
+  width: 53px;
 }
 
 #album_section {
@@ -1084,11 +1121,11 @@ main {
   flex-direction: row;
   width: fit-content;
   gap: 55px;
-  align-items:baseline;
+  align-items: center;
 }
 
 #album_text_info_mobile img {
-  height: 84px;
+  height: 100px;
   border-radius: 16px;
   width: 200px;
 }
@@ -1098,6 +1135,7 @@ main {
   font-size: 19.53px;
   line-height: 28px;
   letter-spacing: -0.5px;
+  margin: 0;
 }
 
 #album_info_mobile p {
