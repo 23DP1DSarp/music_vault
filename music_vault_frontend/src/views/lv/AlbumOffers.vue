@@ -382,7 +382,7 @@ loadFromShoppingList();
               <p @click="deleteFromShoppingList(index)">Dzēst</p>
             </div>
             <div id="price_div">
-              <b><p id="price">{{ item.price }}$</p></b>
+              <b><p id="price">{{ item.price }}€</p></b>
               <p>Daudzums: {{ item.quantity }}</p>
               <div id="item_quantity">
                 <button class="quantity_btn" @click="updateItemInShoppingList(index, '-')">-</button>
