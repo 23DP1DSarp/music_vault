@@ -515,7 +515,7 @@ loadFromShoppingList();
                 </div>
 
                 <div id="item_price_col">
-                    <p>{{ albumItem.price }}$</p>
+                    <p>{{ albumItem.price }}€</p>
                 </div>
 
                 </div>
