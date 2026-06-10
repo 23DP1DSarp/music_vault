@@ -28,7 +28,7 @@ Projekta mērķis ir izveidot tīmekļa sistēmu, kas apvieno mūzikas albumu ka
 - Vue.js
 - HTML
 - CSS
-- JavaScript
+- TypeScript
 
 ## Galvenās datubāzes tabulas
 
