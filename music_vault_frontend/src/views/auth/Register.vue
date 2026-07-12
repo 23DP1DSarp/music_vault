@@ -55,7 +55,7 @@ const register = async (payload: RegisterForm) => {
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.api_token}`;
             axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = response.data.csrf_token;
             
-            window.location.href = "/en";
+            window.location.href = "/";
         }
     } catch (error) {
         console.error(error);
