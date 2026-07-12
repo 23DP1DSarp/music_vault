@@ -74,7 +74,7 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/en';
+        window.location.href='/';
     }
 }
 
@@ -174,9 +174,6 @@ loadFromShoppingList();
         <div id="navbuttons">
             <ul>
                 <li>New Releases</li>
-                <li>Genres</li>
-                <li>Artists</li>
-                <li>Forums</li>
                 <RouterLink to="/add-album" v-if="isLoggedIn">Add Album</RouterLink>
             </ul>
         </div>
@@ -199,8 +196,8 @@ loadFromShoppingList();
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>
-            <RouterLink to="/en/login" v-if="!isLoggedIn">Log In</RouterLink>
-            <RouterLink to="/en/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+            <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
+            <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
         </div>
     </div>
     </nav>

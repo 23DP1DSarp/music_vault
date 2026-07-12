@@ -235,7 +235,7 @@ loadFromShoppingList();
     <body>
         <nav>
         <div id="navwrapper">
-        <RouterLink to="/en">
+        <RouterLink to="/">
             <div id="logo">
                 <img src="../images/nav_images/vinyl_icon.svg">
                 <p>MusicVault</p>
@@ -245,9 +245,6 @@ loadFromShoppingList();
         <div id="navbuttons">
             <ul>
                 <li>New Releases</li>
-                <li>Genres</li>
-                <li>Artists</li>
-                <li>Forums</li>
                 <RouterLink to="/en/add-album" v-if="isLoggedIn">Add Album</RouterLink>
             </ul>
         </div>
@@ -356,7 +353,7 @@ loadFromShoppingList();
                   
                 
                 <div id="item_info_col">
-                    <p>Title: <a :href="`/en/offer/${albumItem.id}`">{{ albumItem.title }}</a></p>
+                    <p>Title: <a :href="`/offer/${albumItem.id}`">{{ albumItem.title }}</a></p>
                     <p>Condition: {{ albumItem.condition }}</p>
                     <p>Quantity: {{ albumItem.quantity }}</p>
                 </div>

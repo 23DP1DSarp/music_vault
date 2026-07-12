@@ -22,16 +22,16 @@ const login = async (payload: LoginForm) => {
         const response = await axiosInstance.post("/login", payload);
         console.log(response.data);
         if (response.status === 200) {
-            // Store token in localStorage
+            
             localStorage.setItem('auth_token', response.data.api_token);
             localStorage.setItem('csrf_token', response.data.csrf_token);
             localStorage.setItem('user', JSON.stringify(response.data.user));
             
-            // Update axios default header with token
+            
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.api_token}`;
             axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = response.data.csrf_token;
             
-            window.location.href = "/en";
+            window.location.href = "/";
         }
     } catch (error) {
         console.error(error);
@@ -48,7 +48,7 @@ const login = async (payload: LoginForm) => {
     <nav>
         <div id="logo">
             <img src="@/images/nav_images/vinyl_icon.svg">
-            <p><RouterLink to="/en">MusicVault</RouterLink></p>
+            <p><RouterLink to="/">MusicVault</RouterLink></p>
         </div>
          <div id="rightbuttons">
         <RouterLink to="/en/register">Sign Up</RouterLink>

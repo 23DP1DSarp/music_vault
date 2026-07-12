@@ -167,10 +167,10 @@ loadFromShoppingList();
             <div id="language_select" name="language">
               <p>RU</p>
               <div id="language_options">
-                <RouterLink to="/en">
+                <RouterLink to="/">
                   EN
                 </RouterLink>
-                <RouterLink to="/">
+                <RouterLink to="/lv">
                   LV
                 </RouterLink>
               </div>
@@ -559,6 +559,10 @@ nav {
 
 #logoutbtn:hover {
   color: #717182;
+}
+
+#mobile_btns, #hamburger_menu {
+  display: none;
 }
 
 main {

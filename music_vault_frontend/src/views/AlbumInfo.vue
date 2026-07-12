@@ -67,7 +67,7 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/en';
+        window.location.href='/';
     }
 };
 
@@ -136,7 +136,7 @@ loadFromShoppingList();
     <body v-if="loading !== true">
      <nav>
         <div id="navwrapper">
-        <RouterLink to="/en">
+        <RouterLink to="/">
             <div id="logo">
             <img src="../images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
@@ -145,9 +145,6 @@ loadFromShoppingList();
         <div id="navbuttons">
             <ul>
                 <li>New Releases</li>
-                <li>Genres</li>
-                <li>Artists</li>
-                <li>Forums</li>
                 <RouterLink to="/add-album" v-if="isLoggedIn">Add Album</RouterLink>
             </ul>
         </div>

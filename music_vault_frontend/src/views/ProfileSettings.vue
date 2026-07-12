@@ -88,7 +88,7 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/en';
+        window.location.href='/';
     }
 }
 
@@ -130,7 +130,7 @@ const deleteAccount = async () => {
     const response = await axiosInstance.delete('/delete-account');
     console.log(response.data);
     alert('Account deleted successfully!');
-    window.location.href='/en';
+    window.location.href='/';
   } catch (error) {
     console.error(error);
   }
@@ -182,9 +182,6 @@ loadFromShoppingList();
         <div id="navbuttons">
             <ul>
                 <li>New Releases</li>
-                <li>Genres</li>
-                <li>Artists</li>
-                <li>Forums</li>
                 <RouterLink to="/add-album" v-if="isLoggedIn">Add Album</RouterLink>
             </ul>
         </div>
@@ -196,19 +193,19 @@ loadFromShoppingList();
                 <RouterLink to="/ru">
                   RU
                 </RouterLink>
-                <RouterLink to="/">
+                <RouterLink to="/lv">
                   LV
                 </RouterLink>
               </div>
             </div>
             <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
             <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <RouterLink to="/en/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
+            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>
-            <RouterLink to="/en/login" v-if="!isLoggedIn">Log In</RouterLink>
-            <RouterLink to="/en/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+            <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
+            <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
         </div>
     </div>
     </nav>

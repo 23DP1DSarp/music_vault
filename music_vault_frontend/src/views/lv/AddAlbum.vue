@@ -193,7 +193,7 @@ const submitForm = async () => {
     });
     //console.log(response.data);
     if (response.status === 200) {
-        router.push('/');
+        router.push('/lv');
     }
     } catch (error) {
     console.error(error);
@@ -270,7 +270,7 @@ loadFromShoppingList();
 <body>
     <nav>
         <div id="navwrapper">
-        <RouterLink to="/">
+        <RouterLink to="/lv">
             <div id="logo">
             <img src="../../images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
@@ -278,10 +278,10 @@ loadFromShoppingList();
 
         <div id="navbuttons">
             <ul>
-                <RouterLink to="/catalog">Jaunumi</RouterLink>
-                <RouterLink to="/add-album" v-if="isLoggedIn">Pievienot albumu</RouterLink>
-                <RouterLink to="/sell-item" v-if="isLoggedIn && user.user_role_id === 2">Pārdot preci</RouterLink>
-                <RouterLink to="/sellerform" v-if="isLoggedIn && user.user_role_id !== 2">Kļūt par pārdevēju</RouterLink>
+                <RouterLink to="/lv/catalog">Jaunumi</RouterLink>
+                <RouterLink to="/lv/add-album" v-if="isLoggedIn">Pievienot albumu</RouterLink>
+                <RouterLink to="/lv/sell-item" v-if="isLoggedIn && user.user_role_id === 2">Pārdot preci</RouterLink>
+                <RouterLink to="/lv/sellerform" v-if="isLoggedIn && user.user_role_id !== 2">Kļūt par pārdevēju</RouterLink>
             </ul>
         </div>
 
@@ -289,7 +289,7 @@ loadFromShoppingList();
             <div id="language_select" name="language">
               <p>LV</p>
               <div id="language_options">
-                <RouterLink to="/en">
+                <RouterLink to="/">
                   EN
                 </RouterLink>
                 <RouterLink to="/ru">
@@ -339,7 +339,7 @@ loadFromShoppingList();
               <div id="language_options_mobile">
                 <ul>
                   <p>LV</p>
-                  <RouterLink to="/en">
+                  <RouterLink to="/">
                     EN
                   </RouterLink>
                   <RouterLink to="/ru">

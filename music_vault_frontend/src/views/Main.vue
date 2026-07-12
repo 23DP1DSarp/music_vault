@@ -171,7 +171,7 @@ loadFromShoppingList();
                 <RouterLink to="/ru">
                   RU
                 </RouterLink>
-                <RouterLink to="/">
+                <RouterLink to="/lv">
                   LV
                 </RouterLink>
               </div>
@@ -182,8 +182,8 @@ loadFromShoppingList();
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>
-            <RouterLink to="/en/login" v-if="!isLoggedIn">Log In</RouterLink>
-            <RouterLink to="/en/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+            <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
+            <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
         </div>
     
 
@@ -214,8 +214,8 @@ loadFromShoppingList();
                   <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                     <button id="logoutbtn">Log out</button>
                   </form>
-                  <RouterLink to="/en/login" v-if="!isLoggedIn">Log In</RouterLink>
-                  <RouterLink to="/en/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+                  <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
+                  <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
                 </ul>
               </div>
               
@@ -224,10 +224,10 @@ loadFromShoppingList();
                   <p>EN</p>
                   <RouterLink to="/ru">
                   RU
-                </RouterLink>
-                <RouterLink to="/">
-                  LV
-                </RouterLink>
+                  </RouterLink>
+                  <RouterLink to="/lv">
+                    LV
+                  </RouterLink>
                 </ul>
               </div>
               
@@ -269,8 +269,8 @@ loadFromShoppingList();
                 <p id="subtext">From rare pressings to the latest releases. Curated vinyl records for every music lover.</p>
 
                 <div id="hero_buttons">
-                    <RouterLink to="/en/catalog" id="shop_button">Shop New Releases</RouterLink>
-                    <button id="browse_button">Browse Collection</button>
+                    <RouterLink to="catalog" id="shop_button">Shop New Releases</RouterLink>
+                    <RouterLink to="/albumoffers" id="browse_button">Browse Collection</RouterLink>
                 </div>
 
                 
@@ -563,6 +563,10 @@ nav {
   color: #717182;
 }
 
+#mobile_btns, #hamburger_menu {
+  display: none;
+}
+
 main {
   width: 80vw;
   margin: 0 auto;
@@ -694,7 +698,7 @@ input::-webkit-inner-spin-button {
   vertical-align: middle;
   font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size:18px;
-  line-height: 20px;
+  line-height: 40px;
   letter-spacing: 0px;
   cursor: pointer;
 }

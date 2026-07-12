@@ -156,7 +156,7 @@ loadFromShoppingList();
 <body v-if="loading !== true">
     <nav>
         <div id="navwrapper">
-        <RouterLink to="/">
+        <RouterLink to="/lv">
             <div id="logo">
             <img src="../../images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
@@ -175,7 +175,7 @@ loadFromShoppingList();
             <div id="language_select" name="language">
               <p>LV</p>
               <div id="language_options">
-                <RouterLink to="/en">
+                <RouterLink to="/">
                   EN
                 </RouterLink>
                 <RouterLink to="/ru">
@@ -225,7 +225,7 @@ loadFromShoppingList();
               <div id="language_options_mobile">
                 <ul>
                   <p>LV</p>
-                  <RouterLink to="/en">
+                  <RouterLink to="/">
                     EN
                   </RouterLink>
                   <RouterLink to="/ru">

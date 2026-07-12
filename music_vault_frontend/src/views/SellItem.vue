@@ -169,7 +169,7 @@ loadFromShoppingList();
 <body v-if="loading !== true">
     <nav>
         <div id="navwrapper">
-        <RouterLink to="/en">
+        <RouterLink to="/">
             <div id="logo">
             <img src="../images/nav_images/vinyl_icon.svg">
             <p>MusicVault</p>
@@ -178,9 +178,6 @@ loadFromShoppingList();
         <div id="navbuttons">
             <ul>
                 <li>New Releases</li>
-                <li>Genres</li>
-                <li>Artists</li>
-                <li>Forums</li>
                 <RouterLink to="/add-album" v-if="isLoggedIn">Add Album</RouterLink>
             </ul>
         </div>
@@ -199,12 +196,12 @@ loadFromShoppingList();
             </div>
             <input type="text" id="searchbar" name="recordsearch" placeholder="Search records...">
             <img id="shoppingcart" src="../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <RouterLink to="/en/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
+            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
             <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
                 <button id="logoutbtn">Log out</button>
             </form>
-            <RouterLink to="/en/login" v-if="!isLoggedIn">Log In</RouterLink>
-            <RouterLink to="/en/register" v-if="!isLoggedIn">Sign Up</RouterLink>
+            <RouterLink to="/login" v-if="!isLoggedIn">Log In</RouterLink>
+            <RouterLink to="/register" v-if="!isLoggedIn">Sign Up</RouterLink>
         </div>
     </div>
     </nav>

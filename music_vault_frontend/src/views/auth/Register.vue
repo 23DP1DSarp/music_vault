@@ -46,12 +46,12 @@ const register = async (payload: RegisterForm) => {
         const response = await axiosInstance.post("/register", payload);
         console.log(response.data);
         if (response.status === 201 || response.status === 200) {
-            // Store tokens in localStorage
+            
             localStorage.setItem('auth_token', response.data.api_token);
             localStorage.setItem('csrf_token', response.data.csrf_token);
             localStorage.setItem('user', JSON.stringify(response.data.user));
             
-            // Update axios default headers with tokens
+            
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.api_token}`;
             axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = response.data.csrf_token;
             
@@ -71,9 +71,9 @@ getCountries();
     <nav>
         <div id="logo">
             <img src="@/images/nav_images/vinyl_icon.svg">
-            <p><RouterLink to="/en">MusicVault</RouterLink></p>
+            <p><RouterLink to="/">MusicVault</RouterLink></p>
         </div>
-        <RouterLink to="/en/login">Log In</RouterLink>
+        <RouterLink to="/login">Log In</RouterLink>
        
     </nav>
 
