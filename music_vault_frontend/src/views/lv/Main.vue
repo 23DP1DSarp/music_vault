@@ -67,7 +67,7 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/';
+        window.location.href='/lv';
     }
 }
 

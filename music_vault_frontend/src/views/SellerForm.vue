@@ -67,7 +67,7 @@ const logout = async () => {
     } catch (error) {
         console.error(error);
     } finally {
-        window.location.href='/en';
+        window.location.href='/';
     }
 }
 
@@ -85,7 +85,7 @@ const createSeller = async (payload: SellerForm) => {
     const response = await axiosInstance.post('/createseller', payload);
     console.log(response.data);
     if (response.status === 200) {
-        router.push('/en');
+        router.push('/');
     }
   } catch (error) {
     console.error(error);
