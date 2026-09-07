@@ -256,7 +256,7 @@ loadFromShoppingList();
                       
                   <img v-if="album.cover" :src="getImageUrl(album.cover)" :alt="album.title">
                       
-                  <a :href="`/en/albuminfo/${album.id}`"><h3>{{ album.title }}</h3></a>
+                  <a :href="`/albuminfo/${album.id}`"><h3>{{ album.title }}</h3></a>
                   <p>{{ album.author }}</p>
                   <div id="genre_and_year">
                     <p>{{ album.genre }}</p>
