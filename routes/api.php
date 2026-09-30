@@ -22,6 +22,8 @@ Route::post('/add_to_collection/{album}', [CollectionController::class, 'addToCo
 Route::get('/getcollection', [CollectionController::class, 'getCollection']);
 Route::get('/ordercollectionalbums', [CollectionController::class, 'orderCollectionAlbums']);
 
+
+// Routes for email verification
 Route::get('/email/verify', function () {
     return 200;
 })->middleware('check.api.token')->name('verification.notice');
@@ -60,6 +62,8 @@ Route::get('/users', function(Request $request) {
     return User::all();
 });
 
+
+// Routes for fetching albums, genres, countries, and ordering/filtering albums
 Route::get('/', function () {
     $album = DB::table('albums')
     ->join('genres', 'albums.genre_id', '=', 'genres.id')
@@ -118,9 +122,8 @@ Route::get('/order_albums', function(Request $request) {
     return response()->json($albums);
 });
 
-Route::get('/order_instruments', [ItemController::class, 'orderInstruments']);
-Route::get('/order_services', [ItemController::class, 'orderServices']);
 
+// Route to get album info and its tracks
 Route::get('/album_info/{album}', function(Album $album) {
     $album = DB::table('albums')
     ->where('albums.id', '=', $album->id)
@@ -138,6 +141,17 @@ Route::get('/album_info/{album}', function(Album $album) {
     ->get();
     return [$album, $tracks];
 });
+
+
+
+// Route to get instruments and services for ordering
+Route::get('/order_instruments', [ItemController::class, 'orderInstruments']);
+
+Route::get('/order_services', [ItemController::class, 'orderServices']);
+
+
+
+
 /*
 Route::post('/email/verification-notification', function(Request $request) {
     $request->user()->sendEmailVerificationNotification();
@@ -155,6 +169,8 @@ Route::get('/email/verify/{id}/{hash}', function ($id, $hash) {
     return response()->json(['message' => 'Email verified!']);
 });
 */
+
+// Routes to change user info and password
 Route::middleware('check.api.token')->put('/change-user-info', function (
     Request $request,
     UpdateUserProfileInformation $updater
@@ -177,8 +193,13 @@ Route::middleware('check.api.token')->put('/reset-password', function (
     ]);
 });
 
+
+// Route to delete user account
 Route::delete('/delete-account', [UserController::class, 'deleteUser'])->middleware('check.api.token');
 
+
+
+// Routes for album, instrument, and service items
 Route::get('/get_album_items', [ItemController::class, 'getAllAlbumItems']);
 Route::get('/get_instrument_items', [ItemController::class, 'getAllInstrumentItems']);
 Route::get('/get_service_items', [ItemController::class, 'getAllServiceItems']);
@@ -190,9 +211,11 @@ Route::get('/filter_album_items', [ItemController::class, 'filterAlbumItems']);
 Route::get('/filter_instrument_items', [ItemController::class, 'filterInstrumentItems']);
 Route::get('/filter_service_items', [ItemController::class, 'filterServiceItems']);
 
+
+// Route to create an order
 Route::post('/create_order', [OrderController::class, 'checkAvaliabllity']);
 
-
+// Route to get all currencies for sellers
 Route::get('/get_currencies', function () {
     return DB::table('currencies')
     ->select(
@@ -201,8 +224,12 @@ Route::get('/get_currencies', function () {
     ->get();
 });
 
+
+// Route to get the user's country
 Route::get('/getusercountry', [UserController::class, 'getUserCountry']);
 
+
+// Routes for wishlist and collection management (checks if the item/album is added, adds/removes from wishlist/collection)
 Route::get('/is_added_to_collection/{album}', [CollectionController::class, 'isAddedToCollection']);
 
 Route::delete('/delete_from_collection/{album}', [CollectionController::class, 'deleteFromCollection']);

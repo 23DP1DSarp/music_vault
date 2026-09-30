@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import Navbar from '@/components/ru/NavbarRu.vue';
+import ShoppingMenu from '@/components/ru/ShoppingMenuRu.vue';
+import Footer from '@/components/ru/FooterRu.vue';
 import axiosInstance from '@/axios';
 import {ref} from 'vue';
 import { useRouter } from 'vue-router';
@@ -14,7 +17,6 @@ const user = ref({
 });
 
 const isLoggedIn = ref(false);
-const shoppingList = ref<Item[]>([]);
 
 interface AccountInfo {
   username: string;
@@ -25,13 +27,6 @@ interface ResetPassword {
   current_password: string;
   new_password: string;
   confirm_new_password: string;
-}
-
-interface Item {
-  id: string;
-  title: string;
-  quantity: number;
-  price: number;
 }
 
 const accountInfo = ref<AccountInfo>({
@@ -58,17 +53,6 @@ const getUser = async () => {
         loading.value = false;
     }
 };
-
-const logout = async () => {
-    try{
-        const response = await axiosInstance.post('/logout');
-        console.log(response.data);
-    } catch (error) {
-        console.error(error);
-    } finally {
-        window.location.href='/ru';
-    }
-}
 
 const changeAccountInfo = async (accountInfo: AccountInfo) => {
   try {
@@ -114,101 +98,17 @@ const deleteAccount = async () => {
   }
 };
 
-
-const shoppingMenu = async () => {
-
-  let shoppingSlider = document.getElementById('shopping_menu') as HTMLFormElement;
-
-  if (shoppingSlider.style.visibility === "hidden" || shoppingSlider.style.visibility === '') {
-    shoppingSlider?.style.setProperty('width','25%');
-    shoppingSlider?.style.setProperty('visibility','visible');
-  } else {
-    shoppingSlider?.style.setProperty('width','0%');
-    shoppingSlider?.style.setProperty('visibility','hidden');
-  }
-  
-}
-
-const loadFromShoppingList = async () => {
-  const stored = localStorage.getItem('shoppingList');
-  if (stored) {
-  shoppingList.value = JSON.parse(stored);
-  }
-}
-
-const deleteFromShoppingList = async (index: number) => { 
-  shoppingList.value.splice(index);
-  localStorage.setItem("shoppingList", JSON.stringify(shoppingList.value));
-}
-
 getUser();
-loadFromShoppingList();
 </script>
 
 <template>
 
-<body v-if="loading !== true">
-    <nav>
-        <div id="navwrapper">
-        <RouterLink to="/ru">
-            <div id="logo">
-            <img src="../../images/nav_images/vinyl_icon.svg">
-            <p>MusicVault</p>
-        </div></RouterLink>
-
-        <div id="navbuttons">
-            <ul>
-                <li>Новинки</li>
-                <li>Жанры</li>
-                <li>Исполнители</li>
-                <li>Форумы</li>
-                <RouterLink to="/add-album" v-if="isLoggedIn">Добавить альбом</RouterLink>
-            </ul>
-        </div>
-
-        <div id="rightbuttons">
-            <div id="language_select" name="language">
-              <p>RU</p>
-              <div id="language_options">
-                <RouterLink to="/en">
-                  EN
-                </RouterLink>
-                <RouterLink to="/">
-                  LV
-                </RouterLink>
-              </div>
-            </div>
-            <input type="text" id="searchbar" name="recordsearch" placeholder="Поиск записей...">
-            <img id="shoppingcart" src="../../images/nav_images/shopping_cart_icon.svg" @click="shoppingMenu()">
-            <RouterLink to="/userprofile" v-if="isLoggedIn">{{user?.username}}</RouterLink>
-            <form action="/logout" @submit.prevent="logout" v-if="isLoggedIn">
-                <button id="logoutbtn">Выйти</button>
-            </form>
-            <RouterLink to="/login" v-if="!isLoggedIn">Войти</RouterLink>
-            <RouterLink to="/register" v-if="!isLoggedIn">Регистрация</RouterLink>
-        </div>
-    </div>
-    </nav>
+<body>
+    <Navbar />
 
 
     <main>
-
-        <div id="shopping_menu">
-          <div id="close_btn" @click="shoppingMenu()">
-            <img src="../../images/shopping_cart images/close-x-svgrepo-com.svg">
-          </div>
-          <div class="shopping_item" v-for="(item, index) in shoppingList">
-            <div id="info_div">
-              <h2>{{ item.title }}</h2>
-              <p @click="deleteFromShoppingList(index)">Удалить</p>
-            </div>
-            <div id="price_div">
-              <b><p id="price">{{ item.price }}$</p></b>
-              <p>Количество: {{ item.quantity }}</p>
-            </div>
-            
-          </div>
-        </div>
+        <ShoppingMenu />
 
         <h1>Настройки профиля</h1>
         <div id="account_info">
@@ -273,80 +173,7 @@ loadFromShoppingList();
         </div>
     </main>
 
-    <footer>
-        <div id="footer_wrapper">
-        <div id="footer_top">
-            <div id="footer_info">
-                <div id="footer_logo">
-                    <img src="../../images/footer_images/vinyl_icon.svg">
-                    <p>MusicVault</p>
-                </div>
-                <p id="footer_info_text">
-                    Ваше главное место для музыкальных записей. Открывайте,
-                    коллекционируйте и наслаждайтесь музыкой так,
-                    как она была создана звучать.
-                </p>
-
-                <div id="icons">
-                    <img class="icon" src="../../images/footer_images/facebook_icon.svg">
-                    <img class="icon" src="../../images/footer_images/instagram_icon.svg">
-                    <img class="icon" src="../../images/footer_images/twitter_icon.svg">
-                    <img class="icon" src="../../images/footer_images/youtube_icon.svg">
-                </div>
-                
-            </div>
-
-            <div>
-                <h6>Быстрые ссылки</h6>
-
-                <ul>
-                    <li>Новинки</li>
-                    <li>Предзаказы</li>
-                    <li>Распродажа</li>
-                    <li>Редкие находки</li>
-                    <li>Подарочные карты</li>
-                </ul>
-            </div>
-
-            <div>
-                
-                <h6>Жанры</h6>
-
-                <ul>
-                    <li>Рок</li>
-                    <li>Джаз</li>
-                    <li>Электроника</li>
-                    <li>Хип-хопs</li>
-                    <li>Классика</li>
-                </ul>
-            </div>
-
-            <div id="subscribe_form">
-                <h6>Будьте в курсе</h6>
-                <p>Получайте уведомления о новинках и эксклюзивных предложениях.</p>
-
-                <form action="" method="post">
-                    <input id="email_input" placeholder="Введите email" name="subscription-email" type="email" required>
-                    <input id="subscribe_form_submit" type="submit" value="Подписаться">
-                </form>
-            </div>
-        </div>
-
-        
-        <div id="footer_bottom">
-
-            <ul>
-                <li>Политика конфиденциальности</li>
-                <li>Условия использования</li>
-                <li>Информация о доставке</li>
-                <li>Возврат</li>
-            </ul>
-
-            <p>&copy; 2025 MusicVault. Все права защищены.</p>
-
-        </div>
-        </div>
-    </footer>
+    <Footer />
 </body>
 </template>
 
@@ -375,159 +202,6 @@ a:visited {
   color: #0A0A0A;
 }
 
-nav {
-  border-bottom: solid #ECECF0 1px;
-}
-
-#navwrapper {
-  width: 80vw;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 0 auto;
-  padding: 0;
-  font-size: 19.53px;
-  color: #0A0A0A;
-}
-
-#logo {
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
-  font-size: 19.53px;
-  line-height: 28px;
-  letter-spacing: -0.5px;
-}
-
-#searchbar {
-  background-color: #F3F3F5;
-  border-style: none;
-  width: 256px;
-  height: 36px;
-  color: #717182;
-  padding: 0px 0px 0px 10px;
-  border-radius: 8px;
-  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 14px;
-}
-
-#shoppingcart {
-  width: 16px;
-  height: 16px;
-  padding: 9px;
-  border-style: solid;
-  border: #ECECF0 solid 1px;
-  border-radius: 8px;
-  text-align: center;
-  cursor: pointer;
-}
-
-#navbuttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin: 0 auto;
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 0px;
-  align-items: center;
-}
-
-#navbuttons ul {
-    display: flex;
-    flex-direction: row;
-    padding: 0;
-    list-style: none;
-    gap: 24px;
-}
-
-#rightbuttons {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    align-items: center;
-    font-size: 16px;
-    line-height: 28px;
-    letter-spacing: -0.5px;
-}
-
-#rightbuttons {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    align-items: center;
-    font-size: 16px;
-    line-height: 28px;
-    letter-spacing: -0.5px;
-}
-
-#language_select {
-  position: relative;
-  width: 16px;
-  height: 16px;
-  padding: 9px;
-  border: #ECECF0 solid 1px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-#language_select p {
-  margin: 0;
-  font-size: 14px;
-}
-
-#language_options {
-  position: absolute;
-  top: 40px;
-  left: 0;
-  width: 100%;
-  background-color: #FFFFFF;
-  border: #ECECF0 solid 1px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-5px);
-  transition: 0.2s ease;
-  z-index: 100;
-}
-
-#language_select:hover #language_options {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-#language_options a {
-  padding: 8px;
-  text-align: center;
-  font-size: 14px;
-  color: #0A0A0A;
-}
-
-#language_options a:hover {
-  background-color: #F3F3F5;
-}
-
-#logoutbtn {
-  background-color: transparent;
-  border-style: none;
-  font-size: 16px;
-  line-height: 28px;
-  letter-spacing: -0.5px;
-  color: #0A0A0A;
-  font-family: Segoe UI Symbol, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  cursor: pointer;
-}
-
-#logoutbtn:hover {
-  color: #717182;
-}
-
 main {
   width: 300px;
   margin: 0 auto;
@@ -536,52 +210,6 @@ main {
   align-items: center;
   gap: 80px;
   padding-bottom: 50px;
-}
-
-#shopping_menu {
-  height: 100%;
-  width: 0px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  right: 0;
-  background-color: #E4E4E4;
-  overflow-x: hidden; 
-  padding-top: 20px;
-  padding-left: 20px;
-  padding-right: 20px;
-  transition: 0.5s;
-  visibility: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-#close_btn {
-  align-self: flex-end;
-}
-
-#close_btn img {
-  width: 48px;
-  height: 48px;
-}
-
-.shopping_item {
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  justify-content: space-between;
-  background-color: #FFFFFF;
-  border-radius: 20px;
-  padding: 10px;
-}
-
-.shopping_item h2 {
-  margin-bottom: 24px;
-}
-
-#price {
-  font-size: 24px;
 }
 
 .form_parts {
