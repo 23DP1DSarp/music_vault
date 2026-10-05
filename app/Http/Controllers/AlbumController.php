@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Album;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AlbumController extends Controller
 {
@@ -22,9 +23,11 @@ class AlbumController extends Controller
             'tracks' => 'required|array|min:1',
         ]);
 
-        if ($request->hasFile('cover')) {
+       /* if ($request->hasFile('cover')) {
             $incomingFields['cover'] = $request->file('cover')->store('images', 'public');
-        }
+        } */
+
+        Storage::disk('cloudinary')->put('test', $incomingFields['cover']);
 
         $incomingFields['title'] = strip_tags($incomingFields['title']);
         $incomingFields['author'] = strip_tags($incomingFields['author']);
