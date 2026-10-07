@@ -4,6 +4,8 @@ import ShoppingMenu from '@/components/en/ShoppingMenu.vue';
 import Footer from '@/components/en/Footer.vue';
 import axiosInstance from '@/axios';
 import {ref} from 'vue';
+import { AdvancedImage } from '@cloudinary/vue';
+import { Cloudinary } from '@cloudinary/url-gen';
 
 interface Album {
   id: number;
@@ -14,6 +16,12 @@ interface Album {
   country: string;
   cover: string;
 }
+
+const imageFromCloud = new Cloudinary({
+  cloud: {
+    cloudName: 'gwfx5j43'
+  }
+});
 
 const loading = ref(true);
 
@@ -37,15 +45,6 @@ const user = ref({
 });
 
 const isLoggedIn = ref(false);
-
-const getImageUrl = (path: string): string => {
-  if (path.startsWith('http')) {
-    return path;
-  }
-
-  return `${'http://music-vault-main-sjukhk.laravel.cloud'}/storage/${path}`;
-};
-
 
 const getUser = async () => {
     try {
@@ -155,8 +154,7 @@ filterAlbums();
             <div id="album_cards">
               <div id="album_data" v-if="loading == false" v-for="album in albums">
                       
-                  <img v-if="album.cover" :src="getImageUrl(album.cover)" :alt="album.title">
-                      
+                  <AdvancedImage v-if="album.cover" :cldImg="imageFromCloud.image(album.cover)" :alt="album.title"/>
                   <a :href="`/albuminfo/${album.id}`"><h3>{{ album.title }}</h3></a>
                   <p>{{ album.author }}</p>
                   <div id="genre_and_year">

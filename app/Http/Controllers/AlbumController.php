@@ -27,7 +27,7 @@ class AlbumController extends Controller
             $incomingFields['cover'] = $request->file('cover')->store('images', 'public');
         } */
 
-        Storage::disk('cloudinary')->put('test', $incomingFields['cover']);
+        $incomingFields['cover'] = Storage::disk('cloudinary')->put('images', $incomingFields['cover']);
 
         $incomingFields['title'] = strip_tags($incomingFields['title']);
         $incomingFields['author'] = strip_tags($incomingFields['author']);
