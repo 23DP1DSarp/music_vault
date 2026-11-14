@@ -40,6 +40,10 @@ interface Album {
   country_id: number
   notes: string
   cover: File | null
+  title_error?: string;
+  author_error?: string;
+  label_error?: string;
+  notes_error?: string;
 }
 
 interface Track {
@@ -58,7 +62,11 @@ const album = ref<Album>({
   release_date: '',
   country_id: 0,
   notes: '',
-  cover: null as File | null
+  cover: null as File | null,
+  title_error: '',
+  author_error: '',
+  label_error: '',
+  notes_error: '',
 })
 
 const tracks = ref<Track[]>([
@@ -111,7 +119,6 @@ const addTrack = () => {
   })
 }
 
-
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
@@ -121,8 +128,7 @@ const handleFileChange = (event: Event) => {
   }
 };
 
-const validateForm = (e: Event) => {
-  console.log('Validating form...');
+const validateTrackFields = (): boolean => {
   let hasErrors = false
 
   tracks.value.forEach(track => {
@@ -135,18 +141,17 @@ const validateForm = (e: Event) => {
     track.error = undefined
 
     if (anyFilled && !allFilled) {
-      track.error = 'Track is incomplete. Fill all fields or leave it empty.'
+      track.error = 'All fields must be filled to add song to the list.'
       hasErrors = true
     }
   })
 
   if (hasErrors) {
-    e.preventDefault();
+    return false;
   } else {
-    submitForm();
+    return true;
   }
 }
-
 
 const submitForm = async () => {
   const formData = new FormData()
@@ -183,6 +188,78 @@ const submitForm = async () => {
     }
 }
 
+function validateForm(form: Album){
+  let validTitle = isValidTitle(form.title);
+  let validAuthor = isValidAuthor(form.author);
+  let validLabel = isValidLabel(form.label);
+  let validNotes = isValidNotes(form.notes);
+  let validTracks = validateTrackFields(); // It takes tracks separately from the 'tracks' variable.
+
+  // Since hasErrors variable is false then validTracks should also be false.
+  if (validTitle && validAuthor && validLabel && validNotes && !validTracks) {
+    submitForm();
+  }
+}
+
+function isValidTitle(title: string): boolean {
+    const MAX_TITLE_LENGTH = 20;
+
+    if (title.length === 0) {
+        album.value.title_error = 'Please enter title.';
+        return false;
+    } else if (title.length > MAX_TITLE_LENGTH) {
+        album.value.title_error = 'Title cannot be more than 20 symbols.'
+        return false;
+    } else {
+      album.value.title_error = '';
+      return true;
+    }
+}
+
+function isValidAuthor(author: string): boolean {
+    const MAX_AUTHOR_LENGTH = 20;
+
+    if (author.length === 0) {
+        album.value.author_error = 'Please enter author.';
+        return false;
+    } else if (author.length > MAX_AUTHOR_LENGTH) {
+        album.value.author_error = 'Author cannot be more than 20 symbols.'
+        return false;
+    } else {
+      album.value.author_error = '';
+      return true;
+    }
+}
+
+function isValidLabel(label: string): boolean {
+    const MAX_LABEL_LENGTH = 20;
+
+    if (label.length === 0) {
+        album.value.label_error = 'Please enter label.';
+        return false;
+    } else if (label.length > MAX_LABEL_LENGTH) {
+        album.value.label_error = 'Label cannot be more than 20 symbols.'
+        return false;
+    } else {
+      album.value.label_error = '';
+      return true;
+    }
+}
+
+function isValidNotes(notes: string): boolean {
+    const MAX_NOTES_LENGTH = 200;
+
+    if (notes.length > MAX_NOTES_LENGTH) {
+        album.value.notes_error = 'Notes cannot be longer than 200 symbols.'
+        return false;
+    } else {
+        album.value.notes_error = '';
+        return true;
+    }
+}
+
+
+
 getUser();
 getGenres();
 getCountries();
@@ -198,29 +275,40 @@ getCountries();
         <h1>Add Album</h1>
         <div id="form_wrapper">
         
-            <form id="add_album_with_tracks" @submit.prevent="validateForm($event)" method="POST" enctype="multipart/form-data">
+            <form id="add_album_with_tracks" @submit.prevent="validateForm(album)" method="POST" enctype="multipart/form-data">
                 <div id="album_wrapper">
                     <div id="input_side">
                         <label>Title</label>
                         <input class="album_input" name="title" type="text" v-model="album.title">
+                        <p v-if="album.title_error" style="color: red;">{{ album.title_error }}</p>
+
                         <label>Author</label>
                         <input class="album_input" name="author" type="text" v-model="album.author">
+                        <p v-if="album.author_error" style="color: red;">{{ album.author_error }}</p>
+
                         <label>Genre</label>
                         <select class="album_input" name="genre" v-model="album.genre_id">
                           <option value="" disabled>Select genre</option>
                           <option v-for="genre in genres" :key="genre.id" :value="genre.id">{{ genre.genre_title }}</option>
                         </select>
+
                         <label>Label</label>
                         <input class="album_input" name="label" type="text" v-model="album.label">
+                        <p v-if="album.label_error" style="color: red;">{{ album.label_error }}</p>
+
                         <label>Date of release</label>
                         <input class="album_input" name="release_date" type="date" v-model="album.release_date">
+
                         <label>Country</label>
                         <select class="album_input" name="country" v-model="album.country_id">
                           <option value="" disabled>Select country</option>
                           <option v-for="country in countries" :key="country.id" :value="country.id">{{ country.country_name }}</option>
                         </select>
+
                         <label>Notes</label>
                         <input class="album_input" name="notes" type="text" v-model="album.notes">
+                        <p v-if="album.notes_error" style="color: red;">{{ album.notes_error }}</p>
+                        
                     </div>
                         
                         <div id="album_cover_side">
@@ -257,7 +345,7 @@ getCountries();
                                     <input type="text" class="duration" :name="`tracks[${index}][duration]`" v-model="track.duration">
                                 </div>
                                 </div>
-                                <div class="error_box" v-if="track.error">
+                                <div class="error_box" v-if="track.error" style="color: red;">
                                   <p>{{ track.error }}</p>
                                 </div>
                             </div>

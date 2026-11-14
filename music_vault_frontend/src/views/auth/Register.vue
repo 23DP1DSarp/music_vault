@@ -11,6 +11,10 @@ interface RegisterForm {
     country_id: number;
     date_of_birth: Date | null;
     error?: string;
+    username_error?: string;
+    email_error?: string;
+    password_error?: string;
+    password_confirmation_error?: string;
 }
 
 interface Country {
@@ -28,6 +32,10 @@ const form = ref<RegisterForm>({
     country_id: 0,
     date_of_birth: null,
     error: '',
+    username_error: '',
+    email_error: '',
+    password_error: '',
+    password_confirmation_error: '',
 });
 
 const getCountries = async () => {
@@ -63,6 +71,75 @@ const register = async (payload: RegisterForm) => {
     }
 };
 
+function isValidUsername(username: string): boolean {
+    const MAX_USERNAME_LENGTH = 20;
+    const MIN_USERNAME_LENGTH = 3;
+    
+    const isInvalidInput =
+        !username || username.length === 0 || username.length < MIN_USERNAME_LENGTH || username.length > MAX_USERNAME_LENGTH;
+
+    const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+
+    if (usernameRegex.test(username) && !isInvalidInput) {
+        form.value.username_error = '';
+        return true;
+    } else {
+        form.value.username_error = 'Username must be from 3 to 20 characters';
+        return false;
+    }
+}
+
+function isValidEmail(email: string): boolean {
+    const MAX_EMAIL_LENGTH = 50;
+    const isInvalidInput =
+        !email || email.length === 0 || email.length > MAX_EMAIL_LENGTH;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (emailRegex.test(email) && !isInvalidInput) {
+        form.value.email_error = '';
+        return true;
+    } else {
+        form.value.email_error = 'Please enter your valid email.'
+        return false;
+    }
+
+}
+
+function isValidPasswordAndConfirmation(password: string, password_confirmation: string): boolean {
+    const MAX_PASSWORD_LENGTH = 50;
+    const MIN_PASSWORD_LENGTH = 8;
+    
+    const isInvalidInput =
+        !password || password.length === 0 || password.length < MIN_PASSWORD_LENGTH || password.length > MAX_PASSWORD_LENGTH;
+
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{8,50}$/;
+
+    if (passwordRegex.test(password) && !isInvalidInput) {
+        form.value.password_error = '';
+        if (password_confirmation != password) {
+          form.value.password_confirmation_error = 'Passwords are not the same.';
+          return false;
+        } else {
+          form.value.password_confirmation_error = '';
+          return true;
+        }
+    } else {
+        form.value.password_error = 'Password must be at least 8 characters.';
+        return false;
+    }
+}
+
+function validateForm(form: RegisterForm){
+  let validusername = isValidUsername(form.username);
+  let validEmail = isValidEmail(form.email);
+  let validPasswordAndConfirmation = isValidPasswordAndConfirmation(form.password, form.password_confirmation);
+
+  if (validusername && validEmail && validPasswordAndConfirmation) {
+    register(form);
+  }
+}
+
 getCountries();
 </script>
 
@@ -74,32 +151,35 @@ getCountries();
             <p><RouterLink to="/">MusicVault</RouterLink></p>
         </div>
         <RouterLink to="/login">Log In</RouterLink>
-       
     </nav>
 
     <main>
             <h1>Sign Up</h1>
-            <form id="sign_up_form" @submit.prevent="register(form)"  method="post">
+            <form id="sign_up_form" @submit.prevent="validateForm(form)"  method="post">
                 <p v-if="form.error" style="color: red;">{{ form.error }}</p>
 
                 <div class="form_parts">
                     <label>Username</label>
                     <input name="username" type="text" v-model="form.username">
+                    <p v-if="form.username_error" style="color: red;">{{ form.username_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Email</label>
                     <input name="email" type="email" v-model="form.email">
+                    <p v-if="form.email_error" style="color: red;">{{ form.email_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Password</label>
                     <input name="password" type="password" v-model="form.password">
+                    <p v-if="form.password_error" style="color: red;">{{ form.password_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Password Confirmation</label>
                     <input name="password_confirmation" type="password" v-model="form.password_confirmation">
+                    <p v-if="form.password_confirmation_error" style="color: red;">{{ form.password_confirmation_error }}</p>
                 </div>
 
                 <div class="form_parts">

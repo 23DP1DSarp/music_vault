@@ -29,24 +29,32 @@ interface AccountInfo {
   username: string;
   email: string;
   country: string;
+  username_error?: string;
+  email_error?: string;
 }
 
 interface ResetPassword {
   current_password: string;
   new_password: string;
   confirm_new_password: string;
+  password_error?: string;
+  password_confirmation_error?: string;
 }
 
 const accountInfo = ref<AccountInfo>({
   username: '',
   email: '',
   country: '',
+  username_error: '',
+  email_error: '',
 });
 
 const resetPassword = ref<ResetPassword>({
   current_password: '',
   new_password: '',
   confirm_new_password: '',
+  password_error: '',
+  password_confirmation_error: '',
 });
 
 const getCountries = async () => {
@@ -91,11 +99,6 @@ const changeAccountInfo = async (accountInfo: AccountInfo) => {
 };
 
 const changePassword = async (resetPassword: ResetPassword) => {
-  if (resetPassword.new_password !== resetPassword.confirm_new_password) {
-    alert('New password and confirm new password do not match!');
-    return;
-  }
-
   try {
     const response = await axiosInstance.put('/reset-password', {
       current_password: resetPassword.current_password,
@@ -120,6 +123,83 @@ const deleteAccount = async () => {
   }
 };
 
+function validateAccountInfoForm(accountInfo: AccountInfo){
+  let validusername = isValidUsername(accountInfo.username);
+  let validEmail = isValidEmail(accountInfo.email);
+
+  if (validusername && validEmail) {
+    changeAccountInfo(accountInfo);
+  }
+}
+
+function validateResetPasswordForm(resetPassword: ResetPassword){
+  let validPasswordAndConfirmation = isValidPasswordAndConfirmation(resetPassword.new_password, resetPassword.confirm_new_password);
+  
+  if (validPasswordAndConfirmation) {
+    changePassword(resetPassword);
+  }
+}
+
+function isValidPasswordAndConfirmation(password: string, password_confirmation: string): boolean {
+    const MAX_PASSWORD_LENGTH = 50;
+    const MIN_PASSWORD_LENGTH = 8;
+    
+    const isInvalidInput =
+        !password || password.length === 0 || password.length < MIN_PASSWORD_LENGTH || password.length > MAX_PASSWORD_LENGTH;
+
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{8,50}$/;
+
+    if (passwordRegex.test(password) && !isInvalidInput) {
+        resetPassword.value.password_error = '';
+        if (password_confirmation != password) {
+          resetPassword.value.password_confirmation_error = 'Passwords are not the same.';
+          return false;
+        } else {
+          resetPassword.value.password_confirmation_error = '';
+          return true;
+        }
+    } else {
+        resetPassword.value.password_error = 'Password must be at least 8 characters.';
+        return false;
+    }
+}
+
+function isValidUsername(username: string): boolean {
+    const MAX_USERNAME_LENGTH = 20;
+    const MIN_USERNAME_LENGTH = 3;
+    
+    const isInvalidInput =
+        !username || username.length === 0 || username.length < MIN_USERNAME_LENGTH || username.length > MAX_USERNAME_LENGTH;
+
+    const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+    console.log(username)
+    console.log(usernameRegex.test(username))
+    if (usernameRegex.test(username) && !isInvalidInput) {
+        accountInfo.value.username_error = '';
+        return true;
+    } else {
+        accountInfo.value.username_error = 'Username must be from 3 to 20 characters';
+        return false;
+    }
+}
+
+function isValidEmail(email: string): boolean {
+    const MAX_EMAIL_LENGTH = 50;
+    const isInvalidInput =
+        !email || email.length === 0 || email.length > MAX_EMAIL_LENGTH;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (emailRegex.test(email) && !isInvalidInput) {
+        accountInfo.value.email_error = '';
+        return true;
+    } else {
+        accountInfo.value.email_error = 'Please enter your valid email.'
+        return false;
+    }
+
+}
+
 getUser();
 getCountries();
 </script>
@@ -135,15 +215,17 @@ getCountries();
         <h1>Profile Settings</h1>
         <div id="account_info">
             <h2>Account Information</h2>
-            <form @submit.prevent="changeAccountInfo(accountInfo)">
+            <form @submit.prevent="validateAccountInfoForm(accountInfo)">
                 <div class="form_parts">
                     <label>Username</label>
                     <input type="text" v-model="accountInfo.username">
+                    <p v-if="accountInfo.username_error" style="color: red;">{{ accountInfo.username_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Email</label>
                     <input type="text" v-model="accountInfo.email">
+                    <p v-if="accountInfo.email_error" style="color: red;">{{ accountInfo.email_error }}</p>
                 </div>
 
                 <!---<div class="form_parts">
@@ -162,7 +244,7 @@ getCountries();
 
             <div id="change_password">
             <h2>Change Password</h2>
-            <form @submit.prevent="changePassword(resetPassword)">
+            <form @submit.prevent="validateResetPasswordForm(resetPassword)">
                 <div class="form_parts">
                     <label>Current Password</label>
                     <input type="password" v-model="resetPassword.current_password">
@@ -171,11 +253,13 @@ getCountries();
                 <div class="form_parts">
                     <label>New Password</label>
                     <input type="password" v-model="resetPassword.new_password">
+                    <p v-if="resetPassword.password_error" style="color: red;">{{ resetPassword.password_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Confirm New Password</label>
                     <input type="password" v-model="resetPassword.confirm_new_password">
+                    <p v-if="resetPassword.password_confirmation_error" style="color: red;">{{ resetPassword.password_confirmation_error }}</p>
                 </div>
 
                 <div class="form_parts">

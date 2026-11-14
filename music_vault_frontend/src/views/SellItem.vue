@@ -41,6 +41,15 @@ interface SellItemForm {
     description: string;
     picture: File | null;
     album_id: number | null;
+    title_error?: string;
+    category_error?: string;
+    quantity_error?: string;
+    price_error?: string;
+    condition_error?: string;
+    album_id_error?: string;
+    instrument_model_error?: string;
+    instrument_type_error?: string;
+    service_duration_error?: string;
 }
 
 const item = ref<SellItemForm>({
@@ -55,6 +64,15 @@ const item = ref<SellItemForm>({
     description: '',
     picture: null as File | null,
     album_id: null,
+    title_error: '',
+    category_error: '',
+    quantity_error: '',
+    price_error: '',
+    condition_error: '',
+    album_id_error: '',
+    instrument_model_error: '',
+    instrument_type_error: '',
+    service_duration_error: '',
 });
 
 
@@ -116,6 +134,121 @@ const sellItem = async (payload: SellItemForm) => {
   }
 }
 
+
+function validateForm(item: SellItemForm){
+  let validTitle = isValidTitle(item.title);
+  let validQuantity = isValidQuantity(item.quantity);
+  let validPrice = isValidPrice(item.price);
+  let isSelectedCondition = item.condition != '';
+  let isCheckedCategoryData = categoryDataCheck(item);
+
+  if (!isSelectedCondition) {
+    item.condition_error = 'Please select condition.';
+  } else {
+    item.condition_error = '';
+  }
+
+  if (validTitle && validQuantity && validPrice && isSelectedCondition && isCheckedCategoryData) {
+    sellItem(item);
+  }
+}
+
+
+console.log(item.value.album_id);
+function isValidTitle(title: string): boolean {
+    const MAX_TITLE_LENGTH = 30;
+
+    if (title.length === 0) {
+      item.value.title_error = 'Please enter title.';
+      return false;
+    } else if (title.length > MAX_TITLE_LENGTH) {
+      item.value.title_error = 'Title cannot be more than 30 symbols.'
+      return false;
+    } else {
+      item.value.title_error = '';
+      return true;
+    }
+}
+
+function isValidQuantity(quantity: number) {
+    const MIN_QUANTITY = 1;
+
+    if (quantity < MIN_QUANTITY) {
+      item.value.quantity_error = 'Quantity cannot be less than 1.'
+      return false;
+    } else {
+      item.value.quantity_error = '';
+      return true;
+    }
+}
+
+function isValidPrice(price: number) {
+    const MIN_PRICE = 0.01;
+
+    if (price < MIN_PRICE) {
+      item.value.price_error = 'Price cannot be less than 0.01.'
+      return false;
+    } else {
+      item.value.price_error = '';
+      return true;
+    }
+}
+
+function categoryDataCheck(item: SellItemForm) {
+    switch (item.category) {
+        case 'Album': {
+          item.category_error = '';
+
+          if (item.album_id != null && item.album_id > 0) {
+            item.album_id_error = '';
+            return true;
+          } else {
+            item.album_id_error = 'Please select the album your item is related to.';
+            return false;
+          }
+        }
+        
+        case 'Instrument': {
+          item.category_error = '';
+
+          if (item.model == null || item.model == '') {
+            item.instrument_model_error = 'Please enter model of the instrument.';
+          } else {
+            item.instrument_model_error = '';
+          }
+          
+          if (item.type == null || item.type == '') {
+            item.instrument_type_error = 'Please enter type of the instrument.';
+          } else {
+            item.instrument_type_error = '';
+          }
+          
+          if ((item.model != null && item.model != '') && (item.type != null && item.type != '')) {
+            return true;
+          }
+
+          return false;
+        }
+
+        case 'Service': {
+          item.category_error = '';
+
+          if (item.duration != null && item.duration > 0) {
+            item.service_duration_error = '';
+            return true;
+          } else {
+            item.service_duration_error = 'Please enter duration of the service.';
+            return false;
+          }
+        }
+
+        default: {
+          item.category_error = 'Please select category.';
+          return false;
+        }
+    }
+}
+
 getUser();
 getAlbums();
 </script>
@@ -129,42 +262,55 @@ getAlbums();
         <ShoppingMenu />
 
         <h1>Sell Item</h1>
-        <form id="add_album_with_tracks" @submit.prevent="sellItem(item)" method="POST" enctype="multipart/form-data">
+        <form id="add_album_with_tracks" @submit.prevent="validateForm(item)" method="POST" enctype="multipart/form-data">
                 <div id="album_wrapper">
                     <div id="input_side">
                         <label>Title</label>
                         <input class="album_input" v-model="item.title" name="title" type="text">
+                        <p v-if="item.title_error" style="color: red;">{{ item.title_error }}</p>
+
                         <label>Category</label>
                         <select class="album_input" name="category" v-model="item.category">
                           <option value="" disabled>Select category</option>
                           <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
                         </select>
+                        <p v-if="item.category_error" style="color: red;">{{ item.category_error }}</p>
+
                         <label v-show="item.category === 'Album'">Album Title</label>
                         <select class="album_input" name="album_id" v-model="item.album_id" v-show="item.category === 'Album'">
                           <option value="" disabled>Select album</option>
                           <option v-for="album in albums" :key="album.id" :value="album.id">{{ album.title }}</option>
                         </select>
+                        <p v-show="item.category === 'Album'" v-if="item.album_id_error" style="color: red;">{{ item.album_id_error }}</p>
+
                         <div v-show="item.category === 'Instrument'">
                         <label>Model</label>
                         <input class="album_input" v-model="item.model" name="model" type="text">
+                        <p v-show="item.category === 'Instrument'" v-if="item.instrument_model_error" style="color: red;">{{ item.instrument_model_error }}</p>
 
                         <label>Type</label>
                         <input class="album_input" v-model="item.type" name="type" type="text">
                         </div>
-
+                        <p v-show="item.category === 'Instrument'" v-if="item.instrument_type_error" style="color: red;">{{ item.instrument_type_error }}</p>
 
                         <label v-show="item.category !== 'Service'">Quantity</label>
-                        <input class="album_input" v-show="item.category !== 'Service'" v-model.number="item.quantity" name="quantity" type="number" >
+                        <input class="album_input" v-show="item.category !== 'Service'" v-model.number="item.quantity" name="quantity" type="number">
+                        <p v-if="item.quantity_error" style="color: red;">{{ item.quantity_error }}</p>
+
                         <label>Price</label>
-                        <input class="album_input" v-model.number="item.price" name="price" type="number" step="0.01">
+                        <input class="album_input" v-model.number="item.price" name="price" type="number" step="0.01" min="0.01">
+                        <p v-if="item.price_error" style="color: red;">{{ item.price_error}}</p>
+
                         <label v-show="item.category !== 'Service'">Condition</label>
                         <select v-show="item.category !== 'Service'" class="album_input" name="condition" v-model="item.condition">
                           <option value="" disabled>Select condition</option>
                           <option v-for="condition in conditions" :key="condition" :value="condition">{{ condition }}</option>
                         </select>
+                        <p v-if="item.condition_error" style="color: red;">{{ item.condition_error }}</p>
 
                         <label v-show="item.category === 'Service'">Duration</label>
                         <input class="album_input" v-show="item.category === 'Service'" v-model.number="item.duration" name="price" type="number" step="0.01">
+                        <p v-show="item.category === 'Service'" v-if="item.service_duration_error" style="color: red;">{{ item.service_duration_error }}</p>
 
                         <label>Description</label>
                         <input class="album_input" v-model="item.description" name="description" type="text">

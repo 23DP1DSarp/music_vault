@@ -6,12 +6,16 @@ interface LoginForm {
     email: string;
     password: string;
     error?: string;
+    email_error?: string;
+    password_error?: string;
 }
 
 const form = ref<LoginForm>({
     email: '',
     password: '',
     error: '',
+    email_error: '',
+    password_error: '',
 });
 
 
@@ -39,7 +43,47 @@ const login = async (payload: LoginForm) => {
     }
 };
 
+function isValidEmail(email: string): boolean {
+    const MAX_EMAIL_LENGTH = 50;
+    const isInvalidInput =
+        !email || email.length === 0 || email.length > MAX_EMAIL_LENGTH;
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (emailRegex.test(email) && !isInvalidInput) {
+        form.value.email_error = '';
+        return true;
+    } else {
+        form.value.email_error = 'Please enter your valid email.'
+        return false;
+    }
+
+}
+
+function isValidPassword(password: string): boolean {
+    const MAX_PASSWORD_LENGTH = 50;
+    const MIN_PASSWORD_LENGTH = 8;
+    
+    const isInvalidInput =
+        !password || password.length === 0;
+
+    if (!isInvalidInput) {
+        form.value.password_error = '';
+        return true;
+    } else {
+        form.value.password_error = 'Please enter your password.';
+        return false;
+    }
+}
+
+function validateForm(form: LoginForm){
+  let validEmail = isValidEmail(form.email);
+  let validPassword = isValidPassword(form.password);
+
+  if (validEmail && validPassword) {
+    login(form);
+  }
+}
 
 </script>
 
@@ -57,18 +101,20 @@ const login = async (payload: LoginForm) => {
 
     <main>
             <h1>Log In</h1>
-            <form id="sign_up_form" @submit.prevent="login(form)">
+            <form id="sign_up_form" @submit.prevent="validateForm(form)">
 
                 <p v-if="form.error" style="color: red;">{{ form.error }}</p>
 
                 <div class="form_parts">
                     <label>Email</label>
                     <input email="email" type="text" v-model="form.email">
+                    <p v-if="form.email_error" style="color: red;">{{ form.email_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Password</label>
                     <input name="password" type="password" v-model="form.password">
+                    <p v-if="form.password_error" style="color: red;">{{ form.password_error }}</p>
                 </div>
 
                 <div class="form_parts">

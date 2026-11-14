@@ -21,6 +21,11 @@ interface SellerForm {
     shipping_address: string;
     minimal_order_total: string;
     seller_terms: string;
+    currency_id_error?: string;
+    full_name_error?: string;
+    shipping_address_error?: string;
+    minimal_order_total_error?: string;
+    seller_terms_error?: string;
 }
 
 interface Currency {
@@ -75,6 +80,96 @@ const createSeller = async (payload: SellerForm) => {
   }
 }
 
+function validateForm(sellerform: SellerForm){
+  let validFullName = isValidFullName(sellerform.full_name);
+  let validShippingAddress = isValidShippingAddress(sellerform.shipping_address);
+  let validMinimalOrderTotal = isValidMinimalOrderTotal(sellerform.minimal_order_total);
+  let validSellerTerms = isValidSellerTerms(sellerform.seller_terms);
+  let isSelectedCurrency = sellerform.currency_id > 0;
+
+  if (!isSelectedCurrency) {
+    sellerForm.value.currency_id_error = 'Please select your currency.';
+  } else {
+    sellerForm.value.currency_id_error = '';
+  }
+
+  if (isSelectedCurrency && validFullName && validShippingAddress && validMinimalOrderTotal && validSellerTerms) {
+    createSeller(sellerform);
+  }
+}
+
+function isValidFullName(full_name: string): boolean {
+    const MAX_FULLNAME_LENGTH = 30;
+
+    const fullNameRegex = /^[a-zA-Z]$/;
+
+    if (!full_name || full_name.length === 0 ) {
+        sellerForm.value.full_name_error = 'Please enter your full name.';
+        return false;
+    } else if (full_name.length > MAX_FULLNAME_LENGTH) {
+        sellerForm.value.full_name_error = 'Full name cannot be longer than 30 characters.';
+        return false;
+    } else if (!fullNameRegex.test(full_name)) {
+        sellerForm.value.full_name_error = 'Full name should not contain numbers and special characters like: !@#$%^&*()';
+        return false;
+    } else {
+        sellerForm.value.full_name_error = '';
+        return true;
+    }
+}
+
+function isValidShippingAddress(shipping_address: string): boolean {
+    const MAX_SHIPPING_ADDRESS_LENGTH = 50;
+
+    const shippingAddressRegex = /^[^!@#\$%\^&\*\(\)]{1,50}$/;
+
+    if (!shipping_address || shipping_address.length === 0 ) {
+        sellerForm.value.shipping_address_error = 'Please enter your shipping address.';
+        return false;
+    } else if (shipping_address.length > MAX_SHIPPING_ADDRESS_LENGTH) {
+        sellerForm.value.shipping_address_error = 'Shipping address cannot be longer than 50 characters.';
+        return false;
+    } else if (!shippingAddressRegex.test(shipping_address)) {
+        sellerForm.value.shipping_address_error = 'Shipping address should not contain numbers and special characters like: !@#$%^&*()';
+        return false;
+    } else {
+        sellerForm.value.shipping_address_error = 'Please select your currency.';
+        return true;
+    }
+}
+
+function isValidMinimalOrderTotal(minimal_order_total: string): boolean {
+    const MAX_MINIMAL_ORDER_TOTAL_LENGTH = 50;
+
+    const minimalOrderTotalRegex = /^\d+([.,]\d+)?$/;
+
+    if (!minimal_order_total || minimal_order_total.length === 0 ) {
+        sellerForm.value.minimal_order_total_error = 'Please enter the minimal order total.';
+        return false;
+    } else if (!minimalOrderTotalRegex.test(minimal_order_total)) {
+        sellerForm.value.minimal_order_total_error = 'Minimal order total cannot contain letters.';
+        return false;
+    } else if (minimal_order_total.length > MAX_MINIMAL_ORDER_TOTAL_LENGTH) {
+        sellerForm.value.minimal_order_total_error = 'Full name cannot be longer than 30 characters.';
+        return false;
+    } else {
+        sellerForm.value.minimal_order_total_error = '';
+        return true;
+    }
+}
+
+function isValidSellerTerms(seller_terms: string): boolean {
+    const MAX_SELLER_TERMS_LENGTH = 200;
+
+    if (seller_terms.length > MAX_SELLER_TERMS_LENGTH) {
+        sellerForm.value.seller_terms_error = 'Seller terms cannot be longer than 200 symbols.'
+        return false;
+    } else {
+        sellerForm.value.seller_terms_error = '';
+        return true;
+    }
+}
+
 getUser();
 getCurrencies();
 </script>
@@ -88,33 +183,38 @@ getCurrencies();
 
         <h1>Seller Form</h1>
 
-        <form id="seller_form" @submit.prevent="createSeller(sellerForm)" action="/login" method="post">
+        <form id="seller_form" @submit.prevent="validateForm(sellerForm)" action="/login" method="post">
                 <div class="form_parts">
                     <label>Currency</label>
                     <select class="album_input" name="currency" v-model="sellerForm.currency_id">
                       <option value="" disabled>Select currency</option>
                       <option v-for="currency in currencies" :key="currency.id" :value="currency.id">{{ currency.currency_name }}</option>
                     </select>
+                    <p v-if="sellerForm.currency_id_error" style="color: red;">{{ sellerForm.currency_id_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Full Name</label>
                     <input v-model="sellerForm.full_name" name="full_name" type="text">
+                    <p v-if="sellerForm.full_name_error" style="color: red;">{{ sellerForm.full_name_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Shipping Address</label>
                     <input v-model="sellerForm.shipping_address" name="shipping_address" type="text">
+                    <p v-if="sellerForm.shipping_address_error" style="color: red;">{{ sellerForm.shipping_address_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Minimal Order Total</label>
-                    <input v-model="sellerForm.minimal_order_total" name="minimal_order_total" type="text">
+                    <input v-model="sellerForm.minimal_order_total" name="minimal_order_total" type="number" step=0.01>
+                    <p v-if="sellerForm.minimal_order_total_error" style="color: red;">{{ sellerForm.minimal_order_total_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Seller Terms</label>
                     <input v-model="sellerForm.seller_terms" name="seller_terms" type="text">
+                    <p v-if="sellerForm.seller_terms_error" style="color: red;">{{ sellerForm.seller_terms_error }}</p>
                 </div>
 
                 <div class="form_parts">
