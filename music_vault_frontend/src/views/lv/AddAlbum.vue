@@ -7,12 +7,12 @@ import {ref} from 'vue';
 import { useRouter } from 'vue-router';
 
 const loading = ref(true);
+
 const router = useRouter();
 
 const user = ref({
     username: '',
     email: '',
-    user_role_id: 0,
 });
 
 const isLoggedIn = ref(false);
@@ -40,6 +40,10 @@ interface Album {
   country_id: number
   notes: string
   cover: File | null
+  title_error?: string;
+  author_error?: string;
+  label_error?: string;
+  notes_error?: string;
 }
 
 interface Track {
@@ -58,7 +62,11 @@ const album = ref<Album>({
   release_date: '',
   country_id: 0,
   notes: '',
-  cover: null as File | null
+  cover: null as File | null,
+  title_error: '',
+  author_error: '',
+  label_error: '',
+  notes_error: '',
 })
 
 const tracks = ref<Track[]>([
@@ -73,7 +81,7 @@ const getUser = async () => {
         const response = await axiosInstance.get('/user');
         user.value = response.data;
         isLoggedIn.value = true;
-        //console.log(response.data);
+        console.log(response.data);
     } catch (error) {
         console.error(error);
         isLoggedIn.value = false;
@@ -86,7 +94,7 @@ const getGenres = async () => {
     try {
       const response = await axiosInstance.get('/getgenres');
       genres.value = response.data;
-      //console.log(genres.value);
+      console.log(genres.value);
     } catch (error) {
       console.error(error);
     }
@@ -96,7 +104,7 @@ const getCountries = async () => {
     try {
       const response = await axiosInstance.get('/getcountries');
       countries.value = response.data;
-      //console.log(countries.value);
+      console.log(countries.value);
     } catch (error) {
       console.error(error);
     }
@@ -111,18 +119,16 @@ const addTrack = () => {
   })
 }
 
-
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
-  //console.log('Selected file:', file);
+  console.log('Selected file:', file);
   if (file) {
     album.value.cover = file;
   }
 };
 
-const validateForm = (e: Event) => {
-  //console.log('Validating form...');
+const validateTrackFields = (): boolean => {
   let hasErrors = false
 
   tracks.value.forEach(track => {
@@ -135,18 +141,17 @@ const validateForm = (e: Event) => {
     track.error = undefined
 
     if (anyFilled && !allFilled) {
-      track.error = 'Visi lauki ir jāaizpilda, lai pievienotu dziesmu sarakstam.'
+      track.error = 'Lai pievienotu dziesmu sarakstam, jāaizpilda visi lauki.';
       hasErrors = true
     }
   })
 
   if (hasErrors) {
-    e.preventDefault();
+    return false;
   } else {
-    submitForm();
+    return true;
   }
 }
-
 
 const submitForm = async () => {
   const formData = new FormData()
@@ -167,21 +172,93 @@ const submitForm = async () => {
   })
 
   try {
-    /*console.log('Submitting form with data:', {
+    console.log('Submitting form with data:', {
       album: album.value,
       tracks: tracks.value
-    });*/
+    });
     const response = await axiosInstance.post('/add_album_with_tracks', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
-    //console.log(response.data);
+    console.log(response.data);
     if (response.status === 200) {
-        router.push('/lv');
+        router.push('/');
     }
     } catch (error) {
     console.error(error);
     }
 }
+
+function validateForm(form: Album){
+  let validTitle = isValidTitle(form.title);
+  let validAuthor = isValidAuthor(form.author);
+  let validLabel = isValidLabel(form.label);
+  let validNotes = isValidNotes(form.notes);
+  let validTracks = validateTrackFields(); // It takes tracks separately from the 'tracks' variable.
+
+  // Since hasErrors variable is false then validTracks should also be false.
+  if (validTitle && validAuthor && validLabel && validNotes && !validTracks) {
+    submitForm();
+  }
+}
+
+function isValidTitle(title: string): boolean {
+    const MAX_TITLE_LENGTH = 20;
+
+    if (title.length === 0) {
+        album.value.title_error = 'Lūdzu, ievadiet nosaukumu.';
+        return false;
+    } else if (title.length > MAX_TITLE_LENGTH) {
+        album.value.title_error = 'Nosaukums nedrīkst pārsniegt 20 rakstzīmes.';
+        return false;
+    } else {
+      album.value.title_error = '';
+      return true;
+    }
+}
+
+function isValidAuthor(author: string): boolean {
+    const MAX_AUTHOR_LENGTH = 20;
+
+    if (author.length === 0) {
+        album.value.author_error = 'Lūdzu, ievadiet autoru.';
+        return false;
+    } else if (author.length > MAX_AUTHOR_LENGTH) {
+        album.value.author_error = 'Autors nedrīkst pārsniegt 20 rakstzīmes.';
+        return false;
+    } else {
+      album.value.author_error = '';
+      return true;
+    }
+}
+
+function isValidLabel(label: string): boolean {
+    const MAX_LABEL_LENGTH = 20;
+
+    if (label.length === 0) {
+        album.value.label_error = 'Lūdzu, ievadiet izdevniecību.';
+        return false;
+    } else if (label.length > MAX_LABEL_LENGTH) {
+        album.value.label_error = 'Izdevniecība nedrīkst pārsniegt 20 rakstzīmes.';
+        return false;
+    } else {
+      album.value.label_error = '';
+      return true;
+    }
+}
+
+function isValidNotes(notes: string): boolean {
+    const MAX_NOTES_LENGTH = 200;
+
+    if (notes.length > MAX_NOTES_LENGTH) {
+        album.value.notes_error = 'Piezīmes nedrīkst pārsniegt 200 rakstzīmes.';
+        return false;
+    } else {
+        album.value.notes_error = '';
+        return true;
+    }
+}
+
+
 
 getUser();
 getGenres();
@@ -198,13 +275,17 @@ getCountries();
         <h1>Pievienot albumu</h1>
         <div id="form_wrapper">
         
-            <form id="add_album_with_tracks" @submit.prevent="validateForm($event)" method="POST" enctype="multipart/form-data">
+            <form id="add_album_with_tracks" @submit.prevent="validateForm(album)" method="POST" enctype="multipart/form-data">
                  <div id="album_wrapper">
                     <div id="input_side">
                         <label>Nosaukums</label>
                         <input class="album_input" name="title" type="text" v-model="album.title">
+                        <p v-if="album.title_error" style="color: red;">{{ album.title_error }}</p>
+
                         <label>Autors</label>
                         <input class="album_input" name="author" type="text" v-model="album.author">
+                        <p v-if="album.author_error" style="color: red;">{{ album.author_error }}</p>
+
                         <label>Žanrs</label>
                         <select class="album_input" name="genre" v-model="album.genre_id">
                           <option value="" disabled>Izvēlieties žanru</option>
@@ -212,6 +293,8 @@ getCountries();
                         </select>
                         <label>Izdevniecība</label>
                         <input class="album_input" name="label" type="text" v-model="album.label">
+                        <p v-if="album.label_error" style="color: red;">{{ album.label_error }}</p>
+
                         <label>Izdošanas datums</label>
                         <input class="album_input" name="release_date" type="date" v-model="album.release_date">
                         <label>Valsts</label>
@@ -219,8 +302,11 @@ getCountries();
                           <option value="" disabled>Izvēlieties valsti</option>
                           <option v-for="country in countries" :key="country.id" :value="country.id">{{ country.country_name }}</option>
                         </select>
+
                         <label>Piezīmes</label>
                         <input class="album_input" name="notes" type="text" v-model="album.notes">
+                        <p v-if="album.notes_error" style="color: red;">{{ album.notes_error }}</p>
+                        
                     </div>
                         
                         <div id="album_cover_side">

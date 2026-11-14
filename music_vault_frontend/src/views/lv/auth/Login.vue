@@ -2,33 +2,87 @@
 import { ref } from 'vue'
 import axiosInstance from '@/axios'
 
-const form = ref({ email: '', password: '', error: '' })
-
-const login = async (payload: any) => {
-  try {
-    const response = await axiosInstance.post('/login', payload)
-    if (response.data && response.data.api_token) {
-      localStorage.setItem('auth_token', response.data.api_token)
-      localStorage.setItem('user', JSON.stringify(response.data.user))
-      window.location.href = '/'
-    }
-  } catch (err) {
-    form.value.error = 'Pieteikšanās neizdevās.'
-  }
+interface LoginForm {
+    email: string;
+    password: string;
+    error?: string;
+    email_error?: string;
+    password_error?: string;
 }
 
-const hamburgerMenu = async () => {
+const form = ref<LoginForm>({
+    email: '',
+    password: '',
+    error: '',
+    email_error: '',
+    password_error: '',
+});
 
-  let hamburgerSlider = document.getElementById('hamburger_menu') as HTMLFormElement;
 
-  if (hamburgerSlider.style.visibility === "hidden" || hamburgerSlider.style.visibility === '') {
-    hamburgerSlider?.style.setProperty('width','70%');
-    hamburgerSlider?.style.setProperty('visibility','visible');
-  } else {
-    hamburgerSlider?.style.setProperty('width','0%');
-    hamburgerSlider?.style.setProperty('visibility','hidden');
+const login = async (payload: LoginForm) => {
+    console.log('Login function called');
+    try { 
+        
+        const response = await axiosInstance.post("/login", payload);
+        console.log(response.data);
+        if (response.status === 200) {
+            
+            localStorage.setItem('auth_token', response.data.api_token);
+            localStorage.setItem('csrf_token', response.data.csrf_token);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+            
+            
+            axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.api_token}`;
+            axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = response.data.csrf_token;
+            
+            window.location.href = "/";
+        }
+    } catch (error) {
+        console.error(error);
+        form.value.error = 'Pieslēgšanās neizdevās. Lūdzu, pārbaudiet ievadītos datus un mēģiniet vēlreiz.';
+    }
+};
+
+function isValidEmail(email: string): boolean {
+    const MAX_EMAIL_LENGTH = 50;
+    const isInvalidInput =
+        !email || email.length === 0 || email.length > MAX_EMAIL_LENGTH;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (emailRegex.test(email) && !isInvalidInput) {
+        form.value.email_error = '';
+        return true;
+    } else {
+        form.value.email_error = 'Lūdzu, ievadiet derīgu e-pasta adresi.';
+        return false;
+    }
+
+}
+
+function isValidPassword(password: string): boolean {
+    const MAX_PASSWORD_LENGTH = 50;
+    const MIN_PASSWORD_LENGTH = 8;
+    
+    const isInvalidInput =
+        !password || password.length === 0;
+
+    if (!isInvalidInput) {
+        form.value.password_error = '';
+        return true;
+    } else {
+        form.value.password_error = 'Lūdzu, ievadiet paroli.';
+        return false;
+    }
+}
+
+function validateForm(form: LoginForm){
+  let validEmail = isValidEmail(form.email);
+  let validPassword = isValidPassword(form.password);
+
+  if (validEmail && validPassword) {
+    login(form);
   }
-  
 }
 
 </script>
@@ -67,11 +121,13 @@ const hamburgerMenu = async () => {
                 <div class="form_parts">
                     <label>E-pasts</label>
                     <input email="email" type="text" v-model="form.email">
+                    <p v-if="form.email_error" style="color: red;">{{ form.email_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Parole</label>
                     <input name="password" type="password" v-model="form.password">
+                    <p v-if="form.password_error" style="color: red;">{{ form.password_error }}</p>
                 </div>
 
                 <div class="form_parts">

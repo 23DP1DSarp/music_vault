@@ -4,11 +4,9 @@ import Navbar from '@/components/en/Navbar.vue';
 import ShoppingMenu from '@/components/en/ShoppingMenu.vue';
 import Footer from '@/components/en/Footer.vue';
 import {ref} from 'vue';
-import { useRouter } from 'vue-router';
 
 const loading = ref(true);
 
-const router = useRouter();
 
 const user = ref({
     username: '',

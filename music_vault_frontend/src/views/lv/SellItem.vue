@@ -13,7 +13,6 @@ const router = useRouter();
 const user = ref({
     username: '',
     email: '',
-    user_role_id: 0,
 });
 
 const albums = ref<{id: number, title: string}[]>([]);
@@ -42,6 +41,15 @@ interface SellItemForm {
     description: string;
     picture: File | null;
     album_id: number | null;
+    title_error?: string;
+    category_error?: string;
+    quantity_error?: string;
+    price_error?: string;
+    condition_error?: string;
+    album_id_error?: string;
+    instrument_model_error?: string;
+    instrument_type_error?: string;
+    service_duration_error?: string;
 }
 
 const item = ref<SellItemForm>({
@@ -56,6 +64,15 @@ const item = ref<SellItemForm>({
     description: '',
     picture: null as File | null,
     album_id: null,
+    title_error: '',
+    category_error: '',
+    quantity_error: '',
+    price_error: '',
+    condition_error: '',
+    album_id_error: '',
+    instrument_model_error: '',
+    instrument_type_error: '',
+    service_duration_error: '',
 });
 
 
@@ -66,7 +83,7 @@ const getUser = async () => {
         const response = await axiosInstance.get('/user');
         user.value = response.data;
         isLoggedIn.value = true;
-        //console.log(response.data);
+        console.log(response.data);
     } catch (error) {
         console.error(error);
         isLoggedIn.value = false;
@@ -79,7 +96,7 @@ const getAlbums = async () => {
   try {
     const response = await axiosInstance.get('/');
     albums.value = response.data;
-    //console.log(response.data);
+    console.log(response.data);
   } catch (error) {
     console.error(error);
   }
@@ -88,7 +105,7 @@ const getAlbums = async () => {
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
-  //console.log('Selected file:', file);
+  console.log('Selected file:', file);
   if (file) {
     item.value.picture = file;
   }
@@ -108,13 +125,128 @@ const sellItem = async (payload: SellItemForm) => {
     const response = await axiosInstance.post('/sellitem', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
-    //console.log(response.data);
+    console.log(response.data);
     if (response.status === 200) {
         router.push('/');
     }
   } catch (error) {
     console.error(error);
   }
+}
+
+
+function validateForm(item: SellItemForm){
+  let validTitle = isValidTitle(item.title);
+  let validQuantity = isValidQuantity(item.quantity);
+  let validPrice = isValidPrice(item.price);
+  let isSelectedCondition = item.condition != '';
+  let isCheckedCategoryData = categoryDataCheck(item);
+
+  if (!isSelectedCondition) {
+    item.condition_error = 'Lūdzu, izvēlieties stāvokli.';
+  } else {
+    item.condition_error = '';
+  }
+
+  if (validTitle && validQuantity && validPrice && isSelectedCondition && isCheckedCategoryData) {
+    sellItem(item);
+  }
+}
+
+
+console.log(item.value.album_id);
+function isValidTitle(title: string): boolean {
+    const MAX_TITLE_LENGTH = 30;
+
+    if (title.length === 0) {
+      item.value.title_error = 'Lūdzu, ievadiet nosaukumu.';
+      return false;
+    } else if (title.length > MAX_TITLE_LENGTH) {
+      item.value.title_error = 'Nosaukums nedrīkst pārsniegt 30 rakstzīmes.';
+      return false;
+    } else {
+      item.value.title_error = '';
+      return true;
+    }
+}
+
+function isValidQuantity(quantity: number) {
+    const MIN_QUANTITY = 1;
+
+    if (quantity < MIN_QUANTITY) {
+      item.value.quantity_error = 'Daudzums nedrīkst būt mazāks par 1.'
+      return false;
+    } else {
+      item.value.quantity_error = '';
+      return true;
+    }
+}
+
+function isValidPrice(price: number) {
+    const MIN_PRICE = 0.01;
+
+    if (price < MIN_PRICE) {
+      item.value.price_error = 'Cena nedrīkst būt mazāka par 0,01.'
+      return false;
+    } else {
+      item.value.price_error = '';
+      return true;
+    }
+}
+
+function categoryDataCheck(item: SellItemForm) {
+    switch (item.category) {
+        case 'Album': {
+          item.category_error = '';
+
+          if (item.album_id != null && item.album_id > 0) {
+            item.album_id_error = '';
+            return true;
+          } else {
+            item.album_id_error = 'Lūdzu, izvēlieties albumu, ar kuru šī prece ir saistīta.';
+            return false;
+          }
+        }
+        
+        case 'Instrument': {
+          item.category_error = '';
+
+          if (item.model == null || item.model == '') {
+            item.instrument_model_error = 'Lūdzu, ievadiet instrumenta modeli.';
+          } else {
+            item.instrument_model_error = '';
+          }
+          
+          if (item.type == null || item.type == '') {
+            item.instrument_type_error = 'Lūdzu, ievadiet instrumenta tipu.';
+          } else {
+            item.instrument_type_error = '';
+          }
+          
+          if ((item.model != null && item.model != '') && (item.type != null && item.type != '')) {
+            return true;
+          }
+
+          return false;
+        }
+
+        case 'Service': {
+          item.category_error = '';
+
+          if (item.duration != null && item.duration > 0) {
+            item.service_duration_error = '';
+            return true;
+          } else {
+            item.service_duration_error = 'Lūdzu, ievadiet pakalpojuma ilgumu.';
+            return false;
+          }
+        }
+
+        default: {
+          item.category_error = 'Lūdzu, izvēlieties kategoriju.';
+          return false;
+        }
+    }
 }
 
 getUser();

@@ -13,7 +13,6 @@ const router = useRouter();
 const user = ref({
     username: '',
     email: '',
-    user_role_id: 0,
 });
 
 interface SellerForm {
@@ -22,6 +21,11 @@ interface SellerForm {
     shipping_address: string;
     minimal_order_total: string;
     seller_terms: string;
+    currency_id_error?: string;
+    full_name_error?: string;
+    shipping_address_error?: string;
+    minimal_order_total_error?: string;
+    seller_terms_error?: string;
 }
 
 interface Currency {
@@ -46,7 +50,7 @@ const getUser = async () => {
         const response = await axiosInstance.get('/user');
         user.value = response.data;
         isLoggedIn.value = true;
-        //console.log(response.data);
+        console.log(response.data);
     } catch (error) {
         console.error(error);
         isLoggedIn.value = false;
@@ -67,13 +71,103 @@ const getCurrencies = async () => {
 const createSeller = async (payload: SellerForm) => {
   try {
     const response = await axiosInstance.post('/createseller', payload);
-    //console.log(response.data);
+    console.log(response.data);
     if (response.status === 200) {
         router.push('/');
     }
   } catch (error) {
     console.error(error);
   }
+}
+
+function validateForm(sellerform: SellerForm){
+  let validFullName = isValidFullName(sellerform.full_name);
+  let validShippingAddress = isValidShippingAddress(sellerform.shipping_address);
+  let validMinimalOrderTotal = isValidMinimalOrderTotal(sellerform.minimal_order_total);
+  let validSellerTerms = isValidSellerTerms(sellerform.seller_terms);
+  let isSelectedCurrency = sellerform.currency_id > 0;
+
+  if (!isSelectedCurrency) {
+    sellerForm.value.currency_id_error = 'Lūdzu, izvēlieties valūtu.';
+  } else {
+    sellerForm.value.currency_id_error = '';
+  }
+
+  if (isSelectedCurrency && validFullName && validShippingAddress && validMinimalOrderTotal && validSellerTerms) {
+    createSeller(sellerform);
+  }
+}
+
+function isValidFullName(full_name: string): boolean {
+    const MAX_FULLNAME_LENGTH = 30;
+
+    const fullNameRegex = /^[a-zA-Z]$/;
+
+    if (!full_name || full_name.length === 0 ) {
+        sellerForm.value.full_name_error = 'Lūdzu, ievadiet savu vārdu un uzvārdu.';
+        return false;
+    } else if (full_name.length > MAX_FULLNAME_LENGTH) {
+        sellerForm.value.full_name_error = 'Vārds un uzvārds nedrīkst pārsniegt 30 rakstzīmes.';
+        return false;
+    } else if (!fullNameRegex.test(full_name)) {
+        sellerForm.value.full_name_error = 'Vārds un uzvārds nedrīkst saturēt ciparus un speciālās rakstzīmes, piemēram: !@#$%^&*()';
+        return false;
+    } else {
+        sellerForm.value.full_name_error = '';
+        return true;
+    }
+}
+
+function isValidShippingAddress(shipping_address: string): boolean {
+    const MAX_SHIPPING_ADDRESS_LENGTH = 50;
+
+    const shippingAddressRegex = /^[^!@#\$%\^&\*\(\)]{1,50}$/;
+
+    if (!shipping_address || shipping_address.length === 0 ) {
+        sellerForm.value.shipping_address_error = 'Lūdzu, ievadiet piegādes adresi.';
+        return false;
+    } else if (shipping_address.length > MAX_SHIPPING_ADDRESS_LENGTH) {
+        sellerForm.value.shipping_address_error = 'Piegādes adrese nedrīkst pārsniegt 50 rakstzīmes.';
+        return false;
+    } else if (!shippingAddressRegex.test(shipping_address)) {
+        sellerForm.value.shipping_address_error = 'Piegādes adrese nedrīkst saturēt speciālās rakstzīmes, piemēram: !@#$%^&*()';
+        return false;
+    } else {
+        sellerForm.value.shipping_address_error = '';
+        return true;
+    }
+}
+
+function isValidMinimalOrderTotal(minimal_order_total: string): boolean {
+    const MAX_MINIMAL_ORDER_TOTAL_LENGTH = 50;
+
+    const minimalOrderTotalRegex = /^\d+([.,]\d+)?$/;
+
+    if (!minimal_order_total || minimal_order_total.length === 0 ) {
+        sellerForm.value.minimal_order_total_error = 'Lūdzu, ievadiet minimālo pasūtījuma summu.';
+        return false;
+    } else if (!minimalOrderTotalRegex.test(minimal_order_total)) {
+        sellerForm.value.minimal_order_total_error = 'Minimālā pasūtījuma summa nedrīkst saturēt burtus.';
+        return false;
+    } else if (minimal_order_total.length > MAX_MINIMAL_ORDER_TOTAL_LENGTH) {
+        sellerForm.value.minimal_order_total_error = 'Minimālā pasūtījuma summa nedrīkst pārsniegt 50 rakstzīmes.';
+        return false;
+    } else {
+        sellerForm.value.minimal_order_total_error = '';
+        return true;
+    }
+}
+
+function isValidSellerTerms(seller_terms: string): boolean {
+    const MAX_SELLER_TERMS_LENGTH = 200;
+
+    if (seller_terms.length > MAX_SELLER_TERMS_LENGTH) {
+        sellerForm.value.seller_terms_error = 'Pārdevēja noteikumi nedrīkst pārsniegt 200 rakstzīmes.';
+        return false;
+    } else {
+        sellerForm.value.seller_terms_error = '';
+        return true;
+    }
 }
 
 getUser();
@@ -93,7 +187,7 @@ getCurrencies();
                 <div class="form_parts">
                     <label>Valūta</label>
                     <select class="album_input" name="currency" v-model="sellerForm.currency_id">
-                      <option value="" disabled>Select currency</option>
+                      <option value="" disabled>Izvēlieties valūtu</option>
                       <option v-for="currency in currencies" :key="currency.id" :value="currency.id">{{ currency.currency_name }}</option>
                     </select>
                 </div>
