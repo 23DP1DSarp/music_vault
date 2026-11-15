@@ -8,7 +8,6 @@ import { useRouter } from 'vue-router';
 
 const loading = ref(true);
 
-const router = useRouter();
 
 const user = ref({
     username: '',
@@ -18,27 +17,54 @@ const user = ref({
 
 const isLoggedIn = ref(false);
 
+interface Country {
+  id: number;
+  country_name: string;
+}
+
+const countries = ref<Country[]>([]);
+
 interface AccountInfo {
   username: string;
   email: string;
+  country: string;
+  username_error?: string;
+  email_error?: string;
 }
 
 interface ResetPassword {
   current_password: string;
   new_password: string;
   confirm_new_password: string;
+  password_error?: string;
+  password_confirmation_error?: string;
 }
 
 const accountInfo = ref<AccountInfo>({
   username: '',
   email: '',
+  country: '',
+  username_error: '',
+  email_error: '',
 });
 
 const resetPassword = ref<ResetPassword>({
   current_password: '',
   new_password: '',
   confirm_new_password: '',
+  password_error: '',
+  password_confirmation_error: '',
 });
+
+const getCountries = async () => {
+    try {
+      const response = await axiosInstance.get('/getcountries');
+      countries.value = response.data;
+      console.log(countries.value);
+    } catch (error) {
+      console.error(error);
+    }
+}
 
 const getUser = async () => {
     try {
@@ -46,6 +72,9 @@ const getUser = async () => {
         user.value = response.data;
         isLoggedIn.value = true;
         console.log(response.data);
+        accountInfo.value.username = response.data.username;
+        accountInfo.value.email = response.data.email;
+        accountInfo.value.country = response.data.country;
     } catch (error) {
         console.error(error);
         isLoggedIn.value = false;
@@ -61,7 +90,7 @@ const changeAccountInfo = async (accountInfo: AccountInfo) => {
       email: accountInfo.email,
     });
     console.log(response.data);
-    alert('Account information updated successfully!');
+    alert('Информация профиля успешно обновлена!');
   } catch (error) {
     console.error(error);
   }
@@ -69,11 +98,6 @@ const changeAccountInfo = async (accountInfo: AccountInfo) => {
 };
 
 const changePassword = async (resetPassword: ResetPassword) => {
-  if (resetPassword.new_password !== resetPassword.confirm_new_password) {
-    alert('New password and confirm new password do not match!');
-    return;
-  }
-
   try {
     const response = await axiosInstance.put('/reset-password', {
       current_password: resetPassword.current_password,
@@ -81,7 +105,7 @@ const changePassword = async (resetPassword: ResetPassword) => {
       password_confirmation: resetPassword.confirm_new_password,
     });
     console.log(response.data);
-    alert('Password changed successfully!');
+    alert('Пароль успешно изменен!');
   } catch (error) {
     console.error(error);
   }
@@ -91,14 +115,92 @@ const deleteAccount = async () => {
   try {
     const response = await axiosInstance.delete('/delete-account');
     console.log(response.data);
-    alert('Account deleted successfully!');
+    alert('Аккаунт успешно удален!');
     window.location.href='/';
   } catch (error) {
     console.error(error);
   }
 };
 
+function validateAccountInfoForm(accountInfo: AccountInfo){
+  let validusername = isValidUsername(accountInfo.username);
+  let validEmail = isValidEmail(accountInfo.email);
+
+  if (validusername && validEmail) {
+    changeAccountInfo(accountInfo);
+  }
+}
+
+function validateResetPasswordForm(resetPassword: ResetPassword){
+  let validPasswordAndConfirmation = isValidPasswordAndConfirmation(resetPassword.new_password, resetPassword.confirm_new_password);
+  
+  if (validPasswordAndConfirmation) {
+    changePassword(resetPassword);
+  }
+}
+
+function isValidPasswordAndConfirmation(password: string, password_confirmation: string): boolean {
+    const MAX_PASSWORD_LENGTH = 50;
+    const MIN_PASSWORD_LENGTH = 8;
+    
+    const isInvalidInput =
+        !password || password.length === 0 || password.length < MIN_PASSWORD_LENGTH || password.length > MAX_PASSWORD_LENGTH;
+
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{8,50}$/;
+
+    if (passwordRegex.test(password) && !isInvalidInput) {
+        resetPassword.value.password_error = '';
+        if (password_confirmation != password) {
+          resetPassword.value.password_confirmation_error = 'Пароли не совпадают.';
+          return false;
+        } else {
+          resetPassword.value.password_confirmation_error = '';
+          return true;
+        }
+    } else {
+        resetPassword.value.password_error = 'Пароль должен содержать не менее 8 символов.';
+        return false;
+    }
+}
+
+function isValidUsername(username: string): boolean {
+    const MAX_USERNAME_LENGTH = 20;
+    const MIN_USERNAME_LENGTH = 3;
+    
+    const isInvalidInput =
+        !username || username.length === 0 || username.length < MIN_USERNAME_LENGTH || username.length > MAX_USERNAME_LENGTH;
+
+    const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+    console.log(username)
+    console.log(usernameRegex.test(username))
+    if (usernameRegex.test(username) && !isInvalidInput) {
+        accountInfo.value.username_error = '';
+        return true;
+    } else {
+        accountInfo.value.username_error = 'Имя пользователя должно содержать от 3 до 20 символов.';
+        return false;
+    }
+}
+
+function isValidEmail(email: string): boolean {
+    const MAX_EMAIL_LENGTH = 50;
+    const isInvalidInput =
+        !email || email.length === 0 || email.length > MAX_EMAIL_LENGTH;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (emailRegex.test(email) && !isInvalidInput) {
+        accountInfo.value.email_error = '';
+        return true;
+    } else {
+        accountInfo.value.email_error = 'Пожалуйста, введите корректный адрес электронной почты.';
+        return false;
+    }
+
+}
+
 getUser();
+getCountries();
 </script>
 
 <template>
@@ -117,11 +219,13 @@ getUser();
                 <div class="form_parts">
                     <label>Имя пользователя</label>
                     <input type="text" v-model="accountInfo.username">
+                    <p v-if="accountInfo.username_error" style="color: red;">{{ accountInfo.username_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Email</label>
                     <input type="text" v-model="accountInfo.email">
+                    <p v-if="accountInfo.email_error" style="color: red;">{{ accountInfo.email_error }}</p>
                 </div>
 
                 <div class="form_parts">
@@ -149,11 +253,13 @@ getUser();
                 <div class="form_parts">
                     <label>Новый пароль</label>
                     <input type="password" v-model="resetPassword.new_password">
+                    <p v-if="resetPassword.password_error" style="color: red;">{{ resetPassword.password_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Confirm Новый пароль</label>
                     <input type="password" v-model="resetPassword.confirm_new_password">
+                    <p v-if="resetPassword.password_confirmation_error" style="color: red;">{{ resetPassword.password_confirmation_error }}</p>
                 </div>
 
                 <div class="form_parts">

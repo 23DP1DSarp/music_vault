@@ -2,7 +2,6 @@
 import axiosInstance from '@/axios';
 import { ref } from 'vue';
 
-
 interface RegisterForm {
     username: string;
     email: string;
@@ -11,6 +10,10 @@ interface RegisterForm {
     country_id: number;
     date_of_birth: Date | null;
     error?: string;
+    username_error?: string;
+    email_error?: string;
+    password_error?: string;
+    password_confirmation_error?: string;
 }
 
 interface Country {
@@ -28,33 +31,113 @@ const form = ref<RegisterForm>({
     country_id: 0,
     date_of_birth: null,
     error: '',
+    username_error: '',
+    email_error: '',
+    password_error: '',
+    password_confirmation_error: '',
 });
 
 const getCountries = async () => {
     try {
       const response = await axiosInstance.get('/getcountries');
       countries.value = response.data;
+      console.log(countries.value);
     } catch (error) {
       console.error(error);
     }
 }
 
 const register = async (payload: RegisterForm) => {
+    console.log('Register function called');
     try {
         const response = await axiosInstance.post("/register", payload);
+        console.log(response.data);
         if (response.status === 201 || response.status === 200) {
+            
             localStorage.setItem('auth_token', response.data.api_token);
             localStorage.setItem('csrf_token', response.data.csrf_token);
             localStorage.setItem('user', JSON.stringify(response.data.user));
+            
+            
             axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.api_token}`;
             axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = response.data.csrf_token;
-            window.location.href = "/ru";
+            
+            window.location.href = "/";
         }
     } catch (error) {
         console.error(error);
-        form.value.error = 'Регистрация не удалась. Попробуйте снова.';
+        form.value.error = 'Регистрация не удалась. Пожалуйста, попробуйте снова.';
     }
 };
+
+function isValidUsername(username: string): boolean {
+    const MAX_USERNAME_LENGTH = 20;
+    const MIN_USERNAME_LENGTH = 3;
+    
+    const isInvalidInput =
+        !username || username.length === 0 || username.length < MIN_USERNAME_LENGTH || username.length > MAX_USERNAME_LENGTH;
+
+    const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+
+    if (usernameRegex.test(username) && !isInvalidInput) {
+        form.value.username_error = '';
+        return true;
+    } else {
+        form.value.username_error = 'Имя пользователя должно содержать от 3 до 20 символов.';
+        return false;
+    }
+}
+
+function isValidEmail(email: string): boolean {
+    const MAX_EMAIL_LENGTH = 50;
+    const isInvalidInput =
+        !email || email.length === 0 || email.length > MAX_EMAIL_LENGTH;
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (emailRegex.test(email) && !isInvalidInput) {
+        form.value.email_error = '';
+        return true;
+    } else {
+        form.value.email_error = 'Пожалуйста, введите корректный адрес электронной почты.';
+        return false;
+    }
+
+}
+
+function isValidPasswordAndConfirmation(password: string, password_confirmation: string): boolean {
+    const MAX_PASSWORD_LENGTH = 50;
+    const MIN_PASSWORD_LENGTH = 8;
+    
+    const isInvalidInput =
+        !password || password.length === 0 || password.length < MIN_PASSWORD_LENGTH || password.length > MAX_PASSWORD_LENGTH;
+
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{8,50}$/;
+
+    if (passwordRegex.test(password) && !isInvalidInput) {
+        form.value.password_error = '';
+        if (password_confirmation != password) {
+          form.value.password_confirmation_error = 'Пароли не совпадают.';
+          return false;
+        } else {
+          form.value.password_confirmation_error = '';
+          return true;
+        }
+    } else {
+        form.value.password_error = 'Пароль должен содержать не менее 8 символов.';
+        return false;
+    }
+}
+
+function validateForm(form: RegisterForm){
+  let validusername = isValidUsername(form.username);
+  let validEmail = isValidEmail(form.email);
+  let validPasswordAndConfirmation = isValidPasswordAndConfirmation(form.password, form.password_confirmation);
+
+  if (validusername && validEmail && validPasswordAndConfirmation) {
+    register(form);
+  }
+}
 
 getCountries();
 </script>
@@ -78,21 +161,25 @@ getCountries();
                 <div class="form_parts">
                     <label>Имя пользователя</label>
                     <input name="username" type="text" v-model="form.username">
+                    <p v-if="form.username_error" style="color: red;">{{ form.username_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Email</label>
                     <input name="email" type="email" v-model="form.email">
+                    <p v-if="form.email_error" style="color: red;">{{ form.email_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Пароль</label>
                     <input name="password" type="password" v-model="form.password">
+                    <p v-if="form.password_error" style="color: red;">{{ form.password_error }}</p>
                 </div>
 
                 <div class="form_parts">
                     <label>Подтверждение пароля</label>
                     <input name="password_confirmation" type="password" v-model="form.password_confirmation">
+                    <p v-if="form.password_confirmation_error" style="color: red;">{{ form.password_confirmation_error }}</p>
                 </div>
 
                 <div class="form_parts">

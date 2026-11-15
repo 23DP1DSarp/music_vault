@@ -4,8 +4,11 @@ import ShoppingMenu from '@/components/ru/ShoppingMenuRu.vue';
 import Footer from '@/components/ru/FooterRu.vue';
 import axiosInstance from '@/axios';
 import {ref} from 'vue';
+import { useRouter } from 'vue-router';
 
 const loading = ref(true);
+
+const router = useRouter();
 
 const user = ref({
     username: '',
@@ -37,6 +40,10 @@ interface Album {
   country_id: number
   notes: string
   cover: File | null
+  title_error?: string;
+  author_error?: string;
+  label_error?: string;
+  notes_error?: string;
 }
 
 interface Track {
@@ -55,7 +62,11 @@ const album = ref<Album>({
   release_date: '',
   country_id: 0,
   notes: '',
-  cover: null as File | null
+  cover: null as File | null,
+  title_error: '',
+  author_error: '',
+  label_error: '',
+  notes_error: '',
 })
 
 const tracks = ref<Track[]>([
@@ -78,17 +89,6 @@ const getUser = async () => {
         loading.value = false;
     }
 };
-
-const logout = async () => {
-    try{
-        const response = await axiosInstance.post('/logout');
-        console.log(response.data);
-    } catch (error) {
-        console.error(error);
-    } finally {
-        window.location.href='/ru';
-    }
-}
 
 const getGenres = async () => {
     try {
@@ -119,7 +119,6 @@ const addTrack = () => {
   })
 }
 
-
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
@@ -129,8 +128,7 @@ const handleFileChange = (event: Event) => {
   }
 };
 
-const validateForm = (e: Event) => {
-  console.log('Validating form...');
+const validateTrackFields = (): boolean => {
   let hasErrors = false
 
   tracks.value.forEach(track => {
@@ -143,18 +141,17 @@ const validateForm = (e: Event) => {
     track.error = undefined
 
     if (anyFilled && !allFilled) {
-      track.error = 'Track is incomplete. Fill all fields or leave it empty.'
+      track.error = 'Для добавления песни в список необходимо заполнить все поля.';
       hasErrors = true
     }
   })
 
   if (hasErrors) {
-    e.preventDefault();
+    return false;
   } else {
-    submitForm();
+    return true;
   }
 }
-
 
 const submitForm = async () => {
   const formData = new FormData()
@@ -183,10 +180,85 @@ const submitForm = async () => {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
     console.log(response.data);
+    if (response.status === 200) {
+        router.push('/');
+    }
     } catch (error) {
     console.error(error);
     }
 }
+
+function validateForm(form: Album){
+  let validTitle = isValidTitle(form.title);
+  let validAuthor = isValidAuthor(form.author);
+  let validLabel = isValidLabel(form.label);
+  let validNotes = isValidNotes(form.notes);
+  let validTracks = validateTrackFields(); // It takes tracks separately from the 'tracks' variable.
+
+  // Since hasErrors variable is false then validTracks should also be false.
+  if (validTitle && validAuthor && validLabel && validNotes && !validTracks) {
+    submitForm();
+  }
+}
+
+function isValidTitle(title: string): boolean {
+    const MAX_TITLE_LENGTH = 20;
+
+    if (title.length === 0) {
+        album.value.title_error = 'Пожалуйста, введите название.';
+        return false;
+    } else if (title.length > MAX_TITLE_LENGTH) {
+        album.value.title_error = 'Название не может содержать более 20 символов.';
+        return false;
+    } else {
+      album.value.title_error = '';
+      return true;
+    }
+}
+
+function isValidAuthor(author: string): boolean {
+    const MAX_AUTHOR_LENGTH = 20;
+
+    if (author.length === 0) {
+        album.value.author_error = 'Пожалуйста, введите автора.';
+        return false;
+    } else if (author.length > MAX_AUTHOR_LENGTH) {
+        album.value.author_error = 'Имя автора не может содержать более 20 символов.';
+        return false;
+    } else {
+      album.value.author_error = '';
+      return true;
+    }
+}
+
+function isValidLabel(label: string): boolean {
+    const MAX_LABEL_LENGTH = 20;
+
+    if (label.length === 0) {
+        album.value.label_error = 'Пожалуйста, введите лейбл.';
+        return false;
+    } else if (label.length > MAX_LABEL_LENGTH) {
+        album.value.label_error = 'Название лейбла не может содержать более 20 символов.';
+        return false;
+    } else {
+      album.value.label_error = '';
+      return true;
+    }
+}
+
+function isValidNotes(notes: string): boolean {
+    const MAX_NOTES_LENGTH = 200;
+
+    if (notes.length > MAX_NOTES_LENGTH) {
+        album.value.notes_error = 'Примечания не могут содержать более 200 символов.';
+        return false;
+    } else {
+        album.value.notes_error = '';
+        return true;
+    }
+}
+
+
 
 getUser();
 getGenres();
@@ -203,20 +275,27 @@ getCountries();
         <h1>Добавить альбом</h1>
         <div id="form_wrapper">
         
-            <form id="add_album_with_tracks" @submit.prevent="validateForm($event)" method="POST" enctype="multipart/form-data">
+            <form id="add_album_with_tracks" @submit.prevent="validateForm(album)" method="POST" enctype="multipart/form-data">
                 <div id="album_wrapper">
                     <div id="input_side">
                         <label>Название</label>
                         <input class="album_input" name="title" type="text" v-model="album.title">
+                        <p v-if="album.title_error" style="color: red;">{{ album.title_error }}</p>
+
                         <label>Автор</label>
                         <input class="album_input" name="author" type="text" v-model="album.author">
+                        <p v-if="album.author_error" style="color: red;">{{ album.author_error }}</p>
+
                         <label>Жанр</label>
                         <select class="album_input" name="genre" v-model="album.genre_id">
                           <option value="" disabled>Выберите жанр</option>
                           <option v-for="genre in genres" :key="genre.id" :value="genre.id">{{ genre.genre_title }}</option>
                         </select>
+
                         <label>Лейбл</label>
                         <input class="album_input" name="label" type="text" v-model="album.label">
+                        <p v-if="album.label_error" style="color: red;">{{ album.label_error }}</p>
+
                         <label>Дата выхода</label>
                         <input class="album_input" name="release_date" type="date" v-model="album.release_date">
                         <label>Страна</label>
@@ -224,8 +303,10 @@ getCountries();
                           <option value="" disabled>Выберите страну</option>
                           <option v-for="country in countries" :key="country.id" :value="country.id">{{ country.country_name }}</option>
                         </select>
+
                         <label>Примечания</label>
                         <input class="album_input" name="notes" type="text" v-model="album.notes">
+                        <p v-if="album.notes_error" style="color: red;">{{ album.notes_error }}</p>
                     </div>
                         
                         <div id="album_cover_side">
